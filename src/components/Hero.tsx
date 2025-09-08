@@ -27,7 +27,7 @@ const Hero = () => {
             </div> */}
           </div>
 
-          <h1 
+          <h1
             className="text-6xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-cyan-200 to-purple-300 bg-clip-text text-transparent leading-tight animate-fade-in-up"
             style={{ animationDelay: "0.2s", animationFillMode: "both" }}
           >
@@ -38,14 +38,14 @@ const Hero = () => {
               style={{
                 backgroundImage: `linear-gradient(to right, #50bcb7, #299fd0)`,
                 animationDelay: "0.4s",
-                animationFillMode: "both"
+                animationFillMode: "both",
               }}
             >
               Solution LLP
             </span>
           </h1>
 
-          <p 
+          <p
             className="text-xl md:text-2xl text-gray-300 mb-8 leading-relaxed max-w-3xl mx-auto animate-fade-in-up"
             style={{ animationDelay: "0.6s", animationFillMode: "both" }}
           >
@@ -53,7 +53,7 @@ const Hero = () => {
             training the next generation of quality assurance professionals
           </p>
 
-          <div 
+          <div
             className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6 mb-12 animate-fade-in-up"
             style={{ animationDelay: "0.8s", animationFillMode: "both" }}
           >
@@ -120,10 +120,10 @@ const Hero = () => {
               <div
                 key={index}
                 className="bg-white/5 backdrop-blur-sm border rounded-2xl p-6 transition-all duration-300 group animate-fade-in-up"
-                style={{ 
+                style={{
                   borderColor: "rgba(80, 188, 183, 0.2)",
                   animationDelay: `${1.0 + index * 0.2}s`,
-                  animationFillMode: "both"
+                  animationFillMode: "both",
                 }}
                 onMouseEnter={(e) =>
                   (e.currentTarget.style.borderColor =
