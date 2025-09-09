@@ -1,4 +1,3 @@
-"use client";
 import { ArrowRight, Shield, Zap, Target } from "lucide-react";
 
 const Hero = () => {

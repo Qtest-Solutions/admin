@@ -1,5 +1,9 @@
 "use client";
-import AnimatedBackground from "./AnimatedBackground";
+import dynamic from "next/dynamic";
+
+const AnimatedBackground = dynamic(() => import("./AnimatedBackground"), {
+  ssr: false,
+});
 
 export default function ClientBackground() {
   return <AnimatedBackground />;

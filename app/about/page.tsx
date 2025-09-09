@@ -1,0 +1,17 @@
+import About from "../../components/About";
+import Footer from "../../components/Footer";
+import Header from "../../components/Header";
+import ClientBackground from "../../components/ClientBackground";
+
+export default function AboutPage() {
+  return (
+    <div className="relative">
+      <ClientBackground />
+      <Header />
+      <main className="pt-20">
+        <About />
+      </main>
+      <Footer />
+    </div>
+  );
+}
