@@ -2,22 +2,28 @@ import { Send, Mail, Phone, MapPin } from "lucide-react";
 
 const Contact = () => {
   const contactInfo = [
-    { icon: Mail, title: "Email", info: "contact@qtestsolutions.com" },
-    { icon: Phone, title: "Phone", info: "+1 (555) 123-4567" },
+    { icon: Mail, title: "Email", info: "info@qtestsolutions.com" },
+    { icon: Phone, title: "Phone", info: "+91 9876543210" },
     {
       icon: MapPin,
       title: "Address",
-      info: "123 Innovation Drive, Tech City, TC 12345",
+      info: "Kozhikode, Kerala, India",
     },
   ];
   return (
     <section id="contact" className="py-20 relative cv-auto">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-white to-cyan-200 bg-clip-text text-transparent">
+          <h2
+            className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-white to-cyan-200 bg-clip-text text-transparent animate-fade-in-up"
+            style={{ animationDelay: "0.2s" }}
+          >
             Get In Touch
           </h2>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+          <p
+            className="text-xl text-gray-300 max-w-3xl mx-auto animate-fade-in-up"
+            style={{ animationDelay: "0.4s" }}
+          >
             Ready to transform your testing process? Let's discuss how we can
             help you achieve exceptional quality.
           </p>

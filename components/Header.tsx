@@ -35,15 +35,14 @@ const Header = () => {
           <Link
             href="/"
             aria-label="Qtest Software Solution LLP Home"
-            className="inline-block focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 rounded"
+            className="flex items-center space-x-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 rounded"
           >
             <img
               src="/image.png"
               alt="Qtest Software Solution LLP logo"
-              width={90}
-              height={100}
-              decoding="async"
-              className="rounded-lg"
+              width={150}
+              height={150}
+              className="w-16 h-16 md:w-20 md:h-20 rounded-lg object-contain flex-shrink-0"
             />
           </Link>
 

@@ -69,10 +69,16 @@ const Services = () => {
     <section id="services" className="py-20 relative cv-auto">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-white to-cyan-200 bg-clip-text text-transparent">
+          <h2
+            className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-white to-cyan-200 bg-clip-text text-transparent animate-fade-in-up"
+            style={{ animationDelay: "0.2s" }}
+          >
             Our Services
           </h2>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+          <p
+            className="text-xl text-gray-300 max-w-3xl mx-auto animate-fade-in-up"
+            style={{ animationDelay: "0.4s" }}
+          >
             Comprehensive testing solutions designed for the future of software
             development
           </p>
@@ -81,8 +87,11 @@ const Services = () => {
           {services.map((service, index) => (
             <div
               key={index}
-              className="group bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-sm border rounded-2xl p-8 transition-all duration-500 transform hover:-translate-y-2"
-              style={{ borderColor: "rgba(80, 188, 183, 0.2)" }}
+              className="group bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-sm border rounded-2xl p-8 transition-all duration-500 transform hover:-translate-y-2 animate-fade-in-up"
+              style={{
+                borderColor: "rgba(80, 188, 183, 0.2)",
+                animationDelay: `${0.6 + index * 0.2}s`,
+              }}
             >
               <div className="mb-6">
                 <div className="relative w-16 h-16 mx-auto">

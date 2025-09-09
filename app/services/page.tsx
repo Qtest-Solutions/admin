@@ -5,7 +5,7 @@ import ClientBackground from "../../components/ClientBackground";
 
 export default function ServicesPage() {
   return (
-    <div className="relative">
+    <div className="relative min-h-screen">
       <ClientBackground />
       <Header />
       <main className="pt-20">

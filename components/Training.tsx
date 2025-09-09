@@ -40,13 +40,22 @@ const Training = () => {
     <section id="training" className="py-20 relative">
       <div className="container mx-auto px-6">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-5xl font-bold text-white mb-8">
+          <h2
+            className="text-5xl font-bold text-white mb-8 animate-fade-in-up"
+            style={{ animationDelay: "0.2s" }}
+          >
             Training Programs
           </h2>
-          <h3 className="text-3xl font-semibold mb-6 bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
+          <h3
+            className="text-3xl font-semibold mb-6 bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent animate-fade-in-up"
+            style={{ animationDelay: "0.4s" }}
+          >
             Launch Your QA Career
           </h3>
-          <p className="text-xl text-gray-300 mb-12 leading-relaxed">
+          <p
+            className="text-xl text-gray-300 mb-12 leading-relaxed animate-fade-in-up"
+            style={{ animationDelay: "0.6s" }}
+          >
             Our comprehensive training programs are designed to take you from
             beginner to job-ready QA professional. With hands-on projects and
             industry-relevant curriculum.
@@ -56,8 +65,11 @@ const Training = () => {
             {features.map((feature, index) => (
               <div
                 key={index}
-                className="flex items-center space-x-3 p-4 bg-white/5 backdrop-blur-sm border rounded-2xl transition-all duration-300 hover:bg-white/10"
-                style={{ borderColor: "rgba(80, 188, 183, 0.2)" }}
+                className="flex items-center space-x-3 p-4 bg-white/5 backdrop-blur-sm border rounded-2xl transition-all duration-300 hover:bg-white/10 animate-fade-in-up"
+                style={{
+                  borderColor: "rgba(80, 188, 183, 0.2)",
+                  animationDelay: `${0.8 + index * 0.1}s`,
+                }}
               >
                 <feature.icon
                   className="w-6 h-6 flex-shrink-0"

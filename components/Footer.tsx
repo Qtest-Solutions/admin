@@ -10,7 +10,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center space-x-0 mb-6">
-              <a
+              {/* <a
                 href="#home"
                 aria-label="QTest Solutions Home"
                 className="relative focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 rounded"
@@ -24,7 +24,7 @@ const Footer = () => {
                   decoding="async"
                   role="img"
                 />
-              </a>
+              </a> */}
               <span
                 className="text-2xl font-bold bg-gradient-to-r bg-clip-text text-transparent"
                 style={{
@@ -32,26 +32,25 @@ const Footer = () => {
                     "linear-gradient(to right, #50bcb7, #299fd0)",
                 }}
               >
-                QTest Solutions
+                Qtest Software Solution LLP
               </span>
             </div>
             <p className="text-gray-400 mb-6 max-w-md leading-relaxed">
-              Revolutionizing software testing with AI-powered solutions and
-              cutting-edge automation. Your partner in delivering flawless
-              software experiences.
+              Empowering startups with professional testing services and
+              training the next generation of QA professionals.
             </p>
             <div className="space-y-3">
               <div className="flex items-center text-gray-400">
                 <Mail className="w-5 h-5 mr-3" style={{ color: "#50bcb7" }} />
-                contact@qtestsolutions.com
+                info@qtestsolutions.com
               </div>
               <div className="flex items-center text-gray-400">
                 <Phone className="w-5 h-5 mr-3" style={{ color: "#50bcb7" }} />
-                +1 (555) 123-4567
+                +91 9876543210
               </div>
               <div className="flex items-center text-gray-400">
                 <MapPin className="w-5 h-5 mr-3" style={{ color: "#50bcb7" }} />
-                123 Innovation Drive, Tech City, TC 12345
+                Kozhikode, Kerala, India
               </div>
             </div>
           </div>
@@ -59,12 +58,10 @@ const Footer = () => {
             <h3 className="text-lg font-semibold text-white mb-6">Services</h3>
             <ul className="space-y-3">
               {[
-                "AI-Powered Testing",
-                "Automated Test Suites",
-                "Performance Testing",
-                "Mobile Testing",
-                "API Testing",
-                "Security Testing",
+                "Software Testing",
+                "Test Automation",
+                "Software Development",
+                "QA Training",
               ].map((service, i) => (
                 <li key={i}>
                   <a
@@ -78,15 +75,13 @@ const Footer = () => {
             </ul>
           </div>
           <div>
-            <h3 className="text-lg font-semibold text-white mb-6">Company</h3>
+            <h3 className="text-lg font-semibold text-white mb-6">Training</h3>
             <ul className="space-y-3">
               {[
-                "About Us",
-                "Our Team",
-                "Careers",
-                "Case Studies",
-                "Blog",
-                "Contact",
+                "Manual Testing",
+                "Automation Testing",
+                "Performance Testing",
+                "QA Bootcamp",
               ].map((item, i) => (
                 <li key={i}>
                   <a

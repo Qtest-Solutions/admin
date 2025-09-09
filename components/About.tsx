@@ -12,20 +12,30 @@ const About = () => {
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-white to-cyan-200 bg-clip-text text-transparent">
+            <h2
+              className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-white to-cyan-200 bg-clip-text text-transparent animate-fade-in-up"
+              style={{ animationDelay: "0.2s" }}
+            >
               About QTest Solutions
             </h2>
-            <p className="text-xl text-gray-300 mb-6 leading-relaxed">
+            <p
+              className="text-xl text-gray-300 mb-6 leading-relaxed animate-fade-in-up"
+              style={{ animationDelay: "0.4s" }}
+            >
               We are pioneers in quality assurance and testing solutions,
               combining cutting-edge technology with deep industry expertise to
               deliver exceptional results.
             </p>
-            <p className="text-lg text-gray-400 mb-8 leading-relaxed">
-              Our team of certified testing professionals leverages AI, machine
-              learning, and advanced automation to ensure your software meets
-              the highest quality standards. From startups to enterprise
-              organizations, we scale our solutions to match your unique
-              requirements.
+            <p
+              className="text-lg text-gray-400 mb-8 leading-relaxed animate-fade-in-up"
+              style={{ animationDelay: "0.6s" }}
+            >
+              Our team consists of seasoned professionals with years of
+              experience in software testing, quality assurance, and training.
+              We bring industry best practices and cutting-edge methodologies to
+              every project. We understand the unique challenges faced by
+              startups and the career aspirations of students, allowing us to
+              provide tailored solutions that drive success.
             </p>
             <div className="space-y-4">
               {[
@@ -57,7 +67,11 @@ const About = () => {
             >
               <div className="grid grid-cols-2 gap-6">
                 {stats.map((stat, index) => (
-                  <div key={index} className="text-center group">
+                  <div
+                    key={index}
+                    className="text-center group animate-fade-in-up"
+                    style={{ animationDelay: `${0.8 + index * 0.1}s` }}
+                  >
                     <div className="mb-4 flex justify-center">
                       <div className="relative">
                         <stat.icon

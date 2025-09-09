@@ -1,13 +1,7 @@
 "use client";
-import { useMemo, useState, useEffect } from "react";
+import { useMemo } from "react";
 
 const AnimatedBackground = () => {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
   const particles = useMemo(
     () =>
       Array.from({ length: 40 }).map((_, i) => ({
@@ -19,13 +13,6 @@ const AnimatedBackground = () => {
     []
   );
 
-  if (!mounted) {
-    return (
-      <div className="fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-blue-900/20 to-purple-900/30" />
-      </div>
-    );
-  }
   return (
     <div className="fixed inset-0 -z-10 overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-blue-900/20 to-purple-900/30" />
