@@ -1,1 +1,1 @@
-self.__REACT_LOADABLE_MANIFEST="{\"components\\\\ClientBackground.tsx -> ./AnimatedBackground\":{\"id\":\"components\\\\ClientBackground.tsx -> ./AnimatedBackground\",\"files\":[\"static/chunks/_app-pages-browser_components_AnimatedBackground_tsx.js\"]}}"
+self.__REACT_LOADABLE_MANIFEST="{}"

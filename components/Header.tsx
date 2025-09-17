@@ -25,7 +25,7 @@ const Header = () => {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled || isMenuOpen
-          ? "backdrop-blur-md bg-gray-900/80 border-b border-cyan-500/20"
+          ? "backdrop-blur-xs bg-gray-900/80 border-b border-cyan-500/20"
           : "bg-transparent"
       }`}
     >
@@ -42,7 +42,6 @@ const Header = () => {
               alt="Qtest Software Solution LLP logo"
               width={150}
               height={150}
-              className="w-16 h-16 md:w-20 md:h-20 rounded-lg object-contain flex-shrink-0"
             />
           </Link>
 
