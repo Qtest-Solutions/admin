@@ -10,11 +10,11 @@ import ClientBackground from "../components/ClientBackground";
 export default function HomePage() {
   return (
     <div className="relative min-h-screen">
-      <ClientBackground />
+      {/* <ClientBackground /> */}
       <Header />
       <Hero />
       <Services />
-      <Training />
+      {/* <Training /> */}
       <About />
       <Contact />
       <Footer />

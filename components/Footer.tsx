@@ -2,60 +2,38 @@ import { Mail, Phone, MapPin } from "lucide-react";
 
 const Footer = () => {
   return (
-    <footer
-      className="bg-gradient-to-b from-gray-900 to-black border-t py-12"
-      style={{ borderColor: "rgba(80, 188, 183, 0.2)" }}
-    >
+    <footer className="bg-slate-50 border-t border-slate-200 py-12">
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center space-x-0 mb-6">
-              {/* <a
-                href="#home"
-                aria-label="QTest Solutions Home"
-                className="relative focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 rounded"
-              >
-                <img
-                  src="/image.png"
-                  alt="QTest Solutions logo"
-                  width={100}
-                  height={50}
-                  loading="lazy"
-                  decoding="async"
-                  role="img"
-                />
-              </a> */}
-              <span
-                className="text-2xl font-bold bg-gradient-to-r bg-clip-text text-transparent"
-                style={{
-                  backgroundImage:
-                    "linear-gradient(to right, #50bcb7, #299fd0)",
-                }}
-              >
+              <span className="text-2xl font-bold text-slate-800">
                 Qtest Software Solution LLP
               </span>
             </div>
-            <p className="text-gray-400 mb-6 max-w-md leading-relaxed">
+            <p className="text-slate-600 mb-6 max-w-md leading-relaxed">
               Empowering startups with professional testing services and
               training the next generation of QA professionals.
             </p>
             <div className="space-y-3">
-              <div className="flex items-center text-gray-400">
-                <Mail className="w-5 h-5 mr-3" style={{ color: "#50bcb7" }} />
+              <div className="flex items-center text-slate-600 hover:text-sky-600 transition-colors duration-300 group">
+                <Mail className="w-5 h-5 mr-3 text-sky-500" />
                 info@qtestsolutions.com
               </div>
-              <div className="flex items-center text-gray-400">
-                <Phone className="w-5 h-5 mr-3" style={{ color: "#50bcb7" }} />
+              <div className="flex items-center text-slate-600 hover:text-emerald-600 transition-colors duration-300 group">
+                <Phone className="w-5 h-5 mr-3 text-emerald-500" />
                 +91 9876543210
               </div>
-              <div className="flex items-center text-gray-400">
-                <MapPin className="w-5 h-5 mr-3" style={{ color: "#50bcb7" }} />
+              <div className="flex items-center text-slate-600 hover:text-violet-600 transition-colors duration-300 group">
+                <MapPin className="w-5 h-5 mr-3 text-violet-500" />
                 Kozhikode, Kerala, India
               </div>
             </div>
           </div>
           <div>
-            <h3 className="text-lg font-semibold text-white mb-6">Services</h3>
+            <h3 className="text-lg font-semibold text-slate-800 mb-6">
+              Services
+            </h3>
             <ul className="space-y-3">
               {[
                 "Software Testing",
@@ -66,7 +44,7 @@ const Footer = () => {
                 <li key={i}>
                   <a
                     href="#services"
-                    className="text-gray-400 transition-colors duration-300"
+                    className="text-slate-600 hover:text-sky-600 transition-colors duration-300"
                   >
                     {service}
                   </a>
@@ -75,7 +53,9 @@ const Footer = () => {
             </ul>
           </div>
           <div>
-            <h3 className="text-lg font-semibold text-white mb-6">Training</h3>
+            <h3 className="text-lg font-semibold text-slate-800 mb-6">
+              Training
+            </h3>
             <ul className="space-y-3">
               {[
                 "Manual Testing",
@@ -86,7 +66,7 @@ const Footer = () => {
                 <li key={i}>
                   <a
                     href="#"
-                    className="text-gray-400 transition-colors duration-300"
+                    className="text-slate-600 hover:text-emerald-600 transition-colors duration-300"
                   >
                     {item}
                   </a>
@@ -95,9 +75,9 @@ const Footer = () => {
             </ul>
           </div>
         </div>
-        <div className="border-t border-gray-700 mt-12 pt-8">
+        <div className="border-t border-slate-200 mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-gray-400 text-sm">
+            <p className="text-slate-500 text-sm">
               © 2025 QTest Solutions. All rights reserved.
             </p>
             <div className="flex space-x-6 mt-4 md:mt-0">
@@ -106,7 +86,7 @@ const Footer = () => {
                   <a
                     key={i}
                     href="#"
-                    className="text-gray-400 text-sm transition-colors duration-300"
+                    className="text-slate-500 hover:text-violet-600 text-sm transition-colors duration-300"
                   >
                     {item}
                   </a>

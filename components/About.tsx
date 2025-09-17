@@ -8,18 +8,18 @@ const About = () => {
     { number: "10+", label: "Years Experience", icon: Lightbulb },
   ];
   return (
-    <section id="about" className="py-20 relative cv-auto">
+    <section id="about" className="py-20 relative cv-auto bg-white">
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div>
             <h2
-              className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-white to-cyan-200 bg-clip-text text-transparent animate-fade-in-up"
+              className="text-4xl md:text-5xl font-bold mb-6 text-emerald-600 animate-fade-in-up"
               style={{ animationDelay: "0.2s" }}
             >
               About QTest Solutions
             </h2>
             <p
-              className="text-xl text-gray-300 mb-6 leading-relaxed animate-fade-in-up"
+              className="text-xl text-slate-700 mb-6 leading-relaxed animate-fade-in-up"
               style={{ animationDelay: "0.4s" }}
             >
               We are pioneers in quality assurance and testing solutions,
@@ -27,7 +27,7 @@ const About = () => {
               deliver exceptional results.
             </p>
             <p
-              className="text-lg text-gray-400 mb-8 leading-relaxed animate-fade-in-up"
+              className="text-lg text-slate-600 mb-8 leading-relaxed animate-fade-in-up"
               style={{ animationDelay: "0.6s" }}
             >
               Our team consists of seasoned professionals with years of
@@ -46,25 +46,23 @@ const About = () => {
               ].map((point, index) => (
                 <div key={index} className="flex items-center">
                   <div
-                    className="w-3 h-3 rounded-full mr-4"
-                    style={{
-                      background: "linear-gradient(to right, #50bcb7, #299fd0)",
-                    }}
+                    className={`w-3 h-3 rounded-full mr-4 ${
+                      index % 4 === 0
+                        ? "bg-sky-500"
+                        : index % 4 === 1
+                        ? "bg-emerald-500"
+                        : index % 4 === 2
+                        ? "bg-violet-500"
+                        : "bg-amber-500"
+                    }`}
                   />
-                  <span className="text-gray-300">{point}</span>
+                  <span className="text-slate-700">{point}</span>
                 </div>
               ))}
             </div>
           </div>
           <div className="relative">
-            <div
-              className="backdrop-blur-sm border rounded-3xl p-8"
-              style={{
-                background:
-                  "linear-gradient(to bottom right, rgba(80, 188, 183, 0.1), rgba(41, 159, 208, 0.1))",
-                borderColor: "rgba(80, 188, 183, 0.2)",
-              }}
-            >
+            <div className="bg-slate-50 border-2 border-emerald-100 rounded-3xl p-8 shadow-lg">
               <div className="grid grid-cols-2 gap-6">
                 {stats.map((stat, index) => (
                   <div
@@ -75,19 +73,43 @@ const About = () => {
                     <div className="mb-4 flex justify-center">
                       <div className="relative">
                         <stat.icon
-                          className="w-12 h-12 transition-colors duration-300"
-                          style={{ color: "#50bcb7" }}
+                          className={`w-12 h-12 transition-colors duration-300 ${
+                            index % 4 === 0
+                              ? "text-sky-500"
+                              : index % 4 === 1
+                              ? "text-emerald-500"
+                              : index % 4 === 2
+                              ? "text-violet-500"
+                              : "text-amber-500"
+                          }`}
                         />
                         <div
-                          className="absolute inset-0 blur-lg rounded-full transition-colors duration-300"
-                          style={{ backgroundColor: "rgba(80, 188, 183, 0.2)" }}
+                          className={`absolute inset-0 blur-lg rounded-full transition-colors duration-300 ${
+                            index % 4 === 0
+                              ? "bg-sky-100"
+                              : index % 4 === 1
+                              ? "bg-emerald-100"
+                              : index % 4 === 2
+                              ? "bg-violet-100"
+                              : "bg-amber-100"
+                          }`}
                         />
                       </div>
                     </div>
-                    <div className="text-3xl font-bold text-white mb-2 transition-colors duration-300">
+                    <div
+                      className={`text-3xl font-bold mb-2 transition-colors duration-300 ${
+                        index % 4 === 0
+                          ? "text-sky-600"
+                          : index % 4 === 1
+                          ? "text-emerald-600"
+                          : index % 4 === 2
+                          ? "text-violet-600"
+                          : "text-amber-600"
+                      }`}
+                    >
                       {stat.number}
                     </div>
-                    <div className="text-gray-400 text-sm">{stat.label}</div>
+                    <div className="text-slate-600 text-sm">{stat.label}</div>
                   </div>
                 ))}
               </div>

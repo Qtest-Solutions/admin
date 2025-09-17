@@ -66,17 +66,17 @@ const Services = () => {
     },
   ];
   return (
-    <section id="services" className="py-20 relative cv-auto">
+    <section id="services" className="py-20 relative cv-auto bg-slate-50">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
           <h2
-            className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-white to-cyan-200 bg-clip-text text-transparent animate-fade-in-up"
+            className="text-4xl md:text-5xl font-bold mb-6 text-sky-600 animate-fade-in-up"
             style={{ animationDelay: "0.2s" }}
           >
             Our Services
           </h2>
           <p
-            className="text-xl text-gray-300 max-w-3xl mx-auto animate-fade-in-up"
+            className="text-xl text-slate-600 max-w-3xl mx-auto animate-fade-in-up"
             style={{ animationDelay: "0.4s" }}
           >
             Comprehensive testing solutions designed for the future of software
@@ -87,39 +87,56 @@ const Services = () => {
           {services.map((service, index) => (
             <div
               key={index}
-              className="group bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-sm border rounded-2xl p-8 transition-all duration-500 transform hover:-translate-y-2 animate-fade-in-up"
+              className={`group bg-white border-2 rounded-2xl p-8 transition-all duration-500 transform hover:-translate-y-2 animate-fade-in-up shadow-lg hover:shadow-xl ${
+                index % 3 === 0
+                  ? "border-sky-200 hover:border-sky-300"
+                  : index % 3 === 1
+                  ? "border-emerald-200 hover:border-emerald-300"
+                  : "border-violet-200 hover:border-violet-300"
+              }`}
               style={{
-                borderColor: "rgba(80, 188, 183, 0.2)",
                 animationDelay: `${0.6 + index * 0.2}s`,
               }}
             >
               <div className="mb-6">
                 <div className="relative w-16 h-16 mx-auto">
                   <service.icon
-                    className="w-16 h-16 transition-colors duration-300"
-                    style={{ color: "#50bcb7" }}
+                    className={`w-16 h-16 transition-colors duration-300 ${
+                      index % 3 === 0
+                        ? "text-sky-500"
+                        : index % 3 === 1
+                        ? "text-emerald-500"
+                        : "text-violet-500"
+                    }`}
                   />
                   <div
-                    className="absolute inset-0 blur-xl rounded-full transition-colors duration-300"
-                    style={{ backgroundColor: "rgba(80, 188, 183, 0.2)" }}
+                    className={`absolute inset-0 blur-xl rounded-full transition-colors duration-300 ${
+                      index % 3 === 0
+                        ? "bg-sky-100"
+                        : index % 3 === 1
+                        ? "bg-emerald-100"
+                        : "bg-violet-100"
+                    }`}
                   />
                 </div>
               </div>
-              <h3 className="text-2xl font-bold text-white mb-4 transition-colors duration-300">
+              <h3 className="text-2xl font-bold text-slate-800 mb-4 transition-colors duration-300">
                 {service.title}
               </h3>
-              <p className="text-gray-300 mb-6 leading-relaxed">
+              <p className="text-slate-600 mb-6 leading-relaxed">
                 {service.description}
               </p>
               <ul className="space-y-2">
                 {service.features.map((f, i) => (
-                  <li key={i} className="flex items-center text-gray-400">
+                  <li key={i} className="flex items-center text-slate-600">
                     <div
-                      className="w-2 h-2 rounded-full mr-3"
-                      style={{
-                        background:
-                          "linear-gradient(to right, #50bcb7, #299fd0)",
-                      }}
+                      className={`w-2 h-2 rounded-full mr-3 ${
+                        index % 3 === 0
+                          ? "bg-sky-500"
+                          : index % 3 === 1
+                          ? "bg-emerald-500"
+                          : "bg-violet-500"
+                      }`}
                     />
                     {f}
                   </li>

@@ -25,7 +25,7 @@ const Header = () => {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled || isMenuOpen
-          ? "backdrop-blur-xs bg-gray-900/80 border-b border-cyan-500/20"
+          ? "backdrop-blur-md bg-white/30 dark:bg-gray-900/30 border-b border-white/40 dark:border-gray-700 shadow-sm"
           : "bg-transparent"
       }`}
     >
@@ -35,7 +35,7 @@ const Header = () => {
           <Link
             href="/"
             aria-label="Qtest Software Solution LLP Home"
-            className="flex items-center space-x-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 rounded"
+            className="flex items-center space-x-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 rounded"
           >
             <img
               src="/image.png"
@@ -51,16 +51,14 @@ const Header = () => {
               <Link
                 key={item.name}
                 href={item.href}
-                className="text-gray-300 hover:text-white transition-all duration-300 relative group font-medium"
+                className={`transition-all duration-300 relative group font-medium ${
+                  isScrolled || isMenuOpen
+                    ? "text-slate-700 dark:text-slate-200 hover:text-sky-600"
+                    : "text-white dark:text-white hover:text-sky-300"
+                }`}
               >
                 {item.name}
-                <span
-                  className="absolute bottom-0 left-0 w-0 h-0.5 group-hover:w-full transition-all duration-300"
-                  style={{
-                    backgroundImage:
-                      "linear-gradient(to right, #50bcb7, #299fd0)",
-                  }}
-                />
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-sky-500 group-hover:w-full transition-all duration-300" />
               </Link>
             ))}
           </div>
@@ -68,8 +66,11 @@ const Header = () => {
           {/* Mobile Toggle */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden transition-colors duration-300"
-            style={{ color: "#50bcb7" }}
+            className={`md:hidden transition-colors duration-300 ${
+              isScrolled || isMenuOpen
+                ? "text-slate-700 dark:text-slate-200 hover:text-sky-600"
+                : "text-white dark:text-white hover:text-sky-300"
+            }`}
             aria-label="Toggle mobile menu"
           >
             {isMenuOpen ? (
@@ -85,18 +86,22 @@ const Header = () => {
           <>
             {/* Backdrop overlay for blur effect */}
             <div
-              className="md:hidden fixed inset-0 backdrop-blur-sm bg-black/50 -z-10"
+              className="md:hidden fixed inset-0 backdrop-blur-sm bg-black/10 dark:bg-white/10 -z-10"
               onClick={() => setIsMenuOpen(false)}
             />
 
-            <div className="md:hidden mt-4 pb-4 border-t border-cyan-500/20">
+            <div className="md:hidden mt-4 pb-4 border-t border-white/40 dark:border-gray-700">
               <div className="flex flex-col space-y-3 mt-4">
                 {navItems.map((item) => (
                   <Link
                     key={item.name}
                     href={item.href}
                     onClick={() => setIsMenuOpen(false)}
-                    className="text-gray-300 hover:text-white transition-colors duration-300 py-2 font-medium"
+                    className={`transition-colors duration-300 py-2 font-medium ${
+                      isScrolled || isMenuOpen
+                        ? "text-slate-700 dark:text-slate-200 hover:text-sky-600"
+                        : "text-white dark:text-white hover:text-sky-300"
+                    }`}
                   >
                     {item.name}
                   </Link>
