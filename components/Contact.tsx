@@ -11,120 +11,159 @@ const Contact = () => {
     },
   ];
   return (
-    <section id="contact" className="py-20 relative cv-auto bg-violet-50">
-      <div className="container mx-auto px-6">
-        <div className="text-center mb-16">
+    <section id="contact" className="py-16 relative cv-auto bg-gradient-coral">
+      {/* Professional Background Elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-20 left-16 w-80 h-80 bg-brand-coral-200/15 rounded-full blur-3xl animate-gentle-float" />
+        <div className="absolute bottom-16 right-20 w-96 h-96 bg-brand-sage-200/10 rounded-full blur-3xl animate-gentle-float" style={{ animationDelay: '2s' }} />
+        <div className="absolute top-1/3 right-1/4 w-64 h-64 bg-brand-lavender-200/12 rounded-full blur-3xl" />
+      </div>
+      
+      <div className="container mx-auto px-6 relative z-10">
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center gap-2 glass-professional px-4 py-2 rounded-full text-xs text-brand-coral-700 mb-4 font-medium glow-coral animate-fade-in-up">
+            <Send className="w-3 h-3" />
+            Connect With Excellence
+            <div className="w-1.5 h-1.5 bg-brand-coral-500 rounded-full animate-pulse" />
+          </div>
+          
           <h2
-            className="text-4xl md:text-5xl font-bold mb-6 text-violet-600 animate-fade-in-up"
+            className="text-3xl md:text-4xl font-bold mb-4 gradient-text-professional leading-tight animate-fade-in-up"
             style={{ animationDelay: "0.2s" }}
           >
             Get In Touch
           </h2>
+          
           <p
-            className="text-xl text-slate-600 max-w-3xl mx-auto animate-fade-in-up"
+            className="text-sm md:text-base text-brand-neutral-600 max-w-2xl mx-auto leading-relaxed font-medium animate-fade-in-up"
             style={{ animationDelay: "0.4s" }}
           >
-            Ready to transform your testing process? Let's discuss how we can
-            help you achieve exceptional quality.
+            Ready to <span className="text-brand-coral-600 font-semibold">transform your testing process</span>? 
+            Let's discuss how we can help you achieve quality.
           </p>
+          
+          <div className="mt-4 flex justify-center">
+            <div className="w-20 h-0.5 bg-gradient-to-r from-brand-coral-500 via-brand-sage-500 to-brand-lavender-500 rounded-full" />
+          </div>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-          <div>
-            <h3 className="text-2xl font-bold text-slate-800 mb-8">
-              Contact Information
-            </h3>
-            <div className="space-y-6">
-              {contactInfo.map((info, idx) => (
-                <div key={idx} className="flex items-center group">
-                  <div className="relative mr-6">
-                    <div
-                      className={`bg-white shadow-lg border-2 rounded-2xl p-4 transition-all duration-300 ${
-                        idx === 0
-                          ? "border-sky-200 text-sky-500"
-                          : idx === 1
-                          ? "border-emerald-200 text-emerald-500"
-                          : "border-violet-200 text-violet-500"
-                      }`}
-                    >
-                      <info.icon className="w-6 h-6" />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+          {/* Contact Information */}
+          <div className="animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
+            <div className="glass-professional p-6 rounded-2xl shadow-professional">
+              <h3 className="text-xl font-bold text-brand-neutral-800 mb-6 flex items-center gap-2">
+                <div className="w-2 h-6 bg-gradient-to-b from-brand-coral-500 to-brand-sage-500 rounded-full" />
+                Contact Information
+              </h3>
+              
+              <div className="space-y-4">
+                {contactInfo.map((info, idx) => (
+                  <div key={idx} className="flex items-start group hover:translate-x-1 transition-transform duration-300">
+                    <div className="relative mr-4 flex-shrink-0">
+                      <div
+                        className={`glass-professional shadow-professional rounded-lg p-3 transition-all duration-300 group-hover:scale-105 ${
+                          idx === 0
+                            ? "border border-brand-sage-200/50 text-brand-sage-600"
+                            : idx === 1
+                            ? "border border-brand-lavender-200/50 text-brand-lavender-600"
+                            : "border border-brand-coral-200/50 text-brand-coral-600"
+                        }`}
+                      >
+                        <info.icon className="w-5 h-5" />
+                      </div>
+                    </div>
+                    <div className="pt-1">
+                      <h4 className="text-base font-bold text-brand-neutral-800 mb-1">
+                        {info.title}
+                      </h4>
+                      <p className="text-brand-neutral-600 font-medium text-sm">{info.info}</p>
                     </div>
                   </div>
-                  <div>
-                    <h4 className="text-lg font-semibold text-slate-800">
-                      {info.title}
-                    </h4>
-                    <p className="text-slate-600">{info.info}</p>
-                  </div>
+                ))}
+              </div>
+              
+              {/* Office Hours */}
+              <div className="mt-6 pt-4 border-t border-brand-neutral-200/30">
+                <h4 className="text-base font-bold text-brand-neutral-800 mb-3">Office Hours</h4>
+                <div className="space-y-1 text-brand-neutral-600 text-sm">
+                  <p><span className="font-semibold">Mon - Fri:</span> 9:00 AM - 6:00 PM IST</p>
+                  <p><span className="font-semibold">Saturday:</span> 10:00 AM - 2:00 PM IST</p>
+                  <p><span className="font-semibold">Sunday:</span> Closed</p>
                 </div>
-              ))}
+              </div>
             </div>
           </div>
-          <div className="relative">
-            <div className="bg-white shadow-lg border-2 border-violet-200 rounded-3xl p-8 transition-all duration-300">
-              <form className="space-y-6" method="post" action="/api/contact">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Contact Form */}
+          <div className="relative animate-fade-in-up" style={{ animationDelay: '0.8s' }}>
+            <div className="glass-professional rounded-2xl p-6 shadow-professional glow-coral">
+              <h3 className="text-lg font-bold text-brand-neutral-800 mb-4 flex items-center gap-2">
+                <div className="w-2 h-5 bg-gradient-to-b from-brand-lavender-500 to-brand-coral-500 rounded-full" />
+                Send us a Message
+              </h3>
+              
+              <form className="space-y-4" method="post" action="/api/contact">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium mb-2 text-slate-700">
-                      Name
+                    <label className="block text-xs font-semibold mb-2 text-brand-neutral-700">
+                      Full Name *
                     </label>
                     <input
                       name="name"
-                      className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-800 focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-colors"
-                      placeholder="Your name"
+                      className="w-full px-3 py-2 glass-sage border border-brand-sage-200/50 rounded-lg text-brand-neutral-800 focus:border-brand-sage-400 focus:ring-2 focus:ring-brand-sage-200/50 transition-all duration-300 placeholder-brand-neutral-400 font-medium text-sm"
+                      placeholder="Enter your full name"
                       required
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2 text-slate-700">
-                      Email
+                    <label className="block text-xs font-semibold mb-2 text-brand-neutral-700">
+                      Email Address *
                     </label>
                     <input
                       type="email"
                       name="email"
-                      className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-800 focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-colors"
-                      placeholder="you@email.com"
+                      className="w-full px-3 py-2 glass-sage border border-brand-sage-200/50 rounded-lg text-brand-neutral-800 focus:border-brand-sage-400 focus:ring-2 focus:ring-brand-sage-200/50 transition-all duration-300 placeholder-brand-neutral-400 font-medium text-sm"
+                      placeholder="your.email@company.com"
                       required
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2 text-slate-700">
-                    Company
+                  <label className="block text-xs font-semibold mb-2 text-brand-neutral-700">
+                    Company / Organization
                   </label>
                   <input
                     name="company"
-                    className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-800 focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-colors"
-                    placeholder="Your company"
+                    className="w-full px-3 py-2 glass-sage border border-brand-sage-200/50 rounded-lg text-brand-neutral-800 focus:border-brand-sage-400 focus:ring-2 focus:ring-brand-sage-200/50 transition-all duration-300 placeholder-brand-neutral-400 font-medium text-sm"
+                    placeholder="Your company or organization"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2 text-slate-700">
-                    Message
+                  <label className="block text-xs font-semibold mb-2 text-brand-neutral-700">
+                    How can we help you? *
                   </label>
                   <textarea
                     name="message"
-                    rows={5}
-                    className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-slate-800 focus:border-violet-400 focus:ring-2 focus:ring-violet-200 transition-colors resize-none"
+                    rows={4}
+                    className="w-full px-3 py-2 glass-sage border border-brand-sage-200/50 rounded-lg text-brand-neutral-800 focus:border-brand-sage-400 focus:ring-2 focus:ring-brand-sage-200/50 transition-all duration-300 resize-none placeholder-brand-neutral-400 font-medium text-sm"
                     placeholder="Tell us about your testing needs..."
                     required
                   />
                 </div>
-                <button
-                  type="submit"
-                  className="w-full text-white font-semibold py-4 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg bg-violet-600 hover:bg-violet-700"
-                >
-                  Send Message
-                  <Send className="inline-block ml-2 w-5 h-5" />
-                </button>
+                
+                <div className="pt-2">
+                  <button
+                    type="submit"
+                    className="w-full btn-accent py-2 px-4 text-sm font-semibold flex items-center justify-center gap-2 group"
+                  >
+                    Send Message
+                    <Send className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+                  </button>
+                </div>
+                
+                <div className="text-center pt-2 text-xs text-brand-neutral-500">
+                  <p>We typically respond within 24 hours</p>
+                </div>
               </form>
             </div>
-            <div
-              className="absolute -inset-4 rounded-3xl blur-xl -z-10"
-              style={{
-                background:
-                  "linear-gradient(to right, rgba(80,188,183,0.1), rgba(41,159,208,0.1))",
-              }}
-            />
           </div>
         </div>
       </div>

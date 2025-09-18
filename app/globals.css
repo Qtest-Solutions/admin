@@ -1,21 +1,141 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-html { scroll-behavior: smooth; }
-body { line-height: 1.6; }
+html { 
+  scroll-behavior: smooth; 
+  font-feature-settings: 'cv11', 'ss01';
+}
 
-/* Reuse custom utilities */
-.glass { background: rgba(255,255,255,0.9); backdrop-filter: blur(10px); border: 1px solid rgba(8,145,178,0.1); }
-.glow-teal { box-shadow: 0 0 20px rgba(8,145,178,0.2); }
-.glow-blue { box-shadow: 0 0 20px rgba(3,105,161,0.2); }
+body { 
+  line-height: 1.6;
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  letter-spacing: -0.01em;
+}
 
-@keyframes fade-in-up { from { opacity:0; transform: translateY(30px);} to {opacity:1; transform: translateY(0);} }
+/* Professional Glass Effects */
+.glass-professional { 
+  background: rgba(248, 250, 249, 0.95); 
+  backdrop-filter: blur(16px); 
+  border: 1px solid rgba(107, 159, 124, 0.12); 
+}
+
+.glass-sage { 
+  background: rgba(240, 245, 242, 0.85); 
+  backdrop-filter: blur(12px); 
+  border: 1px solid rgba(107, 159, 124, 0.15); 
+}
+
+.glass-lavender { 
+  background: rgba(243, 242, 247, 0.85); 
+  backdrop-filter: blur(12px); 
+  border: 1px solid rgba(157, 136, 184, 0.15); 
+}
+
+.glass-coral { 
+  background: rgba(253, 242, 238, 0.85); 
+  backdrop-filter: blur(12px); 
+  border: 1px solid rgba(225, 125, 104, 0.15); 
+}
+
+/* Professional Glow Effects */
+.glow-sage { box-shadow: 0 0 25px rgba(107, 159, 124, 0.15), 0 0 50px rgba(107, 159, 124, 0.08); }
+.glow-lavender { box-shadow: 0 0 25px rgba(157, 136, 184, 0.15), 0 0 50px rgba(157, 136, 184, 0.08); }
+.glow-coral { box-shadow: 0 0 25px rgba(225, 125, 104, 0.15), 0 0 50px rgba(225, 125, 104, 0.08); }
+
+/* Subtle Professional Gradients */
+.gradient-text-professional { 
+  background: linear-gradient(135deg, #6b9f7c 0%, #9d88b8 50%, #e17d68 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gradient-text-sage { 
+  background: linear-gradient(135deg, #578063 0%, #6b9f7c 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Enhanced Animations */
+@keyframes fade-in-up { 
+  from { 
+    opacity: 0; 
+    transform: translateY(30px) scale(0.95);
+  } 
+  to {
+    opacity: 1; 
+    transform: translateY(0) scale(1);
+  } 
+}
+
+@keyframes fade-in-scale { 
+  from { 
+    opacity: 0; 
+    transform: scale(0.9);
+  } 
+  to {
+    opacity: 1; 
+    transform: scale(1);
+  } 
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes gentle-float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(1deg);
+  }
+}
+
 .animate-fade-in-up { animation: fade-in-up 0.8s ease-out both; }
+.animate-fade-in-scale { animation: fade-in-scale 0.6s ease-out both; }
+.animate-slide-in-right { animation: slide-in-right 0.7s ease-out both; }
+.animate-gentle-float { animation: gentle-float 6s ease-in-out infinite; }
+
+/* Professional Button Styles */
+.btn-professional {
+  @apply bg-gradient-to-r from-brand-sage-500 to-brand-sage-600 text-white px-6 py-3 rounded-xl font-medium transition-all duration-300 shadow-soft hover:shadow-soft-lg hover:scale-105 focus:ring-4 focus:ring-brand-sage-200;
+}
+
+.btn-secondary {
+  @apply bg-gradient-to-r from-brand-lavender-100 to-brand-lavender-200 text-brand-lavender-700 px-6 py-3 rounded-xl font-medium transition-all duration-300 hover:from-brand-lavender-200 hover:to-brand-lavender-300 focus:ring-4 focus:ring-brand-lavender-200;
+}
+
+.btn-accent {
+  @apply bg-gradient-to-r from-brand-coral-500 to-brand-coral-600 text-white px-6 py-3 rounded-xl font-medium transition-all duration-300 shadow-soft hover:shadow-soft-lg hover:scale-105 focus:ring-4 focus:ring-brand-coral-200;
+}
 
 /* Performance utilities */
 .cv-auto { content-visibility: auto; contain-intrinsic-size: 600px 800px; }
 
+/* Accessibility */
 @media (prefers-reduced-motion: reduce) {
-	.animate-fade-in-up, .animate-pulse { animation: none !important; }
+  .animate-fade-in-up, .animate-fade-in-scale, .animate-slide-in-right, 
+  .animate-pulse, .animate-gentle-float { 
+    animation: none !important; 
+  }
+  .hover\:scale-105:hover, .group:hover .group-hover\:scale-110 {
+    transform: none !important;
+  }
+}
+
+/* Smooth scrolling for all elements */
+* {
+  scroll-behavior: smooth;
 }

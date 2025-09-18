@@ -1,152 +1,230 @@
-import { Bot, Code, Database, Globe, Smartphone, Shield } from "lucide-react";
+"use client";
+import { User, Cog, Gauge, CheckCircle, Zap, Shield } from "lucide-react";
 
 const Services = () => {
   const services = [
     {
-      icon: Bot,
-      title: "AI-Powered Testing",
+      icon: User,
+      title: "Manual Testing",
       description:
-        "Leverage machine learning algorithms to predict and prevent software defects before they impact users.",
+        "Human-driven testing that ensures your application meets real-world user expectations and catches issues automated tests might miss.",
       features: [
-        "Smart test generation",
-        "Predictive analytics",
-        "Automated bug detection",
+        "Exploratory Testing",
+        "User Experience Validation",
+        "Edge Case Discovery",
+        "Accessibility Testing",
       ],
+      color: "blue",
+      // stats: { accuracy: "99.8%", coverage: "Comprehensive" },
     },
     {
-      icon: Code,
-      title: "Automated Test Suites",
+      icon: Cog,
+      title: "Automation Testing",
       description:
-        "Comprehensive automation frameworks that scale with your development pipeline and reduce manual effort.",
+        "Scalable automated test suites that integrate seamlessly with your CI/CD pipeline for faster, more reliable releases.",
       features: [
-        "CI/CD integration",
-        "Cross-platform testing",
-        "Real-time reporting",
+        "CI/CD Integration",
+        "Cross-Browser Testing",
+        "Regression Testing",
+        "API Test Automation",
       ],
+      color: "emerald",
+      // stats: { speed: "10x Faster", coverage: "95% Code Coverage" },
     },
     {
-      icon: Globe,
+      icon: Gauge,
       title: "Performance Testing",
       description:
-        "Ensure your applications perform optimally under any load with our advanced performance testing solutions.",
-      features: ["Load testing", "Stress testing", "Performance monitoring"],
-    },
-    {
-      icon: Smartphone,
-      title: "Mobile Testing",
-      description:
-        "Comprehensive mobile app testing across all devices and platforms to ensure perfect user experiences.",
+        "Comprehensive performance analysis to ensure your applications deliver exceptional speed and reliability under any load.",
       features: [
-        "Device compatibility",
-        "UI/UX testing",
-        "Cross-platform validation",
+        "Load Testing",
+        "Stress Testing",
+        "Scalability Analysis",
+        "Performance Monitoring",
       ],
-    },
-    {
-      icon: Database,
-      title: "API Testing",
-      description:
-        "Validate your APIs with thorough testing protocols that ensure reliability and security.",
-      features: [
-        "REST/GraphQL testing",
-        "Security validation",
-        "Performance benchmarking",
-      ],
-    },
-    {
-      icon: Shield,
-      title: "Security Testing",
-      description:
-        "Identify vulnerabilities and ensure your applications meet the highest security standards.",
-      features: [
-        "Penetration testing",
-        "Vulnerability scanning",
-        "Compliance validation",
-      ],
+      color: "purple",
+      // stats: { capacity: "10M+ Users", uptime: "99.9%" },
     },
   ];
+
+  const getColorClasses = (color) => {
+    const colors = {
+      blue: {
+        bg: "from-brand-sage-100/30 to-brand-sage-200/20",
+        border: "border-brand-sage-200/40 hover:border-brand-sage-300/60",
+        icon: "text-brand-sage-600",
+        iconBg: "bg-brand-sage-100/50",
+        accent: "bg-gradient-to-r from-brand-sage-500 to-brand-sage-600",
+        text: "text-brand-sage-600",
+        glow: "group-hover:glow-sage",
+      },
+      emerald: {
+        bg: "from-brand-lavender-100/30 to-brand-lavender-200/20",
+        border: "border-brand-lavender-200/40 hover:border-brand-lavender-300/60",
+        icon: "text-brand-lavender-600",
+        iconBg: "bg-brand-lavender-100/50",
+        accent: "bg-gradient-to-r from-brand-lavender-500 to-brand-lavender-600",
+        text: "text-brand-lavender-600",
+        glow: "group-hover:glow-lavender",
+      },
+      purple: {
+        bg: "from-brand-coral-100/30 to-brand-coral-200/20",
+        border: "border-brand-coral-200/40 hover:border-brand-coral-300/60",
+        icon: "text-brand-coral-600",
+        iconBg: "bg-brand-coral-100/50",
+        accent: "bg-gradient-to-r from-brand-coral-500 to-brand-coral-600",
+        text: "text-brand-coral-600",
+        glow: "group-hover:glow-coral",
+      },
+    };
+    return colors[color];
+  };
+
   return (
-    <section id="services" className="py-20 relative cv-auto bg-slate-50">
-      <div className="container mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2
-            className="text-4xl md:text-5xl font-bold mb-6 text-sky-600 animate-fade-in-up"
-            style={{ animationDelay: "0.2s" }}
-          >
+    <section
+      id="services"
+      className="py-16 bg-gradient-sage relative overflow-hidden"
+    >
+      {/* Professional Background Elements */}
+      <div className="absolute inset-0">
+        <div className="absolute top-20 left-20 w-80 h-80 bg-brand-sage-200/20 rounded-full blur-3xl animate-gentle-float" />
+        <div className="absolute bottom-20 right-20 w-96 h-96 bg-brand-lavender-200/20 rounded-full blur-3xl animate-gentle-float" style={{ animationDelay: '2s' }} />
+        <div className="absolute top-1/2 left-1/3 w-72 h-72 bg-brand-coral-200/15 rounded-full blur-3xl animate-gentle-float" style={{ animationDelay: '4s' }} />
+        <div className="absolute top-10 right-1/4 w-64 h-64 bg-brand-sage-300/10 rounded-full blur-3xl" />
+      </div>
+
+      <div className="container mx-auto px-6 relative z-10">
+        {/* Header */}
+        <div className="text-center mb-12 animate-fade-in-up">
+          <div className="inline-flex items-center gap-2 glass-professional px-4 py-2 rounded-full text-xs text-brand-sage-700 mb-4 font-medium glow-sage">
+            <Shield className="w-3 h-3" />
+            Quality Assurance Excellence
+            <div className="w-1.5 h-1.5 bg-brand-sage-500 rounded-full animate-pulse" />
+          </div>
+          
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 gradient-text-professional leading-tight">
             Our Services
           </h2>
-          <p
-            className="text-xl text-slate-600 max-w-3xl mx-auto animate-fade-in-up"
-            style={{ animationDelay: "0.4s" }}
-          >
-            Comprehensive testing solutions designed for the future of software
-            development
+          
+          <p className="text-sm md:text-base text-brand-neutral-600 max-w-2xl mx-auto leading-relaxed font-medium">
+            Comprehensive testing solutions that ensure your software meets the
+            <span className="text-brand-sage-600 font-semibold"> highest standards</span> of quality, 
+            performance, and reliability
           </p>
+          
+          <div className="mt-4 flex justify-center">
+            <div className="w-16 h-0.5 bg-gradient-to-r from-brand-sage-500 via-brand-lavender-500 to-brand-coral-500 rounded-full" />
+          </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {services.map((service, index) => (
-            <div
-              key={index}
-              className={`group bg-white border-2 rounded-2xl p-8 transition-all duration-500 transform hover:-translate-y-2 animate-fade-in-up shadow-lg hover:shadow-xl ${
-                index % 3 === 0
-                  ? "border-sky-200 hover:border-sky-300"
-                  : index % 3 === 1
-                  ? "border-emerald-200 hover:border-emerald-300"
-                  : "border-violet-200 hover:border-violet-300"
-              }`}
-              style={{
-                animationDelay: `${0.6 + index * 0.2}s`,
-              }}
-            >
-              <div className="mb-6">
-                <div className="relative w-16 h-16 mx-auto">
-                  <service.icon
-                    className={`w-16 h-16 transition-colors duration-300 ${
-                      index % 3 === 0
-                        ? "text-sky-500"
-                        : index % 3 === 1
-                        ? "text-emerald-500"
-                        : "text-violet-500"
-                    }`}
-                  />
+
+        {/* Services Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
+          {services.map((service, index) => {
+            const colors = getColorClasses(service.color);
+            return (
+              <div
+                key={index}
+                className={`group relative glass-professional border ${colors.border} rounded-2xl p-6 transition-all duration-700 hover:scale-[1.02] hover:-translate-y-2 shadow-soft hover:shadow-soft-lg ${colors.glow} animate-fade-in-up`}
+                style={{
+                  animationDelay: `${index * 0.2}s`,
+                }}
+              >
+                {/* Gradient Background */}
+                <div
+                  className={`absolute inset-0 bg-gradient-to-br ${colors.bg} rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700`}
+                />
+
+                {/* Content */}
+                <div className="relative z-10">
+                  {/* Icon */}
                   <div
-                    className={`absolute inset-0 blur-xl rounded-full transition-colors duration-300 ${
-                      index % 3 === 0
-                        ? "bg-sky-100"
-                        : index % 3 === 1
-                        ? "bg-emerald-100"
-                        : "bg-violet-100"
-                    }`}
-                  />
+                    className={`w-14 h-14 ${colors.iconBg} rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-all duration-500 border border-white/20`}
+                  >
+                    <service.icon className={`w-7 h-7 ${colors.icon} transition-transform duration-500 group-hover:rotate-12`} />
+                  </div>
+
+                  {/* Title & Description */}
+                  <h3 className="text-lg font-bold text-brand-neutral-800 mb-3 group-hover:text-brand-neutral-900 transition-colors">
+                    {service.title}
+                  </h3>
+                  <p className="text-brand-neutral-600 mb-4 leading-relaxed text-sm font-medium">
+                    {service.description}
+                  </p>
+
+                  {/* Features */}
+                  <div className="space-y-2 mb-4">
+                    {service.features.map((feature, i) => (
+                      <div key={i} className="flex items-center text-brand-neutral-700 group-hover:translate-x-1 transition-transform duration-300" style={{ transitionDelay: `${i * 0.1}s` }}>
+                        <CheckCircle
+                          className={`w-4 h-4 ${colors.text} mr-2 flex-shrink-0 transition-colors duration-300`}
+                        />
+                        <span className="font-medium text-xs">{feature}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* CTA Button */}
+                  <div className="pt-3 border-t border-brand-neutral-200/30 group-hover:border-brand-neutral-200/50 transition-colors">
+                    <button className={`w-full px-4 py-2 rounded-lg font-medium transition-all duration-300 ${colors.accent} text-white hover:shadow-lg transform group-hover:scale-105 text-xs`}>
+                      Learn More
+                    </button>
+                  </div>
                 </div>
+
+                {/* Decorative corner accent */}
+                <div className={`absolute top-3 right-3 w-2 h-2 ${colors.accent} rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 animate-pulse`} />
               </div>
-              <h3 className="text-2xl font-bold text-slate-800 mb-4 transition-colors duration-300">
-                {service.title}
-              </h3>
-              <p className="text-slate-600 mb-6 leading-relaxed">
-                {service.description}
-              </p>
-              <ul className="space-y-2">
-                {service.features.map((f, i) => (
-                  <li key={i} className="flex items-center text-slate-600">
-                    <div
-                      className={`w-2 h-2 rounded-full mr-3 ${
-                        index % 3 === 0
-                          ? "bg-sky-500"
-                          : index % 3 === 1
-                          ? "bg-emerald-500"
-                          : "bg-violet-500"
-                      }`}
-                    />
-                    {f}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+            );
+          })}
         </div>
+
+        {/* Bottom CTA */}
+        {/* <div className="text-center">
+          <div className="bg-gradient-to-r from-slate-900 to-slate-700 text-white rounded-2xl p-8 max-w-4xl mx-auto">
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <Zap className="w-5 h-5 text-yellow-400" />
+              <span className="text-yellow-400 font-medium">
+                End-to-End Quality Assurance
+              </span>
+            </div>
+            <h3 className="text-2xl md:text-3xl font-bold mb-4">
+              Ready to Elevate Your Software Quality?
+            </h3>
+            <p className="text-slate-300 mb-6 max-w-2xl mx-auto">
+              From manual exploratory testing to automated CI/CD pipelines and
+              comprehensive performance analysis - we've got your quality
+              assurance needs covered.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <button className="px-8 py-3 bg-white text-slate-900 rounded-xl font-semibold hover:bg-slate-100 transition-colors">
+                Get Started Today
+              </button>
+              <button className="px-8 py-3 border border-slate-400 text-white rounded-xl font-semibold hover:bg-white/10 transition-colors">
+                View Case Studies
+              </button>
+            </div>
+          </div>
+        </div> */}
       </div>
+
+      <style jsx>{`
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .animate-fade-in-up {
+          animation: fadeInUp 0.8s ease-out forwards;
+        }
+      `}</style>
     </section>
   );
 };
+
 export default Services;

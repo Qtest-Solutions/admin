@@ -6,30 +6,33 @@ import { motion } from "framer-motion";
 const banners = [
   {
     title: "Qtest Software",
-    highlight: "Solution LLP",
-    desc: "Empowering startups with professional software testing services and training the next generation of QA professionals.",
-    primary: "Start Your Journey",
-    secondary: "Learn More",
+    highlight: "Advanced Quality Assurance",
+    desc: "Advanced AI-powered testing solutions that predict performance metrics, defect progression, and resource optimization for superior quality assurance.",
+    primary: "Learn More",
+    secondary: "How It Works",
     accent: "text-sky-400",
     image: "https://picsum.photos/id/1015/1920/1080",
+    subBenefits: ["AI-Powered Analysis", "Predictive Testing"],
   },
   {
     title: "Software Testing Solutions",
-    highlight: "Reliable & Scalable",
-    desc: "We provide end-to-end software testing solutions, including functional, performance, and automation testing, tailored to your business needs.",
+    highlight: "Advanced Outcome Predictions",
+    desc: "End-to-end testing solutions with predictive analytics that identify system behaviors, performance issues, and potential failures before user impact.",
     primary: "Discover Solutions",
     secondary: "How It Works",
     accent: "text-emerald-400",
     image: "https://picsum.photos/id/1016/1920/1080",
+    subBenefits: ["Performance Prediction", "Failure Prevention"],
   },
   {
     title: "CAE Application Testing",
-    highlight: "Precision Services",
-    desc: "Our CAE testing services ensure your engineering and simulation applications deliver accurate results, enhancing efficiency and reliability.",
+    highlight: "Smart Testing Solutions",
+    desc: "Intelligent CAE testing platform using machine learning to predict simulation accuracy, identify computational errors, and optimize engineering workflows.",
     primary: "Get a Demo",
     secondary: "Learn More",
     accent: "text-violet-400",
     image: "https://picsum.photos/id/1018/1920/1080",
+    subBenefits: ["ML-Driven Accuracy", "Resource Optimization"],
   },
 ];
 
@@ -47,65 +50,92 @@ const HeroSlider = () => {
   return (
     <section
       id="home"
-      className="relative h-screen w-full overflow-hidden font-gilroy"
+      className="relative h-[70vh] w-full overflow-hidden"
     >
-      {/* Background images */}
-      <div className="absolute inset-0 w-full h-full">
-        {banners.map((banner, i) => (
-          <motion.img
-            key={i}
-            src={banner.image}
-            alt={banner.title}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: i === index ? 1 : 0 }}
-            transition={{ duration: 1, ease: "easeInOut" }}
-            className="absolute inset-0 w-full h-full object-cover"
-          />
-        ))}
-        <div className="absolute inset-0 bg-black/50" />
-      </div>
+      {/* Background */}
+      <div className="absolute inset-0 bg-gradient-professional" />
 
-      {/* Banner Content */}
-      <div className="relative z-10 flex items-center justify-start w-[500px] h-full">
-        <div className="container mx-auto px-4">
-          <div className="max-w-2xl text-left rounded-3xl bg-white/20 backdrop-blur-xl border border-white/20 shadow-2xl p-6 md:p-8">
-            <h1 className="text-3xl md:text-4xl font-extrabold leading-tight text-white drop-shadow-lg">
-              {banners[index].title}
-              <span
-                className={`${banners[index].accent} block mt-1 text-2xl md:text-3xl`}
-              >
-                {banners[index].highlight}
-              </span>
-            </h1>
-            <p className="mt-3 text-sm md:text-base text-slate-200 leading-relaxed">
-              {banners[index].desc}
-            </p>
-            <div className="flex flex-col sm:flex-row items-center md:items-start justify-start gap-3 pt-4">
-              <button className="group text-white px-5 py-2.5 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg bg-slate-800/90 hover:bg-slate-900 text-sm md:text-base">
-                {banners[index].primary}
-                <ArrowRight className="inline-block ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
-              </button>
-              <button className="border-2 border-white/80 px-5 py-2.5 rounded-full font-semibold transition-all duration-300 text-white text-sm md:text-base hover:bg-white/10 hover:shadow-md">
-                {banners[index].secondary}
-              </button>
+      {/* Split Layout Content */}
+      <div className="relative z-10 h-full">
+        <div className="container mx-auto px-6 h-full">
+          <div className="grid lg:grid-cols-2 gap-4 lg:gap-6 h-full items-center">
+            {/* Left Side - Banner Image */}
+            <div className="flex items-center justify-center p-2 lg:p-4 order-2 lg:order-1">
+              <div className="relative w-full max-w-md">
+                <motion.img
+                  key={index}
+                  src={banners[index].image}
+                  alt={banners[index].title}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.6, ease: "easeOut" }}
+                  className="w-full h-auto rounded-2xl shadow-professional object-cover"
+                />
+
+                {/* Image overlay with gradient */}
+                <div className="absolute inset-0 bg-gradient-to-tr from-brand-sage-500/10 to-brand-lavender-500/10 rounded-2xl" />
+              </div>
+            </div>
+
+            {/* Right Side - Content */}
+            <div className="flex flex-col justify-center space-y-2 lg:space-y-3 animate-fade-in-up order-1 lg:order-2 px-2 lg:px-0">
+              
+              {/* Title */}
+              <div>
+                <h1 className="text-xl md:text-2xl lg:text-3xl font-bold leading-tight mb-2">
+                  <span className="gradient-text-professional">
+                    {banners[index].highlight}
+                  </span>
+                </h1>
+                <div className="w-12 h-0.5 bg-gradient-to-r from-brand-sage-500 to-brand-lavender-500 rounded-full mb-2" />
+              </div>
+              
+              {/* Description */}
+              <p className="text-xs md:text-sm text-brand-neutral-600 leading-relaxed max-w-sm font-medium">
+                {banners[index].desc}
+              </p>
+              
+              {/* Sub-benefits */}
+              <div className="space-y-1">
+                {banners[index].subBenefits.map((benefit, i) => (
+                  <div key={i} className="flex items-center gap-1.5">
+                    <div className={`w-2 h-2 rounded-full ${
+                      i === 0 ? 'bg-brand-sage-500' : 'bg-brand-lavender-500'
+                    }`} />
+                    <span className="text-brand-neutral-700 font-medium text-xs tracking-wide uppercase">
+                      {benefit}
+                    </span>
+                  </div>
+                ))}
+              </div>
+              
+              {/* CTA Button */}
+              <div className="pt-1">
+                <button className="group bg-brand-sage-800 hover:bg-brand-sage-900 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 flex items-center gap-1.5 shadow-soft hover:shadow-soft-lg hover:scale-105 text-xs">
+                  {banners[index].primary}
+                  <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform duration-300" />
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
       {/* Slider Controls */}
-      <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-2 z-20">
-        {banners.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => setIndex(i)}
-            className={`w-3 h-3 rounded-full transition-all duration-300 ${
-              i === index
-                ? "bg-white scale-125"
-                : "bg-white/50 hover:bg-white/80"
-            }`}
-          ></button>
-        ))}
+      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-20">
+        <div className="flex items-center space-x-2 glass-professional px-3 py-2 rounded-xl">
+          {banners.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setIndex(i)}
+              className={`transition-all duration-500 rounded-full ${
+                i === index
+                  ? "w-6 h-2 bg-gradient-to-r from-brand-sage-500 to-brand-lavender-500 scale-110"
+                  : "w-2 h-2 bg-brand-neutral-400 hover:bg-brand-sage-400"
+              }`}
+            ></button>
+          ))}
+        </div>
       </div>
     </section>
   );

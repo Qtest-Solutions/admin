@@ -9,7 +9,7 @@ import ClientBackground from "../components/ClientBackground";
 
 export default function HomePage() {
   return (
-    <div className="relative min-h-screen">
+    <div className="relative min-h-screen mt-[80px]">
       {/* <ClientBackground /> */}
       <Header />
       <Hero />
