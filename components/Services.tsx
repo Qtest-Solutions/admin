@@ -1,8 +1,39 @@
 "use client";
-import { User, Cog, Gauge, CheckCircle, Zap, Shield } from "lucide-react";
+import {
+  User,
+  Cog,
+  Gauge,
+  CheckCircle,
+  Shield,
+  LucideIcon,
+} from "lucide-react";
 
-const Services = () => {
-  const services = [
+// -------------------- Types --------------------
+type ServiceColor = "blue" | "emerald" | "purple";
+
+interface Service {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+  features: string[];
+  color: ServiceColor;
+  // Uncomment if you bring stats back:
+  // stats?: Record<string, string>;
+}
+
+interface ColorClasses {
+  bg: string;
+  border: string;
+  icon: string;
+  iconBg: string;
+  accent: string;
+  text: string;
+  glow: string;
+}
+
+// -------------------- Component --------------------
+const Services: React.FC = () => {
+  const services: Service[] = [
     {
       icon: User,
       title: "Manual Testing",
@@ -15,7 +46,6 @@ const Services = () => {
         "Accessibility Testing",
       ],
       color: "blue",
-      // stats: { accuracy: "99.8%", coverage: "Comprehensive" },
     },
     {
       icon: Cog,
@@ -29,7 +59,6 @@ const Services = () => {
         "API Test Automation",
       ],
       color: "emerald",
-      // stats: { speed: "10x Faster", coverage: "95% Code Coverage" },
     },
     {
       icon: Gauge,
@@ -43,12 +72,11 @@ const Services = () => {
         "Performance Monitoring",
       ],
       color: "purple",
-      // stats: { capacity: "10M+ Users", uptime: "99.9%" },
     },
   ];
 
-  const getColorClasses = (color) => {
-    const colors = {
+  const getColorClasses = (color: ServiceColor): ColorClasses => {
+    const colors: Record<ServiceColor, ColorClasses> = {
       blue: {
         bg: "from-brand-sage-100/30 to-brand-sage-200/20",
         border: "border-brand-sage-200/40 hover:border-brand-sage-300/60",
@@ -60,10 +88,12 @@ const Services = () => {
       },
       emerald: {
         bg: "from-brand-lavender-100/30 to-brand-lavender-200/20",
-        border: "border-brand-lavender-200/40 hover:border-brand-lavender-300/60",
+        border:
+          "border-brand-lavender-200/40 hover:border-brand-lavender-300/60",
         icon: "text-brand-lavender-600",
         iconBg: "bg-brand-lavender-100/50",
-        accent: "bg-gradient-to-r from-brand-lavender-500 to-brand-lavender-600",
+        accent:
+          "bg-gradient-to-r from-brand-lavender-500 to-brand-lavender-600",
         text: "text-brand-lavender-600",
         glow: "group-hover:glow-lavender",
       },
@@ -85,11 +115,17 @@ const Services = () => {
       id="services"
       className="py-16 bg-gradient-sage relative overflow-hidden"
     >
-      {/* Professional Background Elements */}
+      {/* Background blobs */}
       <div className="absolute inset-0">
         <div className="absolute top-20 left-20 w-80 h-80 bg-brand-sage-200/20 rounded-full blur-3xl animate-gentle-float" />
-        <div className="absolute bottom-20 right-20 w-96 h-96 bg-brand-lavender-200/20 rounded-full blur-3xl animate-gentle-float" style={{ animationDelay: '2s' }} />
-        <div className="absolute top-1/2 left-1/3 w-72 h-72 bg-brand-coral-200/15 rounded-full blur-3xl animate-gentle-float" style={{ animationDelay: '4s' }} />
+        <div
+          className="absolute bottom-20 right-20 w-96 h-96 bg-brand-lavender-200/20 rounded-full blur-3xl animate-gentle-float"
+          style={{ animationDelay: "2s" }}
+        />
+        <div
+          className="absolute top-1/2 left-1/3 w-72 h-72 bg-brand-coral-200/15 rounded-full blur-3xl animate-gentle-float"
+          style={{ animationDelay: "4s" }}
+        />
         <div className="absolute top-10 right-1/4 w-64 h-64 bg-brand-sage-300/10 rounded-full blur-3xl" />
       </div>
 
@@ -101,17 +137,20 @@ const Services = () => {
             Quality Assurance Excellence
             <div className="w-1.5 h-1.5 bg-brand-sage-500 rounded-full animate-pulse" />
           </div>
-          
+
           <h2 className="text-3xl md:text-4xl font-bold mb-4 gradient-text-professional leading-tight">
             Our Services
           </h2>
-          
+
           <p className="text-sm md:text-base text-brand-neutral-600 max-w-2xl mx-auto leading-relaxed font-medium">
             Comprehensive testing solutions that ensure your software meets the
-            <span className="text-brand-sage-600 font-semibold"> highest standards</span> of quality, 
-            performance, and reliability
+            <span className="text-brand-sage-600 font-semibold">
+              {" "}
+              highest standards
+            </span>{" "}
+            of quality, performance, and reliability
           </p>
-          
+
           <div className="mt-4 flex justify-center">
             <div className="w-16 h-0.5 bg-gradient-to-r from-brand-sage-500 via-brand-lavender-500 to-brand-coral-500 rounded-full" />
           </div>
@@ -140,7 +179,9 @@ const Services = () => {
                   <div
                     className={`w-14 h-14 ${colors.iconBg} rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-all duration-500 border border-white/20`}
                   >
-                    <service.icon className={`w-7 h-7 ${colors.icon} transition-transform duration-500 group-hover:rotate-12`} />
+                    <service.icon
+                      className={`w-7 h-7 ${colors.icon} transition-transform duration-500 group-hover:rotate-12`}
+                    />
                   </div>
 
                   {/* Title & Description */}
@@ -154,7 +195,11 @@ const Services = () => {
                   {/* Features */}
                   <div className="space-y-2 mb-4">
                     {service.features.map((feature, i) => (
-                      <div key={i} className="flex items-center text-brand-neutral-700 group-hover:translate-x-1 transition-transform duration-300" style={{ transitionDelay: `${i * 0.1}s` }}>
+                      <div
+                        key={i}
+                        className="flex items-center text-brand-neutral-700 group-hover:translate-x-1 transition-transform duration-300"
+                        style={{ transitionDelay: `${i * 0.1}s` }}
+                      >
                         <CheckCircle
                           className={`w-4 h-4 ${colors.text} mr-2 flex-shrink-0 transition-colors duration-300`}
                         />
@@ -165,46 +210,22 @@ const Services = () => {
 
                   {/* CTA Button */}
                   <div className="pt-3 border-t border-brand-neutral-200/30 group-hover:border-brand-neutral-200/50 transition-colors">
-                    <button className={`w-full px-4 py-2 rounded-lg font-medium transition-all duration-300 ${colors.accent} text-white hover:shadow-lg transform group-hover:scale-105 text-xs`}>
+                    <button
+                      className={`w-full px-4 py-2 rounded-lg font-medium transition-all duration-300 ${colors.accent} text-white hover:shadow-lg transform group-hover:scale-105 text-xs`}
+                    >
                       Learn More
                     </button>
                   </div>
                 </div>
 
                 {/* Decorative corner accent */}
-                <div className={`absolute top-3 right-3 w-2 h-2 ${colors.accent} rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 animate-pulse`} />
+                <div
+                  className={`absolute top-3 right-3 w-2 h-2 ${colors.accent} rounded-full opacity-0 group-hover:opacity-100 transition-all duration-500 animate-pulse`}
+                />
               </div>
             );
           })}
         </div>
-
-        {/* Bottom CTA */}
-        {/* <div className="text-center">
-          <div className="bg-gradient-to-r from-slate-900 to-slate-700 text-white rounded-2xl p-8 max-w-4xl mx-auto">
-            <div className="flex items-center justify-center gap-2 mb-4">
-              <Zap className="w-5 h-5 text-yellow-400" />
-              <span className="text-yellow-400 font-medium">
-                End-to-End Quality Assurance
-              </span>
-            </div>
-            <h3 className="text-2xl md:text-3xl font-bold mb-4">
-              Ready to Elevate Your Software Quality?
-            </h3>
-            <p className="text-slate-300 mb-6 max-w-2xl mx-auto">
-              From manual exploratory testing to automated CI/CD pipelines and
-              comprehensive performance analysis - we've got your quality
-              assurance needs covered.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <button className="px-8 py-3 bg-white text-slate-900 rounded-xl font-semibold hover:bg-slate-100 transition-colors">
-                Get Started Today
-              </button>
-              <button className="px-8 py-3 border border-slate-400 text-white rounded-xl font-semibold hover:bg-white/10 transition-colors">
-                View Case Studies
-              </button>
-            </div>
-          </div>
-        </div> */}
       </div>
 
       <style jsx>{`
