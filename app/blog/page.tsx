@@ -1,14 +1,13 @@
-import Training from "../../components/Training";
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
-import ClientBackground from "../../components/ClientBackground";
+import Blog from "../../components/Blog";
 
-export default function TrainingPage() {
+export default function BlogPage() {
   return (
     <div className="relative min-h-screen  bg-gradient-sage">
       <Header />
       <main className="pt-20">
-        <Training />
+        <Blog />
       </main>
       <Footer />
     </div>

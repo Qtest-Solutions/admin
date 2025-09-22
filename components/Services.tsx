@@ -138,7 +138,7 @@ const Services: React.FC = () => {
             <div className="w-1.5 h-1.5 bg-brand-sage-500 rounded-full animate-pulse" />
           </div>
 
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 gradient-text-professional leading-tight">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-black leading-tight">
             Our Services
           </h2>
 

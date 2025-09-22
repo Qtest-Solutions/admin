@@ -1,144 +1,238 @@
 "use client";
-import { useState, useEffect } from "react";
-import { ArrowRight } from "lucide-react";
-import { motion } from "framer-motion";
 
-const banners = [
+import React, { useState, useEffect, useRef } from "react";
+import { ArrowRight } from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
+
+interface Banner {
+  title: string;
+  highlight: string;
+  desc: string;
+  primary: string;
+  accent: string;
+}
+
+const banners: Banner[] = [
   {
     title: "Qtest Software",
-    highlight: "Advanced Quality Assurance",
-    desc: "Advanced AI-powered testing solutions that predict performance metrics, defect progression, and resource optimization for superior quality assurance.",
-    primary: "Learn More",
-    secondary: "How It Works",
+    highlight: "Qtest Software Solutions LLP",
+    desc: "Empowering startups with professional software testing services and training the next generation of quality assurance professionals.",
+    primary: "Explore us",
     accent: "text-sky-400",
-    image: "https://picsum.photos/id/1015/1920/1080",
-    subBenefits: ["AI-Powered Analysis", "Predictive Testing"],
   },
-  {
-    title: "Software Testing Solutions",
-    highlight: "Advanced Outcome Predictions",
-    desc: "End-to-end testing solutions with predictive analytics that identify system behaviors, performance issues, and potential failures before user impact.",
-    primary: "Discover Solutions",
-    secondary: "How It Works",
-    accent: "text-emerald-400",
-    image: "https://picsum.photos/id/1016/1920/1080",
-    subBenefits: ["Performance Prediction", "Failure Prevention"],
-  },
-  {
-    title: "CAE Application Testing",
-    highlight: "Smart Testing Solutions",
-    desc: "Intelligent CAE testing platform using machine learning to predict simulation accuracy, identify computational errors, and optimize engineering workflows.",
-    primary: "Get a Demo",
-    secondary: "Learn More",
-    accent: "text-violet-400",
-    image: "https://picsum.photos/id/1018/1920/1080",
-    subBenefits: ["ML-Driven Accuracy", "Resource Optimization"],
-  },
+  // {
+  //   title: "Software Testing Solutions",
+  //   highlight: "Advanced Outcome Predictions",
+  //   desc: "End-to-end testing solutions with predictive analytics that identify system behaviors, performance issues, and potential failures before user impact.",
+  //   primary: "Discover Solutions",
+  //   accent: "text-emerald-400",
+  // },
+  // {
+  //   title: "CAE Application Testing",
+  //   highlight: "Smart Testing Solutions",
+  //   desc: "Intelligent CAE testing platform using machine learning to predict simulation accuracy, identify computational errors, and optimize engineering workflows.",
+  //   primary: "Get a Demo",
+  //   accent: "text-violet-400",
+  // },
 ];
 
-const HeroSlider = () => {
-  const [index, setIndex] = useState(0);
+// Light modern gradient backgrounds
+const modernGradients = [
+  "linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #bae6fd 100%)", // Light sky blue
+  "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%)", // Light slate
+  "linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 50%, #99f6e4 100%)", // Light teal
+  "linear-gradient(135deg, #faf5ff 0%, #f3e8ff 50%, #e9d5ff 100%)", // Light lavender
+];
 
-  // Auto-slide every 6s
+export default function HeroSlider() {
+  const [index, setIndex] = useState<number>(0);
+  const [isPaused, setIsPaused] = useState<boolean>(false);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const containerRef = useRef<HTMLElement | null>(null);
+  const startX = useRef<number>(0);
+  const reduced = useReducedMotion();
+
+  const slideCount = banners.length;
+  const isSingleSlide = slideCount <= 1;
+  const AUTOPLAY_MS = 2000;
+
+  // Smooth scroll to services section
+  const scrollToServices = () => {
+    const servicesSection = document.getElementById("services");
+    if (servicesSection) {
+      servicesSection.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  };
+
+  // Get modern gradient based on index
+  const getGradient = (slideIndex: number) => {
+    return modernGradients[slideIndex % modernGradients.length];
+  };
+
+  // autoplay effect - only run if multiple slides
   useEffect(() => {
-    const interval = setInterval(() => {
-      setIndex((prev) => (prev + 1) % banners.length);
-    }, 6000);
-    return () => clearInterval(interval);
-  }, []);
+    if (reduced || isSingleSlide) return;
+    if (isPaused) {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+      return;
+    }
+    intervalRef.current = setInterval(() => {
+      setIndex((p) => (p + 1) % slideCount);
+    }, AUTOPLAY_MS);
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [isPaused, slideCount, reduced, isSingleSlide]);
+
+  // Pause handlers - only for multiple slides
+  const handleMouseEnter = () => !isSingleSlide && setIsPaused(true);
+  const handleMouseLeave = () => !isSingleSlide && setIsPaused(false);
+  const handleFocusIn = () => !isSingleSlide && setIsPaused(true);
+  const handleFocusOut = () => !isSingleSlide && setIsPaused(false);
+
+  // Keyboard nav - only for multiple slides
+  useEffect(() => {
+    if (isSingleSlide) return;
+
+    const el = containerRef.current;
+    if (!el) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft")
+        setIndex((p) => (p - 1 + slideCount) % slideCount);
+      if (e.key === "ArrowRight") setIndex((p) => (p + 1) % slideCount);
+    };
+    el.addEventListener("keydown", onKey);
+    return () => el.removeEventListener("keydown", onKey);
+  }, [slideCount, isSingleSlide]);
+
+  // Touch gestures - only for multiple slides
+  const onTouchStart = (e: React.TouchEvent) => {
+    if (isSingleSlide) return;
+    startX.current = e.touches[0].clientX;
+  };
+
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (isSingleSlide) return;
+    const endX = e.changedTouches[0].clientX;
+    const diff = endX - startX.current;
+    const threshold = 40;
+    if (Math.abs(diff) > threshold) {
+      if (diff > 0) setIndex((p) => (p - 1 + slideCount) % slideCount);
+      else setIndex((p) => (p + 1) % slideCount);
+    }
+  };
+
+  const headerVariants = {
+    hidden: { opacity: 0, y: 10 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+  };
+
+  const textVariants = (delay = 0.05) => ({
+    hidden: { opacity: 0, y: 6 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.45, delay } },
+  });
 
   return (
     <section
       id="home"
-      className="relative h-[70vh] w-full overflow-hidden"
+      ref={containerRef}
+      className={`relative h-screen w-full overflow-hidden ${
+        isSingleSlide ? "static-hero" : "carousel-hero"
+      }`}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onFocus={handleFocusIn}
+      onBlur={handleFocusOut}
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+      tabIndex={isSingleSlide ? -1 : 0}
+      aria-roledescription={isSingleSlide ? undefined : "carousel"}
+      aria-label={isSingleSlide ? "Hero section" : "Hero slider"}
     >
-      {/* Background */}
-      <div className="absolute inset-0 bg-gradient-professional" />
+      {/* Light modern gradient backgrounds */}
+      <div className="absolute inset-0">
+        {banners.map((_, i) => (
+          <div
+            key={i}
+            className={`absolute inset-0 w-full h-full transition-all duration-1000 ease-in-out ${
+              i === index ? "opacity-100" : "opacity-0"
+            }`}
+            style={{ background: getGradient(i) }}
+          />
+        ))}
+      </div>
 
-      {/* Split Layout Content */}
-      <div className="relative z-10 h-full">
-        <div className="container mx-auto px-6 h-full">
-          <div className="grid lg:grid-cols-2 gap-4 lg:gap-6 h-full items-center">
-            {/* Left Side - Banner Image */}
-            <div className="flex items-center justify-center p-2 lg:p-4 order-2 lg:order-1">
-              <div className="relative w-full max-w-md">
-                <motion.img
-                  key={index}
-                  src={banners[index].image}
-                  alt={banners[index].title}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.6, ease: "easeOut" }}
-                  className="w-full h-auto rounded-2xl shadow-professional object-cover"
-                />
+      {/* Subtle overlay for depth */}
+      <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-white/5" />
 
-                {/* Image overlay with gradient */}
-                <div className="absolute inset-0 bg-gradient-to-tr from-brand-sage-500/10 to-brand-lavender-500/10 rounded-2xl" />
-              </div>
-            </div>
+      {/* Content centered */}
+      <div className="relative z-10 h-full flex items-center justify-center">
+        <div className="container mx-auto px-6 h-full flex items-center justify-center">
+          <div className="flex flex-col justify-center items-center space-y-6 lg:space-y-8 max-w-2xl text-center">
+            <motion.div
+              initial={reduced ? "show" : "hidden"}
+              animate="show"
+              variants={headerVariants}
+            >
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-gray-900 pt-4">
+                {banners[index].highlight}
+              </h1>
+              <div className="w-20 h-1 bg-gray-700/30 rounded-full mt-4 mx-auto" />
+            </motion.div>
 
-            {/* Right Side - Content */}
-            <div className="flex flex-col justify-center space-y-2 lg:space-y-3 animate-fade-in-up order-1 lg:order-2 px-2 lg:px-0">
-              
-              {/* Title */}
-              <div>
-                <h1 className="text-xl md:text-2xl lg:text-3xl font-bold leading-tight mb-2">
-                  <span className="gradient-text-professional">
-                    {banners[index].highlight}
-                  </span>
-                </h1>
-                <div className="w-12 h-0.5 bg-gradient-to-r from-brand-sage-500 to-brand-lavender-500 rounded-full mb-2" />
-              </div>
-              
-              {/* Description */}
-              <p className="text-xs md:text-sm text-brand-neutral-600 leading-relaxed max-w-sm font-medium">
-                {banners[index].desc}
-              </p>
-              
-              {/* Sub-benefits */}
-              <div className="space-y-1">
-                {banners[index].subBenefits.map((benefit, i) => (
-                  <div key={i} className="flex items-center gap-1.5">
-                    <div className={`w-2 h-2 rounded-full ${
-                      i === 0 ? 'bg-brand-sage-500' : 'bg-brand-lavender-500'
-                    }`} />
-                    <span className="text-brand-neutral-700 font-medium text-xs tracking-wide uppercase">
-                      {benefit}
-                    </span>
-                  </div>
-                ))}
-              </div>
-              
-              {/* CTA Button */}
-              <div className="pt-1">
-                <button className="group bg-brand-sage-800 hover:bg-brand-sage-900 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 flex items-center gap-1.5 shadow-soft hover:shadow-soft-lg hover:scale-105 text-xs">
-                  {banners[index].primary}
-                  <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform duration-300" />
-                </button>
-              </div>
-            </div>
+            <motion.p
+              initial={reduced ? "show" : "hidden"}
+              animate="show"
+              variants={textVariants(0.08)}
+              className="text-lg md:text-xl text-gray-700 leading-relaxed max-w-lg"
+            >
+              {banners[index].desc}
+            </motion.p>
+
+            {/* CTA button with scroll functionality */}
+            <motion.div
+              className="pt-6"
+              initial={reduced ? "show" : "hidden"}
+              animate="show"
+              variants={textVariants(0.12)}
+            >
+              <button
+                onClick={scrollToServices}
+                className="group relative px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-purple-600 hover:to-blue-600 text-white font-semibold rounded-full transition-all duration-500 flex items-center gap-3 shadow-lg hover:shadow-blue-500/25 hover:scale-105 text-base overflow-hidden border border-white/20 backdrop-blur-sm"
+                aria-label={`${banners[index].primary} - Scroll to services section`}
+              >
+                <span className="relative z-10">{banners[index].primary}</span>
+                <div className="relative z-10 w-7 h-7 bg-white/20 rounded-full flex items-center justify-center group-hover:bg-white/30 transition-all duration-300 group-hover:rotate-45">
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-all duration-300" />
+                </div>
+              </button>
+            </motion.div>
           </div>
         </div>
       </div>
 
-      {/* Slider Controls */}
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-20">
-        <div className="flex items-center space-x-2 glass-professional px-3 py-2 rounded-xl">
-          {banners.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setIndex(i)}
-              className={`transition-all duration-500 rounded-full ${
-                i === index
-                  ? "w-6 h-2 bg-gradient-to-r from-brand-sage-500 to-brand-lavender-500 scale-110"
-                  : "w-2 h-2 bg-brand-neutral-400 hover:bg-brand-sage-400"
-              }`}
-            ></button>
-          ))}
+      {/* Slider controls - only show if multiple slides */}
+      {!isSingleSlide && (
+        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-20">
+          <div className="flex items-center space-x-2 bg-white/80 backdrop-blur-md px-3 py-2 rounded-full border border-gray-200">
+            {banners.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setIndex(i)}
+                aria-label={`Go to slide ${i + 1}`}
+                className={`transition-all duration-500 rounded-full ${
+                  i === index
+                    ? "w-6 h-2 bg-gray-900 scale-110 shadow-lg"
+                    : "w-2 h-2 bg-gray-500 hover:bg-gray-700"
+                }`}
+              />
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </section>
   );
-};
-
-export default HeroSlider;
+}

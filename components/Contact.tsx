@@ -11,14 +11,17 @@ const Contact = () => {
     },
   ];
   return (
-    <section id="contact" className="py-16 relative cv-auto bg-gradient-coral">
+    <section id="contact" className="py-16 relative cv-auto bg-gradient-sage">
       {/* Professional Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-20 left-16 w-80 h-80 bg-brand-coral-200/15 rounded-full blur-3xl animate-gentle-float" />
-        <div className="absolute bottom-16 right-20 w-96 h-96 bg-brand-sage-200/10 rounded-full blur-3xl animate-gentle-float" style={{ animationDelay: '2s' }} />
+        <div
+          className="absolute bottom-16 right-20 w-96 h-96 bg-brand-sage-200/10 rounded-full blur-3xl animate-gentle-float"
+          style={{ animationDelay: "2s" }}
+        />
         <div className="absolute top-1/3 right-1/4 w-64 h-64 bg-brand-lavender-200/12 rounded-full blur-3xl" />
       </div>
-      
+
       <div className="container mx-auto px-6 relative z-10">
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 glass-professional px-4 py-2 rounded-full text-xs text-brand-coral-700 mb-4 font-medium glow-coral animate-fade-in-up">
@@ -26,38 +29,47 @@ const Contact = () => {
             Connect With Excellence
             <div className="w-1.5 h-1.5 bg-brand-coral-500 rounded-full animate-pulse" />
           </div>
-          
+
           <h2
-            className="text-3xl md:text-4xl font-bold mb-4 gradient-text-professional leading-tight animate-fade-in-up"
+            className="text-3xl md:text-4xl font-bold mb-4 text-black leading-tight animate-fade-in-up"
             style={{ animationDelay: "0.2s" }}
           >
             Get In Touch
           </h2>
-          
+
           <p
             className="text-sm md:text-base text-brand-neutral-600 max-w-2xl mx-auto leading-relaxed font-medium animate-fade-in-up"
             style={{ animationDelay: "0.4s" }}
           >
-            Ready to <span className="text-brand-coral-600 font-semibold">transform your testing process</span>? 
-            Let's discuss how we can help you achieve quality.
+            Ready to{" "}
+            <span className="text-brand-coral-600 font-semibold">
+              transform your testing process
+            </span>
+            ? Let's discuss how we can help you achieve quality.
           </p>
-          
+
           <div className="mt-4 flex justify-center">
             <div className="w-20 h-0.5 bg-gradient-to-r from-brand-coral-500 via-brand-sage-500 to-brand-lavender-500 rounded-full" />
           </div>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
           {/* Contact Information */}
-          <div className="animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
+          <div
+            className="animate-fade-in-up"
+            style={{ animationDelay: "0.6s" }}
+          >
             <div className="glass-professional p-6 rounded-2xl shadow-professional">
               <h3 className="text-xl font-bold text-brand-neutral-800 mb-6 flex items-center gap-2">
                 <div className="w-2 h-6 bg-gradient-to-b from-brand-coral-500 to-brand-sage-500 rounded-full" />
                 Contact Information
               </h3>
-              
+
               <div className="space-y-4">
                 {contactInfo.map((info, idx) => (
-                  <div key={idx} className="flex items-start group hover:translate-x-1 transition-transform duration-300">
+                  <div
+                    key={idx}
+                    className="flex items-start group hover:translate-x-1 transition-transform duration-300"
+                  >
                     <div className="relative mr-4 flex-shrink-0">
                       <div
                         className={`glass-professional shadow-professional rounded-lg p-3 transition-all duration-300 group-hover:scale-105 ${
@@ -75,31 +87,46 @@ const Contact = () => {
                       <h4 className="text-base font-bold text-brand-neutral-800 mb-1">
                         {info.title}
                       </h4>
-                      <p className="text-brand-neutral-600 font-medium text-sm">{info.info}</p>
+                      <p className="text-brand-neutral-600 font-medium text-sm">
+                        {info.info}
+                      </p>
                     </div>
                   </div>
                 ))}
               </div>
-              
+
               {/* Office Hours */}
               <div className="mt-6 pt-4 border-t border-brand-neutral-200/30">
-                <h4 className="text-base font-bold text-brand-neutral-800 mb-3">Office Hours</h4>
+                <h4 className="text-base font-bold text-brand-neutral-800 mb-3">
+                  Office Hours
+                </h4>
                 <div className="space-y-1 text-brand-neutral-600 text-sm">
-                  <p><span className="font-semibold">Mon - Fri:</span> 9:00 AM - 6:00 PM IST</p>
-                  <p><span className="font-semibold">Saturday:</span> 10:00 AM - 2:00 PM IST</p>
-                  <p><span className="font-semibold">Sunday:</span> Closed</p>
+                  <p>
+                    <span className="font-semibold">Mon - Fri:</span> 9:00 AM -
+                    6:00 PM IST
+                  </p>
+                  <p>
+                    <span className="font-semibold">Saturday:</span> 10:00 AM -
+                    2:00 PM IST
+                  </p>
+                  <p>
+                    <span className="font-semibold">Sunday:</span> Closed
+                  </p>
                 </div>
               </div>
             </div>
           </div>
           {/* Contact Form */}
-          <div className="relative animate-fade-in-up" style={{ animationDelay: '0.8s' }}>
+          <div
+            className="relative animate-fade-in-up"
+            style={{ animationDelay: "0.8s" }}
+          >
             <div className="glass-professional rounded-2xl p-6 shadow-professional glow-coral">
               <h3 className="text-lg font-bold text-brand-neutral-800 mb-4 flex items-center gap-2">
                 <div className="w-2 h-5 bg-gradient-to-b from-brand-lavender-500 to-brand-coral-500 rounded-full" />
                 Send us a Message
               </h3>
-              
+
               <form className="space-y-4" method="post" action="/api/contact">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
@@ -148,7 +175,7 @@ const Contact = () => {
                     required
                   />
                 </div>
-                
+
                 <div className="pt-2">
                   <button
                     type="submit"
@@ -158,7 +185,7 @@ const Contact = () => {
                     <Send className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
                   </button>
                 </div>
-                
+
                 <div className="text-center pt-2 text-xs text-brand-neutral-500">
                   <p>We typically respond within 24 hours</p>
                 </div>

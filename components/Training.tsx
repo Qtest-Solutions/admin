@@ -13,7 +13,9 @@ import {
   BarChart,
   Target,
   Zap,
+  MessageCircle,
 } from "lucide-react";
+import GoogleReviewsWidget from "google-reviews-widget"; // ⭐ Import
 
 // -------------------- Types --------------------
 interface Feature {
@@ -63,6 +65,18 @@ const Training: React.FC = () => {
     course: "",
   });
 
+  // -------------------- WhatsApp Handler --------------------
+  const handleWhatsAppClick = () => {
+    const phoneNumber = "919961544424";
+    const message =
+      "Hi! I'm interested in your QA training programs. Could you please provide more information?";
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
+      message
+    )}`;
+    window.open(whatsappUrl, "_blank");
+  };
+
+  // -------------------- Features --------------------
   const features: Feature[] = [
     {
       icon: BookOpen,
@@ -97,6 +111,7 @@ const Training: React.FC = () => {
     },
   ];
 
+  // -------------------- Courses --------------------
   const courses: Course[] = [
     {
       name: "Manual Testing Fundamentals",
@@ -160,6 +175,7 @@ const Training: React.FC = () => {
     },
   ];
 
+  // -------------------- Color Helpers --------------------
   const getColorClasses = (color: CourseColor): ColorClasses => {
     const colors: Record<CourseColor, ColorClasses> = {
       blue: {
@@ -206,6 +222,7 @@ const Training: React.FC = () => {
     return colors[color];
   };
 
+  // -------------------- Handlers --------------------
   const handleInputChange = (field: keyof FormData, value: string): void => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
@@ -217,6 +234,7 @@ const Training: React.FC = () => {
     setFormData({ name: "", email: "", phone: "", place: "", course: "" });
   };
 
+  // -------------------- Render --------------------
   return (
     <section
       id="training"
@@ -245,7 +263,7 @@ const Training: React.FC = () => {
             <div className="w-1.5 h-1.5 bg-brand-sage-500 rounded-full animate-pulse" />
           </div>
 
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 gradient-text-professional leading-tight">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-black leading-tight">
             Launch Your QA Career
           </h2>
 
@@ -258,13 +276,24 @@ const Training: React.FC = () => {
             QA professional with hands-on projects and industry curriculum
           </p>
 
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="group glass-professional px-8 py-3 rounded-full font-semibold text-sm transition-all duration-300 transform hover:scale-105 shadow-soft hover:shadow-soft-lg bg-gradient-to-r from-brand-sage-500 to-brand-lavender-600 text-black glow-sage mb-6"
-          >
-            Enroll Now
-            <ArrowRight className="inline-block ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
-          </button>
+          {/* Action Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-6">
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="group glass-professional px-8 py-3 rounded-full font-semibold text-sm transition-all duration-300 transform hover:scale-105 shadow-soft hover:shadow-soft-lg bg-gradient-to-r from-brand-sage-500 to-brand-lavender-600 text-black glow-sage"
+            >
+              Enroll Now
+              <ArrowRight className="inline-block ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+            </button>
+
+            <button
+              onClick={handleWhatsAppClick}
+              className="group glass-professional px-8 py-3 rounded-full font-semibold text-sm transition-all duration-300 transform hover:scale-105 shadow-soft hover:shadow-soft-lg bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-black"
+            >
+              <MessageCircle className="inline-block mr-2 w-4 h-4 group-hover:scale-110 transition-transform duration-300" />
+              WhatsApp Us
+            </button>
+          </div>
 
           <div className="mt-4 flex justify-center">
             <div className="w-16 h-0.5 bg-gradient-to-r from-brand-sage-500 via-brand-lavender-500 to-brand-coral-500 rounded-full" />
@@ -277,9 +306,7 @@ const Training: React.FC = () => {
             <div
               key={index}
               className="group glass-professional border border-brand-sage-200/40 hover:border-brand-sage-300/60 rounded-2xl p-5 transition-all duration-500 hover:scale-[1.02] hover:-translate-y-1 shadow-soft hover:shadow-soft-lg glow-sage animate-fade-in-up"
-              style={{
-                animationDelay: `${index * 0.1}s`,
-              }}
+              style={{ animationDelay: `${index * 0.1}s` }}
             >
               <div className="flex items-start space-x-4">
                 <div className="w-12 h-12 bg-brand-sage-100/50 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-all duration-500 border border-white/20">
@@ -319,10 +346,8 @@ const Training: React.FC = () => {
             return (
               <div
                 key={index}
-                className={`group relative glass-professional border ${colors.border} rounded-2xl p-6 transition-all duration-700 hover:scale-[1.02] hover:-translate-y-2 shadow-soft hover:shadow-soft-lg ${colors.glow} animate-fade-in-up`}
-                style={{
-                  animationDelay: `${index * 0.2}s`,
-                }}
+                className={`group relative glass-professional border ${colors.border} rounded-2xl p-6 transition-all duration-700 hover:scale-[1.02] hover:-translate-y-2 shadow-soft hover:shadow-soft-lg ${colors.glow} animate-fade-in-up flex flex-col h-full`}
+                style={{ animationDelay: `${index * 0.2}s` }}
               >
                 {/* Gradient Background */}
                 <div
@@ -330,10 +355,10 @@ const Training: React.FC = () => {
                 />
 
                 {/* Content */}
-                <div className="relative z-10">
+                <div className="relative z-10 flex flex-col h-full">
                   {/* Icon */}
                   <div
-                    className={`w-14 h-14 ${colors.iconBg} rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-all duration-500 border border-white/20`}
+                    className={`w-14 h-14 ${colors.iconBg} rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110                     transition-all duration-500 border border-white/20`}
                   >
                     <course.icon
                       className={`w-7 h-7 ${colors.icon} transition-transform duration-500 group-hover:rotate-12`}
@@ -360,8 +385,8 @@ const Training: React.FC = () => {
                     </p>
                   </div>
 
-                  {/* Highlights */}
-                  <div className="space-y-2 mb-4">
+                  {/* Highlights - flex-1 pushes button down */}
+                  <div className="space-y-2 mb-4 flex-1">
                     {course.highlights.map((highlight, i) => (
                       <div
                         key={i}
@@ -376,8 +401,8 @@ const Training: React.FC = () => {
                     ))}
                   </div>
 
-                  {/* CTA Button */}
-                  <div className="pt-3 border-t border-brand-neutral-200/30 group-hover:border-brand-neutral-200/50 transition-colors">
+                  {/* CTA Button - mt-auto keeps it at bottom */}
+                  <div className="pt-3 border-t border-brand-neutral-200/30 group-hover:border-brand-neutral-200/50 transition-colors mt-auto">
                     <button
                       onClick={() => {
                         setFormData((prev) => ({
@@ -401,9 +426,72 @@ const Training: React.FC = () => {
             );
           })}
         </div>
+
+        {/* -------------------- Testimonials Section -------------------- */}
+        <div className="mt-20 text-center animate-fade-in-up">
+          <h3 className="text-2xl md:text-3xl font-bold mb-4 gradient-text-professional">
+            Hear From Our Students
+          </h3>
+          <p className="text-sm text-brand-neutral-600 max-w-2xl mx-auto leading-relaxed font-medium mb-8">
+            See what our students have to say about their learning experience
+            with us.
+          </p>
+
+          {/* Google Reviews Widget with Avatar Styling */}
+          <div className="max-w-4xl mx-auto glass-professional border border-brand-sage-200/40 rounded-2xl p-8 shadow-soft glow-sage">
+            {/* Custom styling wrapper for Google Reviews Widget */}
+            <style jsx>{`
+              .google-reviews-widget {
+                --review-text-color: #374151;
+                --reviewer-name-color: #111827;
+                --star-color: #f59e0b;
+                --background-color: transparent;
+              }
+              .google-reviews-widget .reviewer-avatar {
+                width: 48px !important;
+                height: 48px !important;
+                border-radius: 50% !important;
+                border: 2px solid #e5e7eb !important;
+                background: linear-gradient(
+                  135deg,
+                  #8b5cf6,
+                  #06b6d4
+                ) !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                color: white !important;
+                font-weight: bold !important;
+                font-size: 16px !important;
+              }
+              .google-reviews-widget .reviewer-avatar img {
+                border-radius: 50% !important;
+                width: 100% !important;
+                height: 100% !important;
+                object-fit: cover !important;
+              }
+              .google-reviews-widget .review-card {
+                background: rgba(255, 255, 255, 0.5) !important;
+                border: 1px solid rgba(139, 92, 246, 0.2) !important;
+                border-radius: 16px !important;
+                padding: 24px !important;
+                margin-bottom: 16px !important;
+                transition: all 0.3s ease !important;
+              }
+              .google-reviews-widget .review-card:hover {
+                transform: translateY(-2px) !important;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+                border-color: rgba(139, 92, 246, 0.3) !important;
+              }
+            `}</style>
+
+            {/* ⭐ Google Reviews Widget */}
+            <GoogleReviewsWidget instanceId="GU7YBHMoAZMDixFb4enI" />
+          </div>
+        </div>
       </div>
 
-      {/* Modal */}
+      {/* -------------------- Modal -------------------- */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/50 backdrop-blur-sm">
           <form
@@ -438,51 +526,42 @@ const Training: React.FC = () => {
                     {field.charAt(0).toUpperCase() + field.slice(1)}
                   </label>
                   <input
-                    type={
-                      field === "email"
-                        ? "email"
-                        : field === "phone"
-                        ? "tel"
-                        : "text"
-                    }
-                    placeholder={`Enter your ${field}`}
+                    type={field === "email" ? "email" : "text"}
                     value={formData[field as keyof FormData]}
                     onChange={(e) =>
                       handleInputChange(field as keyof FormData, e.target.value)
                     }
-                    className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white/80"
+                    required
+                    className="w-full px-4 py-2 rounded-lg border border-brand-neutral-200 focus:ring-2 focus:ring-brand-sage-500 focus:border-transparent transition-all text-sm"
                   />
                 </div>
               ))}
 
-              {/* Course Dropdown */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-brand-neutral-700 mb-1">
                   Select Course
                 </label>
                 <select
                   value={formData.course}
                   onChange={(e) => handleInputChange("course", e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white/80"
+                  required
+                  className="w-full px-4 py-2 rounded-lg border border-brand-neutral-200 focus:ring-2 focus:ring-brand-sage-500 focus:border-transparent transition-all text-sm"
                 >
                   <option value="">Choose a course</option>
-                  {courses.map((course, i) => (
-                    <option key={i} value={course.name}>
+                  {courses.map((course, index) => (
+                    <option key={index} value={course.name}>
                       {course.name}
                     </option>
                   ))}
                 </select>
               </div>
 
-              {/* Submit Button */}
-              <div className="pt-4">
-                <button
-                  type="submit"
-                  className="w-full px-6 py-2 bg-gradient-to-r from-brand-sage-500 to-brand-lavender-600 text-white font-semibold rounded-lg shadow-md hover:scale-105 transition-transform duration-300 text-sm"
-                >
-                  Submit
-                </button>
-              </div>
+              <button
+                type="submit"
+                className="w-full py-3 rounded-lg font-semibold transition-all duration-300 bg-gradient-to-r from-brand-sage-500 to-brand-lavender-600 text-white hover:shadow-lg transform hover:scale-[1.02] text-sm"
+              >
+                Submit Application
+              </button>
             </div>
           </form>
         </div>
