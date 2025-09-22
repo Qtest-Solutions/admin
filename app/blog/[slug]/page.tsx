@@ -12,15 +12,32 @@ import {
   Eye,
 } from "lucide-react";
 
+// Define the Blog type
+interface Blog {
+  id: number;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  author: string;
+  publishDate: string;
+  readTime: string;
+  category: string;
+  tags: string[];
+  image: string;
+}
+
 const BlogDetail = () => {
   const { slug } = useParams();
-  const [blog, setBlog] = useState(null);
-  const [relatedBlogs, setRelatedBlogs] = useState([]);
+  // Fix: Change the type to allow Blog object or null
+  const [blog, setBlog] = useState<Blog | null>(null);
+  const [relatedBlogs, setRelatedBlogs] = useState<Blog[]>([]);
   const [readingProgress, setReadingProgress] = useState(0);
 
   useEffect(() => {
     const foundBlog = blogs.find((b) => b.slug === slug);
-    setBlog(foundBlog);
+    // Fix: Handle undefined case properly
+    setBlog(foundBlog || null);
 
     if (foundBlog) {
       const related = blogs
@@ -44,6 +61,9 @@ const BlogDetail = () => {
   }, [slug]);
 
   const handleShare = async () => {
+    // Add null check for blog
+    if (!blog) return;
+
     if (navigator.share) {
       try {
         await navigator.share({
