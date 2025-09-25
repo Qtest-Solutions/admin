@@ -1,7 +1,75 @@
 "use client";
 import { useState, useEffect } from "react";
 import { courseService, studentService } from "../../../../services/database";
-import { Course, CourseWithStats } from "../../../../types/appwrite";
+
+// Types
+interface AppwriteDocument {
+  $id: string;
+  $createdAt: string;
+  $updatedAt: string;
+  $permissions: string[];
+  $collectionId: string;
+  $databaseId: string;
+}
+
+interface Course extends AppwriteDocument {
+  name: string;
+  description?: string;
+  fee: number;
+  duration?: string;
+  level: "beginner" | "intermediate" | "advanced";
+  status: "active" | "inactive" | "draft";
+}
+
+// Create data type that matches what the service expects
+// This includes the Appwrite fields that are required for creation
+interface CourseCreateData
+  extends Omit<Course, "$id" | "$createdAt" | "$updatedAt"> {
+  // The service will handle setting these fields, but they need to be in the type
+}
+
+// For the actual data we send (without Appwrite fields)
+interface CourseFormCreateData {
+  name: string;
+  description?: string;
+  fee: number;
+  duration?: string;
+  level: "beginner" | "intermediate" | "advanced";
+  status: "active" | "inactive" | "draft";
+}
+
+// Update data type (partial of form create data)
+interface CourseUpdateData extends Partial<CourseFormCreateData> {}
+
+interface CourseWithStats extends Course {
+  enrolledStudents: number;
+  totalRevenue: number;
+}
+
+interface Student extends AppwriteDocument {
+  name: string;
+  email: string;
+  phone?: string;
+  courseId: string;
+  feesPaid: number;
+  enrollmentDate: string;
+  status: "active" | "inactive" | "completed" | "dropped";
+}
+
+interface CourseFormData {
+  name: string;
+  description: string;
+  fee: number;
+  duration: string;
+  level: "beginner" | "intermediate" | "advanced";
+  status: "active" | "inactive" | "draft";
+}
+
+interface ToastNotification {
+  show: boolean;
+  message: string;
+  type: "success" | "error";
+}
 
 export default function CoursesPage() {
   const [courses, setCourses] = useState<CourseWithStats[]>([]);
@@ -11,19 +79,19 @@ export default function CoursesPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState<string>("all");
   const [submitting, setSubmitting] = useState(false);
-  const [toast, setToast] = useState<{
-    show: boolean;
-    message: string;
-    type: "success" | "error";
-  }>({ show: false, message: "", type: "success" });
+  const [toast, setToast] = useState<ToastNotification>({
+    show: false,
+    message: "",
+    type: "success",
+  });
 
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<CourseFormData>({
     name: "",
     description: "",
     fee: 0,
     duration: "",
-    level: "beginner" as "beginner" | "intermediate" | "advanced",
-    status: "active" as "active" | "inactive" | "draft",
+    level: "beginner",
+    status: "active",
   });
 
   // Show toast notification
@@ -91,17 +159,24 @@ export default function CoursesPage() {
 
     try {
       setSubmitting(true);
-      const courseData = {
+
+      // Create the data object that matches what the service expects
+      const courseData: CourseCreateData = {
         name: form.name,
-        description: form.description,
+        description: form.description || undefined,
         fee: form.fee,
-        duration: form.duration,
+        duration: form.duration || undefined,
         level: form.level,
         status: form.status,
+        // These fields will be set by Appwrite, but we need to include them in the type
+        // You can set them to empty values or let your service handle them
+        $permissions: [],
+        $collectionId: "", // Your service should set this
+        $databaseId: "", // Your service should set this
       };
 
       await courseService.create(courseData);
-      await loadData(); // Reload data to get updated list
+      await loadData();
       setShowModal(false);
       resetForm();
       showToast("Course added successfully!", "success");
@@ -134,17 +209,17 @@ export default function CoursesPage() {
 
     try {
       setSubmitting(true);
-      const updateData = {
+      const updateData: CourseUpdateData = {
         name: form.name,
-        description: form.description,
+        description: form.description || undefined,
         fee: form.fee,
-        duration: form.duration,
+        duration: form.duration || undefined,
         level: form.level,
         status: form.status,
       };
 
       await courseService.update(editingCourse.$id, updateData);
-      await loadData(); // Reload data to get updated list
+      await loadData();
       setShowModal(false);
       resetForm();
       showToast("Course updated successfully!", "success");
@@ -163,7 +238,7 @@ export default function CoursesPage() {
 
     try {
       await courseService.delete(courseId);
-      await loadData(); // Reload data to get updated list
+      await loadData();
       showToast("Course deleted successfully!", "success");
     } catch (error) {
       console.error("Error deleting course:", error);

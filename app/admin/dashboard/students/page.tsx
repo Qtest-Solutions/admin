@@ -1,7 +1,68 @@
 "use client";
 import { useState, useEffect } from "react";
 import { studentService, courseService } from "../../../../services/database";
-import { Student, Course, StudentWithCourse } from "../../../../types/appwrite";
+
+// Import types from your types file instead of redefining them
+interface AppwriteDocument {
+  $id: string;
+  $createdAt: string;
+  $updatedAt: string;
+  $permissions: string[];
+  $collectionId: string;
+  $databaseId: string;
+}
+
+interface Course extends AppwriteDocument {
+  name: string;
+  description?: string;
+  fee: number;
+  duration?: string;
+  level: "beginner" | "intermediate" | "advanced";
+  status: "active" | "inactive" | "draft";
+}
+
+interface Student extends AppwriteDocument {
+  name: string;
+  email: string;
+  phone?: string;
+  courseId?: string; // Make this optional to match your imported type
+  feesPaid: number;
+  enrollmentDate: string;
+  status: "active" | "inactive" | "completed" | "dropped";
+}
+
+interface StudentWithCourse extends Student {
+  course?: Course;
+}
+
+// Create data type for student creation
+interface StudentCreateData {
+  name: string;
+  email: string;
+  phone?: string;
+  courseId: string;
+  feesPaid: number;
+  enrollmentDate: string;
+  status: "active" | "inactive" | "completed";
+}
+
+// Update data type
+interface StudentUpdateData extends Partial<StudentCreateData> {}
+
+interface StudentFormData {
+  name: string;
+  email: string;
+  phone: string;
+  courseId: string;
+  feesPaid: number;
+  status: "active" | "inactive" | "completed";
+}
+
+interface ToastNotification {
+  show: boolean;
+  message: string;
+  type: "success" | "error";
+}
 
 export default function StudentsPage() {
   const [students, setStudents] = useState<StudentWithCourse[]>([]);
@@ -13,19 +74,19 @@ export default function StudentsPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState<string>("all");
   const [submitting, setSubmitting] = useState(false);
-  const [toast, setToast] = useState<{
-    show: boolean;
-    message: string;
-    type: "success" | "error";
-  }>({ show: false, message: "", type: "success" });
+  const [toast, setToast] = useState<ToastNotification>({
+    show: false,
+    message: "",
+    type: "success",
+  });
 
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<StudentFormData>({
     name: "",
     email: "",
     phone: "",
     courseId: "",
     feesPaid: 0,
-    status: "active" as "active" | "inactive" | "completed",
+    status: "active",
   });
 
   // Show toast notification
@@ -81,17 +142,17 @@ export default function StudentsPage() {
 
     try {
       setSubmitting(true);
-      const studentData = {
+      const studentData: StudentCreateData = {
         name: form.name,
         email: form.email,
-        phone: form.phone,
+        phone: form.phone || undefined,
         courseId: form.courseId,
         feesPaid: form.feesPaid,
         status: form.status,
         enrollmentDate: new Date().toISOString(),
       };
 
-      await studentService.create(studentData);
+      await studentService.create(studentData as any);
       await loadData(); // Reload data to get updated list
       setShowModal(false);
       resetForm();
@@ -114,9 +175,9 @@ export default function StudentsPage() {
       name: student.name,
       email: student.email,
       phone: student.phone || "",
-      courseId: student.courseId || "",
+      courseId: student.courseId || "", // Handle optional courseId
       feesPaid: student.feesPaid,
-      status: student.status,
+      status: student.status as "active" | "inactive" | "completed",
     });
     setShowModal(true);
   };
@@ -129,16 +190,16 @@ export default function StudentsPage() {
 
     try {
       setSubmitting(true);
-      const updateData = {
+      const updateData: StudentUpdateData = {
         name: form.name,
         email: form.email,
-        phone: form.phone,
+        phone: form.phone || undefined,
         courseId: form.courseId,
         feesPaid: form.feesPaid,
         status: form.status,
       };
 
-      await studentService.update(editingStudent.$id, updateData);
+      await studentService.update(editingStudent.$id, updateData as any);
       await loadData(); // Reload data to get updated list
       setShowModal(false);
       resetForm();

@@ -27,7 +27,7 @@ export const courseService = {
         ID.unique(),
         courseData
       );
-      return response as Course;
+      return response as unknown as Course;
     } catch (error) {
       console.error("Error creating course:", error);
       throw error;
@@ -42,7 +42,7 @@ export const courseService = {
         "courses",
         [Query.orderDesc("$createdAt")]
       );
-      return response.documents as Course[];
+      return response.documents as unknown as Course[];
     } catch (error) {
       console.error("Error fetching courses:", error);
       throw error;
@@ -57,7 +57,7 @@ export const courseService = {
         "courses",
         courseId
       );
-      return response as Course;
+      return response as unknown as Course;
     } catch (error) {
       console.error("Error fetching course:", error);
       throw error;
@@ -76,7 +76,7 @@ export const courseService = {
         courseId,
         courseData
       );
-      return response as Course;
+      return response as unknown as Course;
     } catch (error) {
       console.error("Error updating course:", error);
       throw error;
@@ -115,7 +115,7 @@ export const courseService = {
         "courses",
         queries
       );
-      return response.documents as Course[];
+      return response.documents as unknown as Course[];
     } catch (error) {
       console.error("Error searching courses:", error);
       throw error;
@@ -140,7 +140,7 @@ export const studentService = {
             studentData.enrollmentDate || new Date().toISOString(),
         }
       );
-      return response as Student;
+      return response as unknown as Student;
     } catch (error) {
       console.error("Error creating student:", error);
       throw error;
@@ -155,7 +155,7 @@ export const studentService = {
         "students",
         [Query.orderDesc("$createdAt")]
       );
-      return response.documents as Student[];
+      return response.documents as unknown as Student[];
     } catch (error) {
       console.error("Error fetching students:", error);
       throw error;
@@ -170,7 +170,7 @@ export const studentService = {
         "students",
         studentId
       );
-      return response as Student;
+      return response as unknown as Student;
     } catch (error) {
       console.error("Error fetching student:", error);
       throw error;
@@ -189,7 +189,7 @@ export const studentService = {
         studentId,
         studentData
       );
-      return response as Student;
+      return response as unknown as Student;
     } catch (error) {
       console.error("Error updating student:", error);
       throw error;
@@ -248,7 +248,7 @@ export const studentService = {
         "students",
         queries
       );
-      return response.documents as Student[];
+      return response.documents as unknown as Student[];
     } catch (error) {
       console.error("Error searching students:", error);
       throw error;
@@ -266,14 +266,38 @@ export const analyticsService = {
         studentService.getAll(),
       ]);
 
+      const activeCourses = courses.filter((c) => c.status === "active").length;
+      const inactiveCourses = courses.filter(
+        (c) => c.status === "inactive"
+      ).length;
+      const draftCourses = courses.filter((c) => c.status === "draft").length;
+
+      const activeStudents = students.filter(
+        (s) => s.status === "active"
+      ).length;
+      const inactiveStudents = students.filter(
+        (s) => s.status === "inactive"
+      ).length;
+      const completedStudents = students.filter(
+        (s) => s.status === "completed"
+      ).length;
+
+      const totalRevenue = students.reduce((sum, s) => sum + s.feesPaid, 0);
+      const averageRevenue =
+        students.length > 0 ? totalRevenue / students.length : 0;
+
       return {
         totalCourses: courses.length,
-        activeCourses: courses.filter((c) => c.status === "active").length,
+        activeCourses,
+        inactiveCourses,
+        draftCourses,
         totalStudents: students.length,
-        activeStudents: students.filter((s) => s.status === "active").length,
-        completedStudents: students.filter((s) => s.status === "completed")
-          .length,
-        totalRevenue: students.reduce((sum, s) => sum + s.feesPaid, 0),
+        activeStudents,
+        inactiveStudents,
+        completedStudents,
+        totalRevenue,
+        averageRevenue,
+        totalEnrollments: students.length, // Assuming each student is one enrollment
       };
     } catch (error) {
       console.error("Error fetching dashboard stats:", error);

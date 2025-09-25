@@ -16,6 +16,26 @@ interface AuthContextType {
   checkAuth: () => Promise<void>;
 }
 
+// Helper function to handle errors safely
+const handleError = (error: unknown): void => {
+  console.error("Error details:", error);
+
+  if (error && typeof error === "object") {
+    const errorObj = error as Record<string, unknown>;
+
+    if ("code" in errorObj) {
+      console.error("Error code:", errorObj.code);
+    }
+    if ("message" in errorObj) {
+      console.error("Error message:", errorObj.message);
+    }
+  }
+
+  if (error instanceof Error) {
+    console.error("Error message:", error.message);
+  }
+};
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -54,13 +74,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         email: currentUser.email,
       });
     } catch (error) {
-      console.error("Login error details:", error);
-      if (error.code) {
-        console.error("Error code:", error.code);
-      }
-      if (error.message) {
-        console.error("Error message:", error.message);
-      }
+      handleError(error);
       throw error;
     }
   };
@@ -70,7 +84,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       await account.deleteSession("current");
       setUser(null);
     } catch (error) {
-      console.error("Logout error:", error);
+      handleError(error);
       throw error;
     }
   };
