@@ -46,8 +46,8 @@ const Header = () => {
             <img
               src="/image.png"
               alt="Qtest Software Solution LLP logo"
-              width={100}
-              height={100}
+              width={160}
+              height={160}
               className="transition-transform duration-300 hover:scale-105 drop-shadow-sm"
             />
           </Link>

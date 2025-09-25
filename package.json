@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "appwrite": "^20.1.0",
     "framer-motion": "^12.23.13",
     "google-reviews-widget": "^1.0.4",
     "lucide-react": "^0.542.0",
