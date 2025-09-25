@@ -1,3 +1,4 @@
+import { AuthProvider } from "../contexts/AuthContext";
 import "./globals.css";
 import type { Metadata } from "next";
 
@@ -32,9 +33,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="min-h-screen bg-gradient-professional font-sans overflow-x-hidden antialiased">
-        {children}
-      </body>
+      <AuthProvider>
+        <body className="min-h-screen bg-gradient-professional font-sans overflow-x-hidden antialiased">
+          {children}
+        </body>
+      </AuthProvider>
     </html>
   );
 }
