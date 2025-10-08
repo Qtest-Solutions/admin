@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { courseService, studentService } from "../../../../services/database";
+import Modal from "../../../../components/Modal";
 
 // Types
 interface AppwriteDocument {
@@ -19,13 +20,6 @@ interface Course extends AppwriteDocument {
   duration?: string;
   level: "beginner" | "intermediate" | "advanced";
   status: "active" | "inactive" | "draft";
-}
-
-// Create data type that matches what the service expects
-// This includes the Appwrite fields that are required for creation
-interface CourseCreateData
-  extends Omit<Course, "$id" | "$createdAt" | "$updatedAt"> {
-  // The service will handle setting these fields, but they need to be in the type
 }
 
 // For the actual data we send (without Appwrite fields)
@@ -47,6 +41,7 @@ interface CourseWithStats extends Course {
 }
 
 interface Student extends AppwriteDocument {
+  studentId: string;
   name: string;
   email: string;
   phone?: string;
@@ -161,21 +156,16 @@ export default function CoursesPage() {
       setSubmitting(true);
 
       // Create the data object that matches what the service expects
-      const courseData: CourseCreateData = {
+      const courseData: CourseFormCreateData = {
         name: form.name,
         description: form.description || undefined,
         fee: form.fee,
         duration: form.duration || undefined,
         level: form.level,
         status: form.status,
-        // These fields will be set by Appwrite, but we need to include them in the type
-        // You can set them to empty values or let your service handle them
-        $permissions: [],
-        $collectionId: "", // Your service should set this
-        $databaseId: "", // Your service should set this
       };
 
-      await courseService.create(courseData);
+      await courseService.create(courseData as any);
       await loadData();
       setShowModal(false);
       resetForm();
@@ -296,13 +286,46 @@ export default function CoursesPage() {
       {/* Toast Notification */}
       {toast.show && (
         <div
-          className={`fixed top-4 right-4 z-50 px-4 py-2 rounded-lg shadow-lg ${
+          className={`fixed top-4 right-4 z-[10000] px-4 py-3 rounded-lg shadow-lg transition-all duration-300 ${
             toast.type === "success"
               ? "bg-green-500 text-white"
               : "bg-red-500 text-white"
           }`}
         >
-          {toast.message}
+          <div className="flex items-center space-x-2">
+            <div className="flex-shrink-0">
+              {toast.type === "success" ? (
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+              ) : (
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              )}
+            </div>
+            <span className="text-sm font-medium">{toast.message}</span>
+          </div>
         </div>
       )}
 
@@ -597,217 +620,185 @@ export default function CoursesPage() {
         </div>
       </div>
 
-      {/* Modal */}
-      {showModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-xl border border-white/20 w-full max-w-sm max-h-[90vh] overflow-y-auto">
-            <div className="p-5">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-bold text-slate-800">
-                  {editingCourse ? "Edit Course" : "Add New Course"}
-                </h2>
-                <button
-                  onClick={() => {
-                    setShowModal(false);
-                    resetForm();
-                  }}
-                  className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
-                >
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
-                </button>
-              </div>
+      {/* Modal using the new Modal component */}
+      <Modal
+        isOpen={showModal}
+        onClose={() => {
+          setShowModal(false);
+          resetForm();
+        }}
+        title={editingCourse ? "Edit Course" : "Add New Course"}
+        maxWidth="max-w-lg"
+      >
+        <form
+          className="space-y-4"
+          onSubmit={(e) => {
+            e.preventDefault();
+            editingCourse ? handleUpdateCourse() : handleAddCourse();
+          }}
+        >
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-2">
+              Course Name *
+            </label>
+            <input
+              type="text"
+              placeholder="Enter course name"
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+              className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white/50 backdrop-blur-sm"
+              required
+              disabled={submitting}
+            />
+          </div>
 
-              <form
-                className="space-y-3"
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  editingCourse ? handleUpdateCourse() : handleAddCourse();
-                }}
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-2">
+              Description
+            </label>
+            <textarea
+              placeholder="Enter course description"
+              value={form.description}
+              onChange={(e) =>
+                setForm({ ...form, description: e.target.value })
+              }
+              className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white/50 backdrop-blur-sm resize-none"
+              rows={3}
+              disabled={submitting}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-2">
+                Course Fee *
+              </label>
+              <input
+                type="number"
+                placeholder="Enter fee"
+                value={form.fee}
+                onChange={(e) =>
+                  setForm({ ...form, fee: Number(e.target.value) })
+                }
+                className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white/50 backdrop-blur-sm"
+                min="0"
+                required
+                disabled={submitting}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-2">
+                Duration
+              </label>
+              <input
+                type="text"
+                placeholder="e.g., 4 weeks"
+                value={form.duration}
+                onChange={(e) => setForm({ ...form, duration: e.target.value })}
+                className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white/50 backdrop-blur-sm"
+                disabled={submitting}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-2">
+                Level *
+              </label>
+              <select
+                value={form.level}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    level: e.target.value as
+                      | "beginner"
+                      | "intermediate"
+                      | "advanced",
+                  })
+                }
+                className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white/50 backdrop-blur-sm"
+                required
+                disabled={submitting}
               >
-                <div>
-                  <label className="block text-xs font-medium text-slate-700 mb-1">
-                    Course Name
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Enter course name"
-                    value={form.name}
-                    onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white/50 backdrop-blur-sm"
-                    required
-                    disabled={submitting}
-                  />
-                </div>
+                <option value="beginner">Beginner</option>
+                <option value="intermediate">Intermediate</option>
+                <option value="advanced">Advanced</option>
+              </select>
+            </div>
 
-                <div>
-                  <label className="block text-xs font-medium text-slate-700 mb-1">
-                    Description
-                  </label>
-                  <textarea
-                    placeholder="Enter course description"
-                    value={form.description}
-                    onChange={(e) =>
-                      setForm({ ...form, description: e.target.value })
-                    }
-                    className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white/50 backdrop-blur-sm"
-                    rows={3}
-                    disabled={submitting}
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs font-medium text-slate-700 mb-1">
-                      Course Fee
-                    </label>
-                    <input
-                      type="number"
-                      placeholder="Enter fee"
-                      value={form.fee}
-                      onChange={(e) =>
-                        setForm({ ...form, fee: Number(e.target.value) })
-                      }
-                      className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white/50 backdrop-blur-sm"
-                      min="0"
-                      required
-                      disabled={submitting}
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-medium text-slate-700 mb-1">
-                      Duration
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="e.g., 4 weeks"
-                      value={form.duration}
-                      onChange={(e) =>
-                        setForm({ ...form, duration: e.target.value })
-                      }
-                      className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white/50 backdrop-blur-sm"
-                      disabled={submitting}
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs font-medium text-slate-700 mb-1">
-                      Level
-                    </label>
-                    <select
-                      value={form.level}
-                      onChange={(e) =>
-                        setForm({
-                          ...form,
-                          level: e.target.value as
-                            | "beginner"
-                            | "intermediate"
-                            | "advanced",
-                        })
-                      }
-                      className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white/50 backdrop-blur-sm"
-                      required
-                      disabled={submitting}
-                    >
-                      <option value="beginner">Beginner</option>
-                      <option value="intermediate">Intermediate</option>
-                      <option value="advanced">Advanced</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-medium text-slate-700 mb-1">
-                      Status
-                    </label>
-                    <select
-                      value={form.status}
-                      onChange={(e) =>
-                        setForm({
-                          ...form,
-                          status: e.target.value as
-                            | "active"
-                            | "inactive"
-                            | "draft",
-                        })
-                      }
-                      className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white/50 backdrop-blur-sm"
-                      required
-                      disabled={submitting}
-                    >
-                      <option value="active">Active</option>
-                      <option value="inactive">Inactive</option>
-                      <option value="draft">Draft</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div className="flex justify-end space-x-2 pt-3">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setShowModal(false);
-                      resetForm();
-                    }}
-                    className="px-3 py-2 text-sm text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors font-medium"
-                    disabled={submitting}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg text-sm font-medium hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-                    disabled={submitting}
-                  >
-                    {submitting ? (
-                      <div className="flex items-center">
-                        <svg
-                          className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                        >
-                          <circle
-                            className="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            strokeWidth="4"
-                          ></circle>
-                          <path
-                            className="opacity-75"
-                            fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                          ></path>
-                        </svg>
-                        {editingCourse ? "Updating..." : "Adding..."}
-                      </div>
-                    ) : editingCourse ? (
-                      "Update Course"
-                    ) : (
-                      "Add Course"
-                    )}
-                  </button>
-                </div>
-              </form>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-2">
+                Status *
+              </label>
+              <select
+                value={form.status}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    status: e.target.value as "active" | "inactive" | "draft",
+                  })
+                }
+                className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white/50 backdrop-blur-sm"
+                required
+                disabled={submitting}
+              >
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+                <option value="draft">Draft</option>
+              </select>
             </div>
           </div>
-        </div>
-      )}
+
+          <div className="flex justify-end space-x-3 pt-4 border-t border-slate-200">
+            <button
+              type="button"
+              onClick={() => {
+                setShowModal(false);
+                resetForm();
+              }}
+              className="px-4 py-2 text-sm text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors font-medium"
+              disabled={submitting}
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="px-6 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg text-sm font-medium hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              disabled={submitting}
+            >
+              {submitting ? (
+                <div className="flex items-center">
+                  <svg
+                    className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                  {editingCourse ? "Updating..." : "Adding..."}
+                </div>
+              ) : editingCourse ? (
+                "Update Course"
+              ) : (
+                "Add Course"
+              )}
+            </button>
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 }

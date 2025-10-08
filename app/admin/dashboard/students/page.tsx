@@ -1,8 +1,9 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { studentService, courseService } from "../../../../services/database";
+import Modal from "../../../../components/Modal";
 
-// Import types from your types file instead of redefining them
+// Updated interfaces to include studentId
 interface AppwriteDocument {
   $id: string;
   $createdAt: string;
@@ -22,12 +23,14 @@ interface Course extends AppwriteDocument {
 }
 
 interface Student extends AppwriteDocument {
+  studentId: string; // Added manual student ID field
   name: string;
   email: string;
   phone?: string;
-  courseId?: string; // Make this optional to match your imported type
+  courseId?: string;
   feesPaid: number;
   enrollmentDate: string;
+  entryDate: string;
   status: "active" | "inactive" | "completed" | "dropped";
 }
 
@@ -35,8 +38,8 @@ interface StudentWithCourse extends Student {
   course?: Course;
 }
 
-// Create data type for student creation
 interface StudentCreateData {
+  studentId: string; // Added manual student ID field
   name: string;
   email: string;
   phone?: string;
@@ -46,10 +49,10 @@ interface StudentCreateData {
   status: "active" | "inactive" | "completed";
 }
 
-// Update data type
 interface StudentUpdateData extends Partial<StudentCreateData> {}
 
 interface StudentFormData {
+  studentId: string; // Added manual student ID field
   name: string;
   email: string;
   phone: string;
@@ -65,6 +68,7 @@ interface ToastNotification {
 }
 
 export default function StudentsPage() {
+  // Existing state
   const [students, setStudents] = useState<StudentWithCourse[]>([]);
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
@@ -80,7 +84,12 @@ export default function StudentsPage() {
     type: "success",
   });
 
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
+
   const [form, setForm] = useState<StudentFormData>({
+    studentId: "", // Added student ID field
     name: "",
     email: "",
     phone: "",
@@ -124,27 +133,46 @@ export default function StudentsPage() {
 
   const resetForm = () => {
     setForm({
+      studentId: "", // Reset student ID
       name: "",
       email: "",
       phone: "",
       courseId: courses.length > 0 ? courses[0].$id : "",
       feesPaid: 0,
+      entryDate: new Date().toISOString().split("T")[0],
       status: "active",
     });
     setEditingStudent(null);
   };
 
+  // Check if student ID already exists
+  const isStudentIdExists = (studentId: string, excludeId?: string) => {
+    return students.some(
+      (student) => student.studentId === studentId && student.$id !== excludeId
+    );
+  };
+
   const handleAddStudent = async () => {
-    if (!form.name || !form.email || !form.courseId) {
+    if (!form.studentId || !form.name || !form.courseId) {
       showToast("Please fill in all required fields", "error");
+      return;
+    }
+
+    // Check if student ID already exists
+    if (isStudentIdExists(form.studentId)) {
+      showToast(
+        "Student ID already exists. Please use a different ID.",
+        "error"
+      );
       return;
     }
 
     try {
       setSubmitting(true);
       const studentData: StudentCreateData = {
+        studentId: form.studentId,
         name: form.name,
-        email: form.email,
+        email: form.email || "",
         phone: form.phone || undefined,
         courseId: form.courseId,
         feesPaid: form.feesPaid,
@@ -153,13 +181,15 @@ export default function StudentsPage() {
       };
 
       await studentService.create(studentData as any);
-      await loadData(); // Reload data to get updated list
+      await loadData();
       setShowModal(false);
       resetForm();
       showToast("Student added successfully!", "success");
     } catch (error: any) {
       console.error("Error adding student:", error);
-      if (error.message?.includes("email")) {
+      if (error.message?.includes("studentId")) {
+        showToast("Student ID already exists", "error");
+      } else if (error.message?.includes("email")) {
         showToast("Email already exists", "error");
       } else {
         showToast("Failed to add student", "error");
@@ -172,10 +202,11 @@ export default function StudentsPage() {
   const handleEditStudent = (student: StudentWithCourse) => {
     setEditingStudent(student);
     setForm({
+      studentId: student.studentId,
       name: student.name,
-      email: student.email,
+      email: student.email || "",
       phone: student.phone || "",
-      courseId: student.courseId || "", // Handle optional courseId
+      courseId: student.courseId || "",
       feesPaid: student.feesPaid,
       status: student.status as "active" | "inactive" | "completed",
     });
@@ -183,16 +214,26 @@ export default function StudentsPage() {
   };
 
   const handleUpdateStudent = async () => {
-    if (!editingStudent || !form.name || !form.email || !form.courseId) {
+    if (!editingStudent || !form.studentId || !form.name || !form.courseId) {
       showToast("Please fill in all required fields", "error");
+      return;
+    }
+
+    // Check if student ID already exists (excluding current student)
+    if (isStudentIdExists(form.studentId, editingStudent.$id)) {
+      showToast(
+        "Student ID already exists. Please use a different ID.",
+        "error"
+      );
       return;
     }
 
     try {
       setSubmitting(true);
       const updateData: StudentUpdateData = {
+        studentId: form.studentId,
         name: form.name,
-        email: form.email,
+        email: form.email || "",
         phone: form.phone || undefined,
         courseId: form.courseId,
         feesPaid: form.feesPaid,
@@ -200,13 +241,15 @@ export default function StudentsPage() {
       };
 
       await studentService.update(editingStudent.$id, updateData as any);
-      await loadData(); // Reload data to get updated list
+      await loadData();
       setShowModal(false);
       resetForm();
       showToast("Student updated successfully!", "success");
     } catch (error: any) {
       console.error("Error updating student:", error);
-      if (error.message?.includes("email")) {
+      if (error.message?.includes("studentId")) {
+        showToast("Student ID already exists", "error");
+      } else if (error.message?.includes("email")) {
         showToast("Email already exists", "error");
       } else {
         showToast("Failed to update student", "error");
@@ -223,7 +266,7 @@ export default function StudentsPage() {
 
     try {
       await studentService.delete(studentId);
-      await loadData(); // Reload data to get updated list
+      await loadData();
       showToast("Student deleted successfully!", "success");
     } catch (error) {
       console.error("Error deleting student:", error);
@@ -231,17 +274,34 @@ export default function StudentsPage() {
     }
   };
 
-  const filteredStudents = students.filter((student) => {
-    const matchesSearch =
-      student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      student.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (student.course?.name || "")
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase());
-    const matchesFilter =
-      filterStatus === "all" || student.status === filterStatus;
-    return matchesSearch && matchesFilter;
-  });
+  // Filter and paginate students - Updated to include studentId in search
+  const filteredStudents = useMemo(() => {
+    return students.filter((student) => {
+      const matchesSearch =
+        student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        student.studentId.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (student.email || "")
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
+        (student.course?.name || "")
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase());
+      const matchesFilter =
+        filterStatus === "all" || student.status === filterStatus;
+      return matchesSearch && matchesFilter;
+    });
+  }, [students, searchTerm, filterStatus]);
+
+  // Pagination calculations
+  const totalPages = Math.ceil(filteredStudents.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentStudents = filteredStudents.slice(startIndex, endIndex);
+
+  // Reset to first page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, filterStatus]);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -264,6 +324,93 @@ export default function StudentsPage() {
     return { text: "Pending", color: "text-red-600" };
   };
 
+  // Pagination component
+  const Pagination = () => {
+    const getPageNumbers = () => {
+      const pages = [];
+      const maxVisiblePages = 5;
+
+      if (totalPages <= maxVisiblePages) {
+        for (let i = 1; i <= totalPages; i++) {
+          pages.push(i);
+        }
+      } else {
+        if (currentPage <= 3) {
+          for (let i = 1; i <= 4; i++) {
+            pages.push(i);
+          }
+          pages.push("...");
+          pages.push(totalPages);
+        } else if (currentPage >= totalPages - 2) {
+          pages.push(1);
+          pages.push("...");
+          for (let i = totalPages - 3; i <= totalPages; i++) {
+            pages.push(i);
+          }
+        } else {
+          pages.push(1);
+          pages.push("...");
+          for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+            pages.push(i);
+          }
+          pages.push("...");
+          pages.push(totalPages);
+        }
+      }
+
+      return pages;
+    };
+
+    if (totalPages <= 1) return null;
+
+    return (
+      <div className="flex items-center justify-between px-4 py-3 bg-white border-t border-gray-200">
+        <div className="flex items-center text-sm text-gray-500">
+          Showing {startIndex + 1} to{" "}
+          {Math.min(endIndex, filteredStudents.length)} of{" "}
+          {filteredStudents.length} results
+        </div>
+
+        <div className="flex items-center space-x-1">
+          <button
+            onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+            disabled={currentPage === 1}
+            className="px-3 py-1 text-sm border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Previous
+          </button>
+
+          {getPageNumbers().map((page, index) => (
+            <button
+              key={index}
+              onClick={() => typeof page === "number" && setCurrentPage(page)}
+              disabled={page === "..."}
+              className={`px-3 py-1 text-sm border rounded-md ${
+                page === currentPage
+                  ? "bg-indigo-600 text-white border-indigo-600"
+                  : page === "..."
+                  ? "border-transparent cursor-default"
+                  : "border-gray-300 hover:bg-gray-50"
+              }`}
+            >
+              {page}
+            </button>
+          ))}
+
+          <button
+            onClick={() =>
+              setCurrentPage(Math.min(totalPages, currentPage + 1))
+            }
+            disabled={currentPage === totalPages}
+            className="px-3 py-1 text-sm border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -277,7 +424,7 @@ export default function StudentsPage() {
       {/* Toast Notification */}
       {toast.show && (
         <div
-          className={`fixed top-4 right-4 z-50 px-4 py-2 rounded-lg shadow-lg ${
+          className={`fixed top-4 right-4 z-[10000] px-4 py-2 rounded-lg shadow-lg ${
             toast.type === "success"
               ? "bg-green-500 text-white"
               : "bg-red-500 text-white"
@@ -394,7 +541,7 @@ export default function StudentsPage() {
               </div>
               <input
                 type="text"
-                placeholder="Search students..."
+                placeholder="Search students by name, ID, email, or course..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-9 pr-3 py-2 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white/50 backdrop-blur-sm"
@@ -429,6 +576,7 @@ export default function StudentsPage() {
                 <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                   Course
                 </th>
+
                 <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                   Payment
                 </th>
@@ -441,7 +589,7 @@ export default function StudentsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200">
-              {filteredStudents.map((student) => {
+              {currentStudents.map((student) => {
                 const paymentStatus = getPaymentStatus(
                   student.feesPaid,
                   student.course?.fee || 0
@@ -461,14 +609,14 @@ export default function StudentsPage() {
                             {student.name}
                           </div>
                           <div className="text-xs text-slate-500">
-                            ID: {student.$id.slice(-8)}
+                            ID: {student.studentId}
                           </div>
                         </div>
                       </div>
                     </td>
                     <td className="px-4 py-3">
                       <div className="text-sm text-slate-900">
-                        {student.email}
+                        {student.email || "No email"}
                       </div>
                       <div className="text-xs text-slate-500">
                         {student.phone || "No phone"}
@@ -483,6 +631,7 @@ export default function StudentsPage() {
                         {new Date(student.enrollmentDate).toLocaleDateString()}
                       </div>
                     </td>
+
                     <td className="px-4 py-3">
                       <div className="text-sm font-medium text-slate-900">
                         ₹{student.feesPaid.toLocaleString()} / ₹
@@ -568,7 +717,7 @@ export default function StudentsPage() {
             </tbody>
           </table>
 
-          {filteredStudents.length === 0 && (
+          {currentStudents.length === 0 && (
             <div className="text-center py-8">
               <svg
                 className="w-10 h-10 text-slate-400 mx-auto mb-3"
@@ -592,222 +741,213 @@ export default function StudentsPage() {
             </div>
           )}
         </div>
+
+        {/* Pagination */}
+        <Pagination />
       </div>
 
-      {/* Modal */}
-      {showModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-xl border border-white/20 w-full max-w-sm max-h-[90vh] overflow-y-auto">
-            <div className="p-5">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-bold text-slate-800">
-                  {editingStudent ? "Edit Student" : "Add New Student"}
-                </h2>
-                <button
-                  onClick={() => {
-                    setShowModal(false);
-                    resetForm();
-                  }}
-                  className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
-                >
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
-                </button>
-              </div>
+      {/* Compact Modal with Better Layout */}
+      <Modal
+        isOpen={showModal}
+        onClose={() => {
+          setShowModal(false);
+          resetForm();
+        }}
+        title={editingStudent ? "Edit Student" : "Add New Student"}
+        maxWidth="max-w-lg"
+      >
+        <form
+          className="space-y-3"
+          onSubmit={(e) => {
+            e.preventDefault();
+            editingStudent ? handleUpdateStudent() : handleAddStudent();
+          }}
+        >
+          {/* Student ID - Full width and prominent */}
 
-              <form
-                className="space-y-3"
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  editingStudent ? handleUpdateStudent() : handleAddStudent();
-                }}
+          {/* Two-column layout for other fields */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-medium text-slate-700 mb-1">
+                Full Name *
+              </label>
+              <input
+                type="text"
+                placeholder="Enter student name"
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white/50 backdrop-blur-sm"
+                required
+                disabled={submitting}
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-medium text-slate-700 mb-1">
+                Email Address
+              </label>
+              <input
+                type="email"
+                placeholder="Enter email address"
+                value={form.email}
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
+                className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white/50 backdrop-blur-sm"
+                disabled={submitting}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">
+                Student ID *
+              </label>
+              <input
+                type="text"
+                placeholder="Enter student ID (e.g., qtest001)"
+                value={form.studentId}
+                onChange={(e) =>
+                  setForm({ ...form, studentId: e.target.value.trim() })
+                }
+                className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white/50 backdrop-blur-sm font-mono"
+                required
+                disabled={submitting}
+                pattern="[a-zA-Z0-9]+"
+                title="Student ID should contain only letters and numbers"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-slate-700 mb-1">
+                Phone Number
+              </label>
+              <input
+                type="tel"
+                placeholder="Enter phone number"
+                value={form.phone}
+                onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white/50 backdrop-blur-sm"
+                disabled={submitting}
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-medium text-slate-700 mb-1">
+                Fees Paid *
+              </label>
+              <input
+                type="number"
+                placeholder="Enter amount paid"
+                value={form.feesPaid}
+                onChange={(e) =>
+                  setForm({ ...form, feesPaid: Number(e.target.value) })
+                }
+                className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white/50 backdrop-blur-sm"
+                min="0"
+                max={courses.find((c) => c.$id === form.courseId)?.fee || 0}
+                required
+                disabled={submitting}
+              />
+              {form.courseId && (
+                <p className="text-xs text-slate-500 mt-1">
+                  Course fee: ₹
+                  {courses
+                    .find((c) => c.$id === form.courseId)
+                    ?.fee.toLocaleString()}
+                </p>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-xs font-medium text-slate-700 mb-1">
+                Status *
+              </label>
+              <select
+                value={form.status}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    status: e.target.value as
+                      | "active"
+                      | "inactive"
+                      | "completed",
+                  })
+                }
+                className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white/50 backdrop-blur-sm"
+                required
+                disabled={submitting}
               >
-                <div>
-                  <label className="block text-xs font-medium text-slate-700 mb-1">
-                    Full Name
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Enter student name"
-                    value={form.name}
-                    onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white/50 backdrop-blur-sm"
-                    required
-                    disabled={submitting}
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-medium text-slate-700 mb-1">
-                    Email Address
-                  </label>
-                  <input
-                    type="email"
-                    placeholder="Enter email address"
-                    value={form.email}
-                    onChange={(e) =>
-                      setForm({ ...form, email: e.target.value })
-                    }
-                    className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white/50 backdrop-blur-sm"
-                    required
-                    disabled={submitting}
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-medium text-slate-700 mb-1">
-                    Phone Number
-                  </label>
-                  <input
-                    type="tel"
-                    placeholder="Enter phone number"
-                    value={form.phone}
-                    onChange={(e) =>
-                      setForm({ ...form, phone: e.target.value })
-                    }
-                    className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white/50 backdrop-blur-sm"
-                    disabled={submitting}
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-medium text-slate-700 mb-1">
-                    Course
-                  </label>
-                  <select
-                    value={form.courseId}
-                    onChange={(e) =>
-                      setForm({ ...form, courseId: e.target.value })
-                    }
-                    className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white/50 backdrop-blur-sm"
-                    required
-                    disabled={submitting}
-                  >
-                    <option value="">Select a course</option>
-                    {courses.map((course) => (
-                      <option key={course.$id} value={course.$id}>
-                        {course.name} - ₹{course.fee.toLocaleString()}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-medium text-slate-700 mb-1">
-                    Fees Paid
-                  </label>
-                  <input
-                    type="number"
-                    placeholder="Enter amount paid"
-                    value={form.feesPaid}
-                    onChange={(e) =>
-                      setForm({ ...form, feesPaid: Number(e.target.value) })
-                    }
-                    className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white/50 backdrop-blur-sm"
-                    min="0"
-                    max={courses.find((c) => c.$id === form.courseId)?.fee || 0}
-                    required
-                    disabled={submitting}
-                  />
-                  {form.courseId && (
-                    <p className="text-xs text-slate-500 mt-1">
-                      Course fee: ₹
-                      {courses
-                        .find((c) => c.$id === form.courseId)
-                        ?.fee.toLocaleString()}
-                    </p>
-                  )}
-                </div>
-
-                <div>
-                  <label className="block text-xs font-medium text-slate-700 mb-1">
-                    Status
-                  </label>
-                  <select
-                    value={form.status}
-                    onChange={(e) =>
-                      setForm({
-                        ...form,
-                        status: e.target.value as
-                          | "active"
-                          | "inactive"
-                          | "completed",
-                      })
-                    }
-                    className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white/50 backdrop-blur-sm"
-                    required
-                    disabled={submitting}
-                  >
-                    <option value="active">Active</option>
-                    <option value="inactive">Inactive</option>
-                    <option value="completed">Completed</option>
-                  </select>
-                </div>
-
-                <div className="flex justify-end space-x-2 pt-3">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setShowModal(false);
-                      resetForm();
-                    }}
-                    className="px-3 py-2 text-sm text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors font-medium"
-                    disabled={submitting}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg text-sm font-medium hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-                    disabled={submitting}
-                  >
-                    {submitting ? (
-                      <div className="flex items-center">
-                        <svg
-                          className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                        >
-                          <circle
-                            className="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            strokeWidth="4"
-                          ></circle>
-                          <path
-                            className="opacity-75"
-                            fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                          ></path>
-                        </svg>
-                        {editingStudent ? "Updating..." : "Adding..."}
-                      </div>
-                    ) : editingStudent ? (
-                      "Update Student"
-                    ) : (
-                      "Add Student"
-                    )}
-                  </button>
-                </div>
-              </form>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+                <option value="completed">Completed</option>
+              </select>
             </div>
           </div>
-        </div>
-      )}
+          <div>
+            <label className="block text-xs font-medium text-slate-700 mb-1">
+              Course *
+            </label>
+            <select
+              value={form.courseId}
+              onChange={(e) => setForm({ ...form, courseId: e.target.value })}
+              className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white/50 backdrop-blur-sm"
+              required
+              disabled={submitting}
+            >
+              <option value="">Select a course</option>
+              {courses.map((course) => (
+                <option key={course.$id} value={course.$id}>
+                  {course.name} - ₹{course.fee.toLocaleString()}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="flex justify-end space-x-2 pt-3 border-t border-slate-200">
+            <button
+              type="button"
+              onClick={() => {
+                setShowModal(false);
+                resetForm();
+              }}
+              className="px-3 py-2 text-sm text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors font-medium"
+              disabled={submitting}
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg text-sm font-medium hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              disabled={submitting}
+            >
+              {submitting ? (
+                <div className="flex items-center">
+                  <svg
+                    className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                  {editingStudent ? "Updating..." : "Adding..."}
+                </div>
+              ) : editingStudent ? (
+                "Update Student"
+              ) : (
+                "Add Student"
+              )}
+            </button>
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 }

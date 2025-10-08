@@ -18,8 +18,9 @@ export interface Course extends AppwriteDocument {
   status: "active" | "inactive" | "draft";
 }
 
-// Student interface
+// Student interface - Updated with studentId only
 export interface Student extends AppwriteDocument {
+  studentId: string;
   name: string;
   email: string;
   phone?: string;
@@ -71,7 +72,9 @@ export interface CourseFormData {
   status: "active" | "inactive" | "draft";
 }
 
+// Updated StudentFormData with studentId only
 export interface StudentFormData {
+  studentId: string;
   name: string;
   email: string;
   phone?: string;
@@ -113,12 +116,14 @@ export interface CourseFilters extends SearchFilters {
   maxFee?: number;
 }
 
+// Updated StudentFilters with studentId only (removed entryDate filters)
 export interface StudentFilters extends SearchFilters {
   status?: "active" | "inactive" | "completed";
   courseId?: string;
   paymentStatus?: "paid" | "partial" | "pending";
   enrollmentDateFrom?: string;
   enrollmentDateTo?: string;
+  studentId?: string;
 }
 
 // Analytics interfaces
@@ -247,7 +252,7 @@ export interface FormValidation {
   errors: ValidationError[];
 }
 
-// Export utility functions types
+// Export utility functions types - Updated to include studentId only
 export type CreateCourseData = Omit<
   Course,
   | "$id"
@@ -303,9 +308,52 @@ export interface ImportResult {
   skipped: number;
   errors: string[];
 }
-// Add this to your existing types/appwrite.ts
-export interface User {
-  $id: string;
+
+// Lead interfaces (simplified: removed notes, followUpDate, assignedTo, priority, leadScore)
+export interface Lead extends AppwriteDocument {
   name: string;
   email: string;
+  phone?: string;
+  interestedCourseId?: string;
+  source:
+    | "website"
+    | "referral"
+    | "social_media"
+    | "advertisement"
+    | "walk_in"
+    | "other";
+  status:
+    | "new"
+    | "contacted"
+    | "interested"
+    | "not_interested"
+    | "converted"
+    | "lost";
 }
+
+export interface LeadWithCourse extends Lead {
+  course?: Course;
+}
+
+export interface LeadCreateData {
+  name: string;
+  email: string;
+  phone?: string;
+  interestedCourseId?: string;
+  source:
+    | "website"
+    | "referral"
+    | "social_media"
+    | "advertisement"
+    | "walk_in"
+    | "other";
+  status:
+    | "new"
+    | "contacted"
+    | "interested"
+    | "not_interested"
+    | "converted"
+    | "lost";
+}
+
+export interface LeadUpdateData extends Partial<LeadCreateData> {}
