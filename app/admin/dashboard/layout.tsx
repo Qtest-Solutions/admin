@@ -15,22 +15,18 @@ export default function DashboardLayout({
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
-  // Modal states
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [showHelpModal, setShowHelpModal] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
-  // Form states
   const [profileForm, setProfileForm] = useState({
     name: "",
     email: "",
     phone: "",
-    bio: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Toast state
   const [toast, setToast] = useState({
     show: false,
     message: "",
@@ -69,9 +65,6 @@ export default function DashboardLayout({
 
     try {
       setIsSubmitting(true);
-      // Add your profile update logic here
-      // await userService.updateProfile(profileForm);
-
       showToast("Profile updated successfully!", "success");
       setShowProfileModal(false);
     } catch (error) {
@@ -85,8 +78,7 @@ export default function DashboardLayout({
     setProfileForm({
       name: user?.name || "",
       email: user?.email || "",
-      phone: user?.phone || "",
-      bio: user?.bio || "",
+      phone: (user as any)?.phone || "",
     });
     setShowProfileModal(true);
     setIsUserMenuOpen(false);
@@ -198,7 +190,6 @@ export default function DashboardLayout({
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-        {/* Toast Notification */}
         {toast.show && (
           <div
             className={`fixed top-4 right-4 z-[10000] px-4 py-3 rounded-lg shadow-lg transition-all duration-300 ${
@@ -244,14 +235,12 @@ export default function DashboardLayout({
           </div>
         )}
 
-        {/* Sidebar */}
         <aside
           className={`fixed left-0 top-0 h-full bg-white/80 backdrop-blur-sm border-r border-white/20 shadow-xl transition-all duration-300 z-40 ${
             isSidebarCollapsed ? "w-16" : "w-64"
           }`}
         >
           <div className="p-4">
-            {/* Header */}
             <div className="flex items-center justify-between mb-8">
               <div
                 className={`flex items-center ${
@@ -299,7 +288,6 @@ export default function DashboardLayout({
               </button>
             </div>
 
-            {/* Navigation */}
             <nav className="space-y-2">
               {navigationItems.map((item) => (
                 <Link
@@ -328,7 +316,6 @@ export default function DashboardLayout({
             </nav>
           </div>
 
-          {/* User Profile */}
           {!isSidebarCollapsed && (
             <div className="absolute bottom-4 left-4 right-4">
               <div className="bg-slate-100/50 rounded-lg p-3">
@@ -352,13 +339,11 @@ export default function DashboardLayout({
           )}
         </aside>
 
-        {/* Main Content */}
         <div
           className={`transition-all duration-300 ${
             isSidebarCollapsed ? "ml-16" : "ml-64"
           }`}
         >
-          {/* Top Bar */}
           <header className="bg-white/70 backdrop-blur-sm border-b border-white/20 px-6 py-4 relative z-50">
             <div className="flex items-center justify-between">
               <div>
@@ -380,7 +365,6 @@ export default function DashboardLayout({
                 </nav>
               </div>
 
-              {/* User Menu */}
               <div className="relative">
                 <button
                   onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
@@ -416,7 +400,6 @@ export default function DashboardLayout({
                   </svg>
                 </button>
 
-                {/* Enhanced Dropdown Menu */}
                 {isUserMenuOpen && (
                   <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-slate-200 py-1 z-[60]">
                     <div className="px-4 py-3 border-b border-slate-100">
@@ -428,7 +411,6 @@ export default function DashboardLayout({
                       </p>
                     </div>
 
-                    {/* Profile Option */}
                     <button
                       onClick={openProfileModal}
                       className="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 transition-colors flex items-center"
@@ -449,7 +431,6 @@ export default function DashboardLayout({
                       Edit Profile
                     </button>
 
-                    {/* Settings Option */}
                     <button
                       onClick={() => {
                         setShowSettingsModal(true);
@@ -479,7 +460,6 @@ export default function DashboardLayout({
                       Settings
                     </button>
 
-                    {/* Help Option */}
                     <button
                       onClick={() => {
                         setShowHelpModal(true);
@@ -504,7 +484,6 @@ export default function DashboardLayout({
                     </button>
 
                     <div className="border-t border-slate-100 mt-1">
-                      {/* Logout Option */}
                       <button
                         onClick={() => {
                           setShowLogoutModal(true);
@@ -534,7 +513,6 @@ export default function DashboardLayout({
             </div>
           </header>
 
-          {/* Page Content */}
           <main className="p-6 relative z-10">
             <div className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 p-6 min-h-[calc(100vh-200px)]">
               {children}
@@ -542,7 +520,6 @@ export default function DashboardLayout({
           </main>
         </div>
 
-        {/* Click outside to close dropdown */}
         {isUserMenuOpen && (
           <div
             className="fixed inset-0 z-[55]"
@@ -550,7 +527,6 @@ export default function DashboardLayout({
           />
         )}
 
-        {/* Profile Modal */}
         <Modal
           isOpen={showProfileModal}
           onClose={() => setShowProfileModal(false)}
@@ -608,22 +584,6 @@ export default function DashboardLayout({
               />
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
-                Bio
-              </label>
-              <textarea
-                placeholder="Tell us about yourself"
-                value={profileForm.bio}
-                onChange={(e) =>
-                  setProfileForm({ ...profileForm, bio: e.target.value })
-                }
-                rows={3}
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white/50 backdrop-blur-sm resize-none"
-                disabled={isSubmitting}
-              />
-            </div>
-
             <div className="flex justify-end space-x-3 pt-4">
               <button
                 type="button"
@@ -670,7 +630,6 @@ export default function DashboardLayout({
           </form>
         </Modal>
 
-        {/* Settings Modal */}
         <Modal
           isOpen={showSettingsModal}
           onClose={() => setShowSettingsModal(false)}
@@ -800,7 +759,6 @@ export default function DashboardLayout({
           </div>
         </Modal>
 
-        {/* Help Modal */}
         <Modal
           isOpen={showHelpModal}
           onClose={() => setShowHelpModal(false)}
@@ -974,7 +932,6 @@ export default function DashboardLayout({
           </div>
         </Modal>
 
-        {/* Logout Confirmation Modal */}
         <Modal
           isOpen={showLogoutModal}
           onClose={() => setShowLogoutModal(false)}

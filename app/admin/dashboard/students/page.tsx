@@ -3,7 +3,6 @@ import { useState, useEffect, useMemo } from "react";
 import { studentService, courseService } from "../../../../services/database";
 import Modal from "../../../../components/Modal";
 
-// Updated interfaces to include studentId
 interface AppwriteDocument {
   $id: string;
   $createdAt: string;
@@ -23,14 +22,13 @@ interface Course extends AppwriteDocument {
 }
 
 interface Student extends AppwriteDocument {
-  studentId: string; // Added manual student ID field
+  studentId: string;
   name: string;
   email: string;
   phone?: string;
   courseId?: string;
   feesPaid: number;
   enrollmentDate: string;
-  entryDate: string;
   status: "active" | "inactive" | "completed" | "dropped";
 }
 
@@ -39,7 +37,7 @@ interface StudentWithCourse extends Student {
 }
 
 interface StudentCreateData {
-  studentId: string; // Added manual student ID field
+  studentId: string;
   name: string;
   email: string;
   phone?: string;
@@ -52,7 +50,7 @@ interface StudentCreateData {
 interface StudentUpdateData extends Partial<StudentCreateData> {}
 
 interface StudentFormData {
-  studentId: string; // Added manual student ID field
+  studentId: string;
   name: string;
   email: string;
   phone: string;
@@ -68,7 +66,6 @@ interface ToastNotification {
 }
 
 export default function StudentsPage() {
-  // Existing state
   const [students, setStudents] = useState<StudentWithCourse[]>([]);
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
@@ -84,12 +81,11 @@ export default function StudentsPage() {
     type: "success",
   });
 
-  // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
 
   const [form, setForm] = useState<StudentFormData>({
-    studentId: "", // Added student ID field
+    studentId: "",
     name: "",
     email: "",
     phone: "",
@@ -98,15 +94,14 @@ export default function StudentsPage() {
     status: "active",
   });
 
-  // Show toast notification
   const showToast = (message: string, type: "success" | "error") => {
     setToast({ show: true, message, type });
-    setTimeout(() => {
-      setToast({ show: false, message: "", type: "success" });
-    }, 3000);
+    setTimeout(
+      () => setToast({ show: false, message: "", type: "success" }),
+      3000
+    );
   };
 
-  // Load initial data
   useEffect(() => {
     loadData();
   }, []);
@@ -133,19 +128,17 @@ export default function StudentsPage() {
 
   const resetForm = () => {
     setForm({
-      studentId: "", // Reset student ID
+      studentId: "",
       name: "",
       email: "",
       phone: "",
       courseId: courses.length > 0 ? courses[0].$id : "",
       feesPaid: 0,
-      entryDate: new Date().toISOString().split("T")[0],
       status: "active",
     });
     setEditingStudent(null);
   };
 
-  // Check if student ID already exists
   const isStudentIdExists = (studentId: string, excludeId?: string) => {
     return students.some(
       (student) => student.studentId === studentId && student.$id !== excludeId
@@ -158,7 +151,6 @@ export default function StudentsPage() {
       return;
     }
 
-    // Check if student ID already exists
     if (isStudentIdExists(form.studentId)) {
       showToast(
         "Student ID already exists. Please use a different ID.",
@@ -219,7 +211,6 @@ export default function StudentsPage() {
       return;
     }
 
-    // Check if student ID already exists (excluding current student)
     if (isStudentIdExists(form.studentId, editingStudent.$id)) {
       showToast(
         "Student ID already exists. Please use a different ID.",
@@ -274,7 +265,6 @@ export default function StudentsPage() {
     }
   };
 
-  // Filter and paginate students - Updated to include studentId in search
   const filteredStudents = useMemo(() => {
     return students.filter((student) => {
       const matchesSearch =
@@ -292,13 +282,11 @@ export default function StudentsPage() {
     });
   }, [students, searchTerm, filterStatus]);
 
-  // Pagination calculations
   const totalPages = Math.ceil(filteredStudents.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentStudents = filteredStudents.slice(startIndex, endIndex);
 
-  // Reset to first page when filters change
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm, filterStatus]);
@@ -324,40 +312,27 @@ export default function StudentsPage() {
     return { text: "Pending", color: "text-red-600" };
   };
 
-  // Pagination component
   const Pagination = () => {
     const getPageNumbers = () => {
-      const pages = [];
+      const pages: (number | "...")[] = [];
       const maxVisiblePages = 5;
 
       if (totalPages <= maxVisiblePages) {
-        for (let i = 1; i <= totalPages; i++) {
-          pages.push(i);
-        }
+        for (let i = 1; i <= totalPages; i++) pages.push(i);
       } else {
         if (currentPage <= 3) {
-          for (let i = 1; i <= 4; i++) {
-            pages.push(i);
-          }
-          pages.push("...");
-          pages.push(totalPages);
+          for (let i = 1; i <= 4; i++) pages.push(i);
+          pages.push("...", totalPages);
         } else if (currentPage >= totalPages - 2) {
-          pages.push(1);
-          pages.push("...");
-          for (let i = totalPages - 3; i <= totalPages; i++) {
-            pages.push(i);
-          }
+          pages.push(1, "...");
+          for (let i = totalPages - 3; i <= totalPages; i++) pages.push(i);
         } else {
-          pages.push(1);
-          pages.push("...");
-          for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+          pages.push(1, "...");
+          for (let i = currentPage - 1; i <= currentPage + 1; i++)
             pages.push(i);
-          }
-          pages.push("...");
-          pages.push(totalPages);
+          pages.push("...", totalPages);
         }
       }
-
       return pages;
     };
 
@@ -421,7 +396,6 @@ export default function StudentsPage() {
 
   return (
     <div className="space-y-4">
-      {/* Toast Notification */}
       {toast.show && (
         <div
           className={`fixed top-4 right-4 z-[10000] px-4 py-2 rounded-lg shadow-lg ${
@@ -434,7 +408,6 @@ export default function StudentsPage() {
         </div>
       )}
 
-      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold text-slate-800">Students</h1>
@@ -466,7 +439,6 @@ export default function StudentsPage() {
         </button>
       </div>
 
-      {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {[
           {
@@ -519,7 +491,6 @@ export default function StudentsPage() {
         ))}
       </div>
 
-      {/* Filters and Search */}
       <div className="bg-white/70 backdrop-blur-sm rounded-lg shadow-md border border-white/20 p-4">
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="flex-1">
@@ -561,7 +532,6 @@ export default function StudentsPage() {
         </div>
       </div>
 
-      {/* Students Table */}
       <div className="bg-white/70 backdrop-blur-sm rounded-lg shadow-md border border-white/20 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
@@ -576,7 +546,6 @@ export default function StudentsPage() {
                 <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                   Course
                 </th>
-
                 <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                   Payment
                 </th>
@@ -631,7 +600,6 @@ export default function StudentsPage() {
                         {new Date(student.enrollmentDate).toLocaleDateString()}
                       </div>
                     </td>
-
                     <td className="px-4 py-3">
                       <div className="text-sm font-medium text-slate-900">
                         ₹{student.feesPaid.toLocaleString()} / ₹
@@ -742,11 +710,9 @@ export default function StudentsPage() {
           )}
         </div>
 
-        {/* Pagination */}
         <Pagination />
       </div>
 
-      {/* Compact Modal with Better Layout */}
       <Modal
         isOpen={showModal}
         onClose={() => {
@@ -763,9 +729,6 @@ export default function StudentsPage() {
             editingStudent ? handleUpdateStudent() : handleAddStudent();
           }}
         >
-          {/* Student ID - Full width and prominent */}
-
-          {/* Two-column layout for other fields */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-medium text-slate-700 mb-1">
@@ -795,6 +758,7 @@ export default function StudentsPage() {
                 disabled={submitting}
               />
             </div>
+
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">
                 Student ID *
@@ -813,6 +777,7 @@ export default function StudentsPage() {
                 title="Student ID should contain only letters and numbers"
               />
             </div>
+
             <div>
               <label className="block text-xs font-medium text-slate-700 mb-1">
                 Phone Number
@@ -879,6 +844,7 @@ export default function StudentsPage() {
               </select>
             </div>
           </div>
+
           <div>
             <label className="block text-xs font-medium text-slate-700 mb-1">
               Course *
@@ -898,6 +864,7 @@ export default function StudentsPage() {
               ))}
             </select>
           </div>
+
           <div className="flex justify-end space-x-2 pt-3 border-t border-slate-200">
             <button
               type="button"
