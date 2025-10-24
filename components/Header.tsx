@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 const Header = () => {
@@ -19,97 +19,216 @@ const Header = () => {
     { name: "Blog", href: "/blog" },
     { name: "Training", href: "/training" },
     { name: "About", href: "/about" },
-    { name: "Contact", href: "/contact" },
   ];
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        isScrolled || isMenuOpen
-          ? "bg-white/10 backdrop-blur-xl border-b border-white/20 shadow-lg shadow-black/5"
-          : "bg-transparent"
-      }`}
+      className={`fixed top-0 left-0 right-0 z-50 px-4 ${isScrolled && "pt-4"}`}
     >
-      {/* Glass morphism overlay - only when scrolled or menu open */}
-      {(isScrolled || isMenuOpen) && (
-        <div className="absolute inset-0 bg-gradient-to-r from-white/15 via-white/10 to-white/15" />
-      )}
-
-      <nav className="container mx-auto px-1 py-1 relative z-10">
-        <div className="flex items-center justify-between">
-          {/* Logo - Increased size */}
-          <Link
-            href="/"
-            aria-label="Qtest Software Solution LLP Home"
-            className="flex items-start space-x-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-sage-300 rounded-lg p-2 -m-2 transition-all duration-300 hover:opacity-90"
-          >
-            <img
-              src="/image.png"
-              alt="Qtest Software Solution LLP logo"
-              width={160}
-              height={160}
-              className="transition-transform duration-300 hover:scale-105 drop-shadow-sm"
-            />
-          </Link>
-
-          {/* Desktop Nav - Using black text */}
-          <div className="hidden md:flex items-center space-x-1">
-            {navItems.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className="relative group px-4 py-2.5 rounded-xl font-medium text-black hover:text-brand-sage-700 transition-all duration-300"
-              >
-                <span className="relative z-10 drop-shadow-sm">
-                  {item.name}
-                </span>
-                <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-brand-sage-500 to-brand-lavender-500 group-hover:w-3/4 transition-all duration-300 rounded-full" />
-                <span className="absolute inset-0 bg-gradient-to-r from-brand-sage-100/0 to-brand-lavender-100/0 group-hover:from-brand-sage-100/40 group-hover:to-brand-lavender-100/40 rounded-xl transition-all duration-300" />
-              </Link>
-            ))}
-          </div>
-
-          {/* Mobile Toggle - Using black text */}
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2.5 rounded-xl transition-all duration-300 text-black hover:text-brand-sage-600 hover:bg-brand-sage-50/50 focus:ring-2 focus:ring-brand-sage-300"
-            aria-label="Toggle mobile menu"
-          >
-            {isMenuOpen ? (
-              <X className="w-6 h-6" />
-            ) : (
-              <Menu className="w-6 h-6" />
-            )}
-          </button>
-        </div>
-
-        {/* Mobile Menu - Using black text with glass effect */}
-        {isMenuOpen && (
+      <div
+        className={`mx-auto max-w-7xl transition-all duration-700 ease-in-out ${
+          isScrolled
+            ? "bg-white/20 backdrop-blur-3xl rounded-full  shadow-[0_20px_60px_0_rgba(0,0,0,0.12)]"
+            : "bg-transparent"
+        }`}
+      >
+        {/* Multiple Glass Layers for Enhanced Effect */}
+        {isScrolled && (
           <>
-            {/* Backdrop overlay for blur effect */}
-            <div
-              className="md:hidden fixed inset-0 backdrop-blur-md bg-black/10 -z-10"
-              onClick={() => setIsMenuOpen(false)}
-            />
+            {/* Inner glow layer */}
+            <div className="absolute inset-0 bg-gradient-to-b from-white/40 via-white/20 to-white/10 rounded-full" />
 
-            <div className="md:hidden mt-6 pb-6 border-t border-white/30 pt-6 bg-white/10 backdrop-blur-xl rounded-xl mx-2">
-              <div className="flex flex-col space-y-3">
+            {/* Outer glow effect */}
+            <div className="absolute -inset-1 bg-gradient-to-r from-white/30 via-white/10 to-white/30 rounded-full blur-2xl opacity-60 -z-10" />
+
+            {/* Shimmer effect */}
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent rounded-full opacity-50" />
+          </>
+        )}
+
+        <nav className="relative px-8 py-4">
+          <div className="flex items-center justify-between">
+            {/* Logo */}
+            <Link
+              href="/"
+              aria-label="Qtest Software Solution LLP Home"
+              className="flex items-center transition-all duration-300 hover:scale-105 relative z-10"
+            >
+              <img
+                src="/image.png"
+                alt="Qtest Software Solution LLP logo"
+                className={`transition-all duration-700 ease-in-out ${
+                  isScrolled ? "h-[50px]" : "h-[120px]"
+                }`}
+              />
+            </Link>
+
+            {/* Desktop Navigation */}
+            <div className="hidden lg:flex items-center gap-2 relative z-10">
+              {navItems.map((item) => (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className={`group relative px-5 py-2.5 text-sm font-medium transition-all duration-300 overflow-hidden ${
+                    isScrolled
+                      ? "text-gray-800 hover:text-gray-900 rounded-full"
+                      : "text-gray-800 hover:text-gray-900"
+                  }`}
+                >
+                  {/* Hover Background - Only when scrolled */}
+                  {isScrolled && (
+                    <span className="absolute inset-0 bg-white/60 backdrop-blur-md rounded-full scale-0 group-hover:scale-100 transition-transform duration-300 shadow-inner" />
+                  )}
+
+                  {/* Text */}
+                  <span className="relative z-10 drop-shadow-sm">
+                    <text className="text-base">{item.name}</text>
+                  </span>
+
+                  {/* Underline when not scrolled */}
+                  {!isScrolled && (
+                    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gray-900 group-hover:w-full transition-all duration-300" />
+                  )}
+                </Link>
+              ))}
+            </div>
+
+            {/* CTA Button - Desktop */}
+            <div className="hidden lg:flex items-center relative z-10">
+              <Link
+                href="/contact"
+                className="group relative px-6 py-2.5 bg-gray-900/95 backdrop-blur-sm text-white text-sm font-medium rounded-full overflow-hidden transition-all duration-300 hover:bg-gray-900 shadow-lg hover:shadow-2xl"
+              >
+                <span className="relative z-10 flex items-center gap-2">
+                  Contact Us
+                  <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+                </span>
+
+                {/* Shine Effect */}
+                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+              </Link>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className={`lg:hidden relative p-2.5 transition-all duration-300 hover:scale-105 z-10 ${
+                isScrolled
+                  ? "rounded-full bg-white/50 backdrop-blur-md border border-white/30 text-gray-800 hover:bg-white/70 shadow-lg"
+                  : "text-gray-800 hover:bg-gray-100 rounded-lg"
+              }`}
+              aria-label="Toggle menu"
+            >
+              {isMenuOpen ? (
+                <X className="w-5 h-5" />
+              ) : (
+                <Menu className="w-5 h-5" />
+              )}
+            </button>
+          </div>
+        </nav>
+      </div>
+
+      {/* Mobile Menu */}
+      {isMenuOpen && (
+        <>
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-black/30 backdrop-blur-xl -z-10 lg:hidden animate-fade-in"
+            onClick={() => setIsMenuOpen(false)}
+          />
+
+          {/* Menu Panel */}
+          <div className="lg:hidden mt-4 relative animate-slide-down mx-auto max-w-7xl">
+            {/* Multiple Glassmorphism Layers */}
+            <div className="absolute inset-0 bg-white/25 backdrop-blur-3xl rounded-3xl border border-white/30 shadow-[0_20px_60px_0_rgba(0,0,0,0.15)]" />
+            <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-white/20 to-white/30 rounded-3xl" />
+            <div className="absolute -inset-1 bg-gradient-to-r from-white/20 via-transparent to-white/20 rounded-3xl blur-xl opacity-50 -z-10" />
+
+            <div className="relative px-6 py-6">
+              <div className="flex flex-col gap-2">
                 {navItems.map((item, index) => (
                   <Link
                     key={item.name}
                     href={item.href}
                     onClick={() => setIsMenuOpen(false)}
-                    className="px-4 py-3 rounded-xl font-medium text-black hover:text-brand-sage-700 hover:bg-white/20 transition-all duration-300 transform hover:translate-x-1 backdrop-blur-sm"
-                    style={{ animationDelay: `${index * 0.1}s` }}
+                    className="group relative px-5 py-3.5 text-sm font-medium text-gray-800 hover:text-gray-900 rounded-2xl transition-all duration-300 overflow-hidden"
+                    style={{
+                      animation: `slide-in 0.3s ease-out ${index * 0.05}s both`,
+                    }}
                   >
-                    <span className="drop-shadow-sm">{item.name}</span>
+                    {/* Hover Background */}
+                    <span className="absolute inset-0 bg-white/60 backdrop-blur-md rounded-2xl scale-0 group-hover:scale-100 transition-transform duration-300 shadow-inner" />
+
+                    {/* Text */}
+                    <span className="relative z-10 drop-shadow-sm">
+                      {item.name}
+                    </span>
                   </Link>
                 ))}
+
+                {/* Mobile CTA */}
+                <div className="pt-4 mt-2 border-t border-white/40">
+                  <Link
+                    href="/contact"
+                    onClick={() => setIsMenuOpen(false)}
+                    className="group relative flex items-center justify-center gap-2 w-full px-6 py-3.5 bg-gray-900/95 backdrop-blur-sm text-white text-sm font-medium rounded-2xl overflow-hidden transition-all duration-300 hover:bg-gray-900 shadow-lg hover:shadow-2xl"
+                  >
+                    <span className="relative z-10 flex items-center gap-2">
+                      Contact Us
+                      <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+                    </span>
+
+                    {/* Shine Effect */}
+                    <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                  </Link>
+                </div>
               </div>
             </div>
-          </>
-        )}
-      </nav>
+          </div>
+        </>
+      )}
+
+      <style jsx>{`
+        @keyframes fade-in {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+
+        @keyframes slide-down {
+          from {
+            opacity: 0;
+            transform: translateY(-20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes slide-in {
+          from {
+            opacity: 0;
+            transform: translateX(-20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+
+        .animate-fade-in {
+          animation: fade-in 0.3s ease-out;
+        }
+
+        .animate-slide-down {
+          animation: slide-down 0.4s ease-out;
+        }
+      `}</style>
     </header>
   );
 };

@@ -1,6 +1,50 @@
-import { Send, Mail, Phone, MapPin } from "lucide-react";
+"use client";
+
+import { Send, Mail, Phone, MapPin, CheckCircle } from "lucide-react";
+import { useState } from "react";
 
 const Contact = () => {
+  const [showMessage, setShowMessage] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    try {
+      const response = await fetch(
+        "https://formsubmit.co/hisham@qtestsolutions.com",
+        {
+          method: "POST",
+          body: formData,
+          headers: {
+            Accept: "application/json",
+          },
+        }
+      );
+
+      if (response.ok) {
+        // Show success message
+        setShowMessage(true);
+
+        // Clear form
+        form.reset();
+
+        // Hide message after 5 seconds
+        setTimeout(() => {
+          setShowMessage(false);
+        }, 5000);
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   const contactInfo = [
     { icon: Mail, title: "Email", info: "info@qtestsolutions.com" },
     { icon: Phone, title: "Phone", info: "+91 9876543210" },
@@ -60,7 +104,7 @@ const Contact = () => {
           >
             <div className="glass-professional p-6 rounded-2xl shadow-professional">
               <h3 className="text-xl font-bold text-brand-neutral-800 mb-6 flex items-center gap-2">
-                <div className="w-2 h-6 bg-gradient-to-b from-brand-coral-500 to-brand-sage-500 rounded-full" />
+                {/* <div className="w-2 h-6 bg-gradient-to-b from-brand-coral-500 to-brand-sage-500 rounded-full" /> */}
                 Contact Information
               </h3>
 
@@ -96,7 +140,7 @@ const Contact = () => {
               </div>
 
               {/* Office Hours */}
-              <div className="mt-6 pt-4 border-t border-brand-neutral-200/30">
+              {/* <div className="mt-6 pt-4 border-t border-brand-neutral-200/30">
                 <h4 className="text-base font-bold text-brand-neutral-800 mb-3">
                   Office Hours
                 </h4>
@@ -113,7 +157,7 @@ const Contact = () => {
                     <span className="font-semibold">Sunday:</span> Closed
                   </p>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
           {/* Contact Form */}
@@ -123,11 +167,20 @@ const Contact = () => {
           >
             <div className="glass-professional rounded-2xl p-6 shadow-professional glow-coral">
               <h3 className="text-lg font-bold text-brand-neutral-800 mb-4 flex items-center gap-2">
-                <div className="w-2 h-5 bg-gradient-to-b from-brand-lavender-500 to-brand-coral-500 rounded-full" />
+                {/* <div className="w-2 h-5 bg-gradient-to-b from-brand-lavender-500 to-brand-coral-500 rounded-full" /> */}
                 Send us a Message
               </h3>
 
-              <form className="space-y-4" method="post" action="/api/contact">
+              <form className="space-y-4" onSubmit={handleSubmit}>
+                {/* FormSubmit Configuration */}
+                <input type="hidden" name="_captcha" value="false" />
+                <input
+                  type="hidden"
+                  name="_subject"
+                  value="New Contact Form Submission from QTest Website"
+                />
+                <input type="hidden" name="_template" value="table" />
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs font-semibold mb-2 text-brand-neutral-700">
@@ -179,12 +232,30 @@ const Contact = () => {
                 <div className="pt-2">
                   <button
                     type="submit"
-                    className="w-full btn-accent py-2 px-4 text-sm font-semibold flex items-center justify-center gap-2 group"
+                    disabled={isSubmitting}
+                    className="w-full btn-accent py-2 px-4 text-sm font-semibold flex items-center justify-center gap-2 group disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Send Message
+                    {isSubmitting ? "Sending..." : "Send Message"}
                     <Send className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
                   </button>
                 </div>
+
+                {/* Success Message */}
+                {showMessage && (
+                  <div className="pt-2 animate-fade-in-up">
+                    <div className="flex items-center gap-2 bg-green-50 border border-green-200 rounded-lg px-4 py-3">
+                      <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
+                      <div>
+                        <p className="font-semibold text-green-800 text-sm">
+                          Message Sent Successfully!
+                        </p>
+                        <p className="text-green-700 text-xs">
+                          We'll get back to you within 24 hours.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 <div className="text-center pt-2 text-xs text-brand-neutral-500">
                   <p>We typically respond within 24 hours</p>

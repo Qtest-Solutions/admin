@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { ArrowRight } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 interface Banner {
   title: string;
@@ -17,7 +18,7 @@ const banners: Banner[] = [
     title: "Qtest Software",
     highlight: "Qtest Software Solutions LLP",
     desc: "Empowering startups with professional software testing services and training the next generation of quality assurance professionals.",
-    primary: "Explore us",
+    primary: "Contact us",
     accent: "text-sky-400",
   },
   // {
@@ -45,6 +46,8 @@ const modernGradients = [
 ];
 
 export default function HeroSlider() {
+  const router = useRouter();
+
   const [index, setIndex] = useState<number>(0);
   const [isPaused, setIsPaused] = useState<boolean>(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -58,13 +61,7 @@ export default function HeroSlider() {
 
   // Smooth scroll to services section
   const scrollToServices = () => {
-    const servicesSection = document.getElementById("services");
-    if (servicesSection) {
-      servicesSection.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-    }
+    router.push("/contact");
   };
 
   // Get modern gradient based on index

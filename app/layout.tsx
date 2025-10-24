@@ -33,6 +33,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <link rel="icon" href="/favicon.ico" type="image/png" />
+      </head>
       <AuthProvider>
         <body className="min-h-screen bg-gradient-professional font-sans overflow-x-hidden antialiased">
           {children}
