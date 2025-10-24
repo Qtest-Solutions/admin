@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { ArrowRight } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 interface Banner {
   title: string;
@@ -17,7 +18,7 @@ const banners: Banner[] = [
     title: "Qtest Software",
     highlight: "Qtest Software Solutions LLP",
     desc: "Empowering startups with professional software testing services and training the next generation of quality assurance professionals.",
-    primary: "Explore us",
+    primary: "Contact us",
     accent: "text-sky-400",
   },
   // {
@@ -36,14 +37,6 @@ const banners: Banner[] = [
   // },
 ];
 
-// Light modern gradient backgrounds
-const modernGradients = [
-  "linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #bae6fd 100%)", // Light sky blue
-  "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%)", // Light slate
-  "linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 50%, #99f6e4 100%)", // Light teal
-  "linear-gradient(135deg, #faf5ff 0%, #f3e8ff 50%, #e9d5ff 100%)", // Light lavender
-];
-
 export default function HeroSlider() {
   const [index, setIndex] = useState<number>(0);
   const [isPaused, setIsPaused] = useState<boolean>(false);
@@ -51,25 +44,15 @@ export default function HeroSlider() {
   const containerRef = useRef<HTMLElement | null>(null);
   const startX = useRef<number>(0);
   const reduced = useReducedMotion();
+  const router = useRouter();
 
   const slideCount = banners.length;
   const isSingleSlide = slideCount <= 1;
   const AUTOPLAY_MS = 2000;
 
-  // Smooth scroll to services section
-  const scrollToServices = () => {
-    const servicesSection = document.getElementById("services");
-    if (servicesSection) {
-      servicesSection.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-    }
-  };
-
-  // Get modern gradient based on index
-  const getGradient = (slideIndex: number) => {
-    return modernGradients[slideIndex % modernGradients.length];
+  // Navigate to contact page
+  const navigateToContact = () => {
+    router.push("/contact");
   };
 
   // autoplay effect - only run if multiple slides
@@ -152,42 +135,41 @@ export default function HeroSlider() {
       aria-roledescription={isSingleSlide ? undefined : "carousel"}
       aria-label={isSingleSlide ? "Hero section" : "Hero slider"}
     >
-      {/* Light modern gradient backgrounds */}
-      <div className="absolute inset-0">
-        {banners.map((_, i) => (
-          <div
-            key={i}
-            className={`absolute inset-0 w-full h-full transition-all duration-1000 ease-in-out ${
-              i === index ? "opacity-100" : "opacity-0"
-            }`}
-            style={{ background: getGradient(i) }}
-          />
-        ))}
-      </div>
+      {/* Video Background */}
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover"
+      >
+        <source src="/herobg.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
 
-      {/* Subtle overlay for depth */}
-      <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-white/5" />
+      {/* Overlay for better text readability */}
+      <div className="absolute inset-0 bg-black/50" />
 
       {/* Content centered */}
       <div className="relative z-10 h-full flex items-center justify-center">
         <div className="container mx-auto px-6 h-full flex items-center justify-center">
-          <div className="flex flex-col justify-center items-center space-y-6 lg:space-y-8 max-w-2xl text-center">
+          <div className="flex flex-col justify-center items-center space-y-6 lg:space-y-8 max-w-2xl mt-[100px] text-center">
             <motion.div
               initial={reduced ? "show" : "hidden"}
               animate="show"
               variants={headerVariants}
             >
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-gray-900 pt-4">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-white pt-4">
                 {banners[index].highlight}
               </h1>
-              <div className="w-20 h-1 bg-gray-700/30 rounded-full mt-4 mx-auto" />
+              <div className="w-20 h-1 bg-white/50 rounded-full mt-4 mx-auto" />
             </motion.div>
 
             <motion.p
               initial={reduced ? "show" : "hidden"}
               animate="show"
               variants={textVariants(0.08)}
-              className="text-lg md:text-xl text-gray-700 leading-relaxed max-w-lg"
+              className="text-lg md:text-xl text-white leading-relaxed max-w-lg"
             >
               {banners[index].desc}
             </motion.p>
@@ -200,9 +182,9 @@ export default function HeroSlider() {
               variants={textVariants(0.12)}
             >
               <button
-                onClick={scrollToServices}
+                onClick={navigateToContact}
                 className="group relative px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-purple-600 hover:to-blue-600 text-white font-semibold rounded-full transition-all duration-500 flex items-center gap-3 shadow-lg hover:shadow-blue-500/25 hover:scale-105 text-base overflow-hidden border border-white/20 backdrop-blur-sm"
-                aria-label={`${banners[index].primary} - Scroll to services section`}
+                aria-label={`${banners[index].primary} - Navigate to contact page`}
               >
                 <span className="relative z-10">{banners[index].primary}</span>
                 <div className="relative z-10 w-7 h-7 bg-white/20 rounded-full flex items-center justify-center group-hover:bg-white/30 transition-all duration-300 group-hover:rotate-45">

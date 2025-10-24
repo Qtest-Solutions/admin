@@ -1,5 +1,5 @@
 "use client";
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, useEffect } from "react";
 import {
   CheckCircle,
   Users,
@@ -14,8 +14,11 @@ import {
   Target,
   Zap,
   MessageCircle,
+  Star,
+  Quote,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
-import GoogleReviewsWidget from "google-reviews-widget"; // ⭐ Import
 
 // -------------------- Types --------------------
 interface Feature {
@@ -54,9 +57,21 @@ interface FormData {
   course: string;
 }
 
+interface Testimonial {
+  id: number;
+  name: string;
+  rating: number;
+  title: string;
+  review: string;
+  course: string;
+  date: string;
+}
+
 // -------------------- Component --------------------
 const Training: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [currentTestimonial, setCurrentTestimonial] = useState<number>(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState<boolean>(true);
   const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
@@ -64,6 +79,247 @@ const Training: React.FC = () => {
     place: "",
     course: "",
   });
+
+  // Testimonials data
+  const testimonials: Testimonial[] = [
+    {
+      id: 1,
+      name: "Soumya KK",
+      rating: 5,
+      title: "Best Software Testing Training Center",
+      review:
+        "The one and only good centre for software testing training. Excellent instructors and perfect learning environment.",
+      course: "Software Testing",
+      date: "2024-09-15",
+    },
+    {
+      id: 2,
+      name: "Neeraja",
+      rating: 5,
+      title: "Amazing Experience",
+      review:
+        "Everything was perfect I was totally satisfied with everything. The service and facilities were great. Education system and the tutors were amazing. Words are not enough to define!",
+      course: "Manual & Automation Testing",
+      date: "2024-08-20",
+    },
+    {
+      id: 3,
+      name: "Sreelakshmi",
+      rating: 5,
+      title: "Perfect Environment for Learning",
+      review:
+        "Perfect environment to learn technology and implement own ideas as a fresher. Trainers will explain every scenario with real time examples.",
+      course: "Automation Testing",
+      date: "2024-09-28",
+    },
+    {
+      id: 4,
+      name: "Subha",
+      rating: 5,
+      title: "Great Experience with Placement Support",
+      review:
+        "It was a great experience. Good place and good atmosphere with placement support that helped me land my first job.",
+      course: "Software Testing",
+      date: "2024-10-05",
+    },
+    {
+      id: 5,
+      name: "Hari Priya V G",
+      rating: 5,
+      title: "Highly Recommended Training",
+      review:
+        "Excellent training program with knowledgeable trainers. They provided clear explanations and hands-on practice with industry tools.",
+      course: "Selenium Training",
+      date: "2024-09-10",
+    },
+    {
+      id: 6,
+      name: "Anand Krishna",
+      rating: 5,
+      title: "Best Investment in My Career",
+      review:
+        "QTest Solutions helped me transition into software testing. The trainers are patient and the curriculum is up-to-date with industry standards.",
+      course: "Manual Testing",
+      date: "2024-08-18",
+    },
+    {
+      id: 7,
+      name: "Priya Menon",
+      rating: 5,
+      title: "Comprehensive Training Program",
+      review:
+        "Very good training center with experienced faculty. They cover both manual and automation testing thoroughly with practical sessions.",
+      course: "QA Automation",
+      date: "2024-09-22",
+    },
+    {
+      id: 8,
+      name: "Rahul Sharma",
+      rating: 5,
+      title: "Excellent Placement Support",
+      review:
+        "Got placed within 2 weeks of completing the course. The placement team is very supportive and connected me with good companies.",
+      course: "Software Testing",
+      date: "2024-10-12",
+    },
+    {
+      id: 9,
+      name: "Divya Krishnan",
+      rating: 5,
+      title: "Real-World Training Approach",
+      review:
+        "The trainers use real-time project examples which made learning very practical. Highly recommend for anyone serious about software testing.",
+      course: "Automation Testing",
+      date: "2024-09-05",
+    },
+    {
+      id: 10,
+      name: "Arun Kumar",
+      rating: 5,
+      title: "Professional and Supportive Environment",
+      review:
+        "Great learning atmosphere with modern infrastructure. The instructors are knowledgeable and always ready to help clarify doubts.",
+      course: "Manual & Automation Testing",
+      date: "2024-08-30",
+    },
+    {
+      id: 11,
+      name: "Sneha Thomas",
+      rating: 5,
+      title: "Career Transformation",
+      review:
+        "QTest Solutions changed my career path completely. From being a fresher to getting hired as a Test Engineer, this training made all the difference.",
+      course: "Software Testing",
+      date: "2024-10-08",
+    },
+    {
+      id: 12,
+      name: "Vishnu Prasad",
+      rating: 5,
+      title: "Best Training Institute in Calicut",
+      review:
+        "Excellent training with focus on both theoretical knowledge and practical implementation. The tools training is comprehensive.",
+      course: "Selenium & Jmeter",
+      date: "2024-09-17",
+    },
+    {
+      id: 13,
+      name: "Anjali Nair",
+      rating: 5,
+      title: "Highly Skilled Trainers",
+      review:
+        "The trainers have extensive industry experience and they share valuable insights about real-world testing scenarios. Very beneficial.",
+      course: "QA Testing",
+      date: "2024-08-25",
+    },
+    {
+      id: 14,
+      name: "Mohammed Riyas",
+      rating: 5,
+      title: "Perfect for Fresh Graduates",
+      review:
+        "As a BTech graduate, this course gave me the practical skills needed to start my testing career. Got placed in a good company after training.",
+      course: "Manual & Automation Testing",
+      date: "2024-10-01",
+    },
+    {
+      id: 15,
+      name: "Lakshmi Priya",
+      rating: 5,
+      title: "Excellent Course Content",
+      review:
+        "The curriculum is well-structured covering all aspects of software testing from basics to advanced automation tools. Very satisfied.",
+      course: "Software Testing",
+      date: "2024-09-12",
+    },
+    {
+      id: 16,
+      name: "Sreekanth Pillai",
+      rating: 5,
+      title: "Value for Money",
+      review:
+        "Best training institute for software testing in Kozhikode. The fees are reasonable and the quality of training is top-notch.",
+      course: "Automation Testing",
+      date: "2024-08-28",
+    },
+    {
+      id: 17,
+      name: "Reshma Abdul",
+      rating: 5,
+      title: "Supportive Learning Environment",
+      review:
+        "The calm and comfortable atmosphere makes learning easy. Instructors are patient and provide clear explanations for complex concepts.",
+      course: "Manual Testing",
+      date: "2024-10-15",
+    },
+    {
+      id: 18,
+      name: "Nithin Raj",
+      rating: 5,
+      title: "Industry-Ready Training",
+      review:
+        "Training on advanced tools like Selenium, QTP, and Appium with hands-on practice made me job-ready. Successfully working as a Test Engineer now.",
+      course: "Automation Testing",
+      date: "2024-09-25",
+    },
+    {
+      id: 19,
+      name: "Arya Menon",
+      rating: 5,
+      title: "Great Faculty and Infrastructure",
+      review:
+        "Modern lab facilities with latest software and tools. The trainers are experienced professionals who provide practical knowledge.",
+      course: "Software Testing",
+      date: "2024-10-10",
+    },
+    {
+      id: 20,
+      name: "Kiran Das",
+      rating: 5,
+      title: "Best Decision for My Career",
+      review:
+        "Joining QTest Solutions was the best decision for my career. Comprehensive training, good placement support, and excellent faculty.",
+      course: "Manual & Automation Testing",
+      date: "2024-09-30",
+    },
+  ];
+
+  // Auto-play carousel
+  useEffect(() => {
+    if (!isAutoPlaying) return;
+
+    const interval = setInterval(() => {
+      setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [isAutoPlaying, testimonials.length]);
+
+  const nextTestimonial = () => {
+    setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
+    setIsAutoPlaying(false);
+  };
+
+  const prevTestimonial = () => {
+    setCurrentTestimonial(
+      (prev) => (prev - 1 + testimonials.length) % testimonials.length
+    );
+    setIsAutoPlaying(false);
+  };
+
+  const goToTestimonial = (index: number) => {
+    setCurrentTestimonial(index);
+    setIsAutoPlaying(false);
+  };
+
+  // Get initials for avatar
+  const getInitials = (name: string) => {
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase();
+  };
 
   // -------------------- WhatsApp Handler --------------------
   const handleWhatsAppClick = () => {
@@ -428,65 +684,169 @@ const Training: React.FC = () => {
         </div>
 
         {/* -------------------- Testimonials Section -------------------- */}
-        <div className="mt-20 text-center animate-fade-in-up">
-          <h3 className="text-2xl md:text-3xl font-bold mb-4 gradient-text-professional">
-            Hear From Our Students
-          </h3>
-          <p className="text-sm text-brand-neutral-600 max-w-2xl mx-auto leading-relaxed font-medium mb-8">
-            See what our students have to say about their learning experience
-            with us.
-          </p>
+        <div className="mt-20 -mx-6 px-6 py-16  animate-fade-in-up">
+          <div className="container mx-auto">
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center gap-2 glass-professional px-4 py-2 rounded-full text-xs text-brand-coral-700 mb-4 font-medium glow-coral">
+                <Star className="w-3 h-3 fill-current" />
+                Student Success Stories
+                <div className="w-1.5 h-1.5 bg-brand-coral-500 rounded-full animate-pulse" />
+              </div>
+              <h3 className="text-2xl md:text-3xl font-bold mb-4 gradient-text-professional">
+                What Our Students Say
+              </h3>
+              <p className="text-sm text-brand-neutral-600 max-w-2xl mx-auto leading-relaxed font-medium">
+                Real experiences from our graduates who have successfully
+                launched their QA careers
+              </p>
+              <div className="mt-4 flex justify-center">
+                <div className="w-16 h-0.5 bg-gradient-to-r from-brand-coral-500 via-brand-sage-500 to-brand-lavender-500 rounded-full" />
+              </div>
+            </div>
 
-          {/* Google Reviews Widget with Avatar Styling */}
-          <div className="max-w-4xl mx-auto glass-professional border border-brand-sage-200/40 rounded-2xl p-8 shadow-soft glow-sage">
-            {/* Custom styling wrapper for Google Reviews Widget */}
-            <style jsx>{`
-              .google-reviews-widget {
-                --review-text-color: #374151;
-                --reviewer-name-color: #111827;
-                --star-color: #f59e0b;
-                --background-color: transparent;
-              }
-              .google-reviews-widget .reviewer-avatar {
-                width: 48px !important;
-                height: 48px !important;
-                border-radius: 50% !important;
-                border: 2px solid #e5e7eb !important;
-                background: linear-gradient(
-                  135deg,
-                  #8b5cf6,
-                  #06b6d4
-                ) !important;
-                display: flex !important;
-                align-items: center !important;
-                justify-content: center !important;
-                color: white !important;
-                font-weight: bold !important;
-                font-size: 16px !important;
-              }
-              .google-reviews-widget .reviewer-avatar img {
-                border-radius: 50% !important;
-                width: 100% !important;
-                height: 100% !important;
-                object-fit: cover !important;
-              }
-              .google-reviews-widget .review-card {
-                background: rgba(255, 255, 255, 0.5) !important;
-                border: 1px solid rgba(139, 92, 246, 0.2) !important;
-                border-radius: 16px !important;
-                padding: 24px !important;
-                margin-bottom: 16px !important;
-                transition: all 0.3s ease !important;
-              }
-              .google-reviews-widget .review-card:hover {
-                transform: translateY(-2px) !important;
-                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
-                border-color: rgba(139, 92, 246, 0.3) !important;
-              }
-            `}</style>
+            {/* Carousel Container */}
+            <div className="relative max-w-7xl mx-auto">
+              {/* Overflow Container */}
+              <div className="overflow-hidden rounded-3xl">
+                {/* Sliding Track */}
+                <div
+                  className="flex transition-transform duration-700 ease-out"
+                  style={{
+                    transform: `translateX(-${
+                      currentTestimonial * (100 / 5)
+                    }%)`,
+                  }}
+                >
+                  {testimonials.map((testimonial, index) => (
+                    <div
+                      key={testimonial.id}
+                      className="flex-shrink-0 px-2"
+                      style={{ width: "20%" }} // 100% / 5 = 20%
+                    >
+                      <div className="glass-professional bg-white/80 backdrop-blur-sm border border-brand-sage-200/40 hover:border-brand-coral-300/60 rounded-2xl p-5 shadow-soft hover:shadow-soft-lg transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1 glow-sage flex flex-col h-full min-h-[320px]">
+                        {/* Decorative Quote Icon */}
+                        <div className="absolute top-3 right-3 opacity-5">
+                          <Quote className="w-12 h-12 text-brand-sage-600" />
+                        </div>
 
-            {/* ⭐ Google Reviews Widget */}
-            <GoogleReviewsWidget instanceId="GU7YBHMoAZMDixFb4enI" />
+                        {/* Content */}
+                        <div className="relative z-10 flex flex-col h-full">
+                          {/* Stars */}
+                          <div className="flex gap-0.5 mb-3">
+                            {[...Array(testimonial.rating)].map((_, i) => (
+                              <Star
+                                key={i}
+                                className="w-3 h-3 fill-yellow-400 text-yellow-400"
+                              />
+                            ))}
+                          </div>
+
+                          {/* Title */}
+                          <h4 className="text-sm font-bold text-brand-neutral-800 mb-2 line-clamp-2">
+                            {testimonial.title}
+                          </h4>
+
+                          {/* Review */}
+                          <p className="text-brand-neutral-600 text-xs leading-relaxed mb-4 font-medium line-clamp-4 flex-1">
+                            "{testimonial.review}"
+                          </p>
+
+                          {/* Author Info */}
+                          <div className="pt-3 border-t border-brand-neutral-200/30 mt-auto">
+                            <div className="flex items-center gap-2 mb-2">
+                              {/* Avatar */}
+                              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-brand-sage-400 to-brand-lavender-500 flex items-center justify-center text-white font-bold text-xs shadow">
+                                {getInitials(testimonial.name)}
+                              </div>
+
+                              {/* Details */}
+                              <div className="flex-1 min-w-0">
+                                <p className="font-bold text-brand-neutral-800 text-xs truncate">
+                                  {testimonial.name}
+                                </p>
+                                <p className="text-xs text-brand-neutral-600 truncate">
+                                  {testimonial.course}
+                                </p>
+                              </div>
+                            </div>
+
+                            {/* Date Badge */}
+                            <span className="text-xs text-brand-neutral-500 bg-brand-neutral-100 px-2 py-0.5 rounded-full inline-block">
+                              {new Date(testimonial.date).toLocaleDateString(
+                                "en-US",
+                                {
+                                  month: "short",
+                                  year: "numeric",
+                                }
+                              )}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Navigation Arrows */}
+              <button
+                onClick={prevTestimonial}
+                disabled={currentTestimonial === 0}
+                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 glass-professional bg-white/90 w-12 h-12 rounded-full flex items-center justify-center text-brand-neutral-700 hover:text-brand-sage-600 transition-all duration-300 hover:scale-110 shadow-soft hover:shadow-soft-lg border border-brand-sage-200/40 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 z-10"
+                aria-label="Previous testimonials"
+              >
+                <ChevronLeft className="w-6 h-6" />
+              </button>
+
+              <button
+                onClick={nextTestimonial}
+                disabled={currentTestimonial >= testimonials.length - 5}
+                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 glass-professional bg-white/90 w-12 h-12 rounded-full flex items-center justify-center text-brand-neutral-700 hover:text-brand-sage-600 transition-all duration-300 hover:scale-110 shadow-soft hover:shadow-soft-lg border border-brand-sage-200/40 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 z-10"
+                aria-label="Next testimonials"
+              >
+                <ChevronRight className="w-6 h-6" />
+              </button>
+
+              {/* Navigation Controls */}
+              <div className="flex items-center justify-center gap-4 mt-8">
+                {/* Dots Indicator */}
+                <div className="flex gap-2">
+                  {Array.from({
+                    length: testimonials.length - 4,
+                  }).map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => goToTestimonial(index)}
+                      className={`transition-all duration-300 rounded-full ${
+                        currentTestimonial === index
+                          ? "w-8 h-2 bg-brand-sage-600"
+                          : "w-2 h-2 bg-brand-neutral-300 hover:bg-brand-sage-400"
+                      }`}
+                      aria-label={`Go to testimonial ${index + 1}`}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* Counter */}
+              <div className="text-center mt-4">
+                <p className="text-sm text-brand-neutral-500 font-medium">
+                  Showing {currentTestimonial + 1}-
+                  {Math.min(currentTestimonial + 5, testimonials.length)} of{" "}
+                  {testimonials.length} reviews
+                </p>
+              </div>
+
+              {/* Auto-play Toggle */}
+              <div className="text-center mt-4">
+                <button
+                  onClick={() => setIsAutoPlaying(!isAutoPlaying)}
+                  className="text-xs text-brand-neutral-500 hover:text-brand-sage-600 transition-colors font-medium"
+                >
+                  {isAutoPlaying ? "⏸ Pause" : "▶ Play"} Auto-scroll
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>

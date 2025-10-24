@@ -2,10 +2,16 @@
 import React, { useState, useEffect } from "react";
 import { Menu, X, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const pathname = usePathname();
+
+  // Only use white text on home page when not scrolled
+  const isHomePage = pathname === "/";
+  const useWhiteText = isHomePage && !isScrolled;
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
@@ -72,22 +78,32 @@ const Header = () => {
                   className={`group relative px-5 py-2.5 text-sm font-medium transition-all duration-300 overflow-hidden ${
                     isScrolled
                       ? "text-gray-800 hover:text-gray-900 rounded-full"
+                      : useWhiteText
+                      ? "text-white hover:text-white/90"
                       : "text-gray-800 hover:text-gray-900"
                   }`}
                 >
                   {/* Hover Background - Only when scrolled */}
                   {isScrolled && (
-                    <span className="absolute inset-0 bg-white/60 backdrop-blur-md rounded-full scale-0 group-hover:scale-100 transition-transform duration-300 shadow-inner" />
+                    <span className="absolute inset-0 bg-white/10 backdrop-blur-md rounded-full scale-0 group-hover:scale-100 transition-transform duration-300 shadow-inner" />
                   )}
 
                   {/* Text */}
-                  <span className="relative z-10 drop-shadow-sm">
+                  <span
+                    className={`relative z-10 ${
+                      useWhiteText ? "drop-shadow-lg" : "drop-shadow-sm"
+                    }`}
+                  >
                     <text className="text-base">{item.name}</text>
                   </span>
 
                   {/* Underline when not scrolled */}
                   {!isScrolled && (
-                    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gray-900 group-hover:w-full transition-all duration-300" />
+                    <span
+                      className={`absolute bottom-0 left-0 w-0 h-0.5 group-hover:w-full transition-all duration-300 ${
+                        useWhiteText ? "bg-white" : "bg-gray-900"
+                      }`}
+                    />
                   )}
                 </Link>
               ))}
@@ -97,7 +113,13 @@ const Header = () => {
             <div className="hidden lg:flex items-center relative z-10">
               <Link
                 href="/contact"
-                className="group relative px-6 py-2.5 bg-gray-900/95 backdrop-blur-sm text-white text-sm font-medium rounded-full overflow-hidden transition-all duration-300 hover:bg-gray-900 shadow-lg hover:shadow-2xl"
+                className={`group relative px-6 py-2.5 text-sm font-medium rounded-full overflow-hidden transition-all duration-300 shadow-lg hover:shadow-2xl ${
+                  isScrolled
+                    ? "bg-gray-900/95 backdrop-blur-sm text-white hover:bg-gray-900"
+                    : useWhiteText
+                    ? "bg-white/20 backdrop-blur-md text-white border border-white/30 hover:bg-white/30"
+                    : "bg-gray-900/95 backdrop-blur-sm text-white hover:bg-gray-900"
+                }`}
               >
                 <span className="relative z-10 flex items-center gap-2">
                   Contact Us
@@ -115,6 +137,8 @@ const Header = () => {
               className={`lg:hidden relative p-2.5 transition-all duration-300 hover:scale-105 z-10 ${
                 isScrolled
                   ? "rounded-full bg-white/50 backdrop-blur-md border border-white/30 text-gray-800 hover:bg-white/70 shadow-lg"
+                  : useWhiteText
+                  ? "text-white hover:bg-white/20 rounded-lg backdrop-blur-sm border border-white/30"
                   : "text-gray-800 hover:bg-gray-100 rounded-lg"
               }`}
               aria-label="Toggle menu"

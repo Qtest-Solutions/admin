@@ -48,7 +48,7 @@ const About = () => {
               {/* Mission Card */}
               <div className="glass-professional p-6 rounded-2xl shadow-professional h-[200px] flex flex-col justify-between">
                 <h3 className="text-lg font-bold text-brand-neutral-800 mb-4 flex items-center gap-2">
-                  <div className="w-2 h-6 bg-gradient-to-b from-brand-sage-500 to-brand-lavender-500 rounded-full" />
+                  {/* <div className="w-2 h-6 bg-gradient-to-b from-brand-sage-500 to-brand-lavender-500 rounded-full" /> */}
                   Our Mission
                 </h3>
                 <p className="text-sm text-brand-neutral-600 leading-relaxed font-medium">
@@ -65,7 +65,7 @@ const About = () => {
               {/* Expertise Card */}
               <div className="glass-professional p-6 rounded-2xl shadow-professional h-[200px] flex flex-col justify-between">
                 <h3 className="text-lg font-bold text-brand-neutral-800 mb-4 flex items-center gap-2">
-                  <div className="w-2 h-6 bg-gradient-to-b from-brand-lavender-500 to-brand-coral-500 rounded-full" />
+                  {/* <div className="w-2 h-6 bg-gradient-to-b from-brand-lavender-500 to-brand-coral-500 rounded-full" /> */}
                   Our Expertise
                 </h3>
                 <p className="text-sm text-brand-neutral-600 leading-relaxed font-medium">
@@ -85,7 +85,7 @@ const About = () => {
               {/* Commitment Card */}
               <div className="glass-professional p-6 rounded-2xl shadow-professional h-[200px] flex flex-col justify-between">
                 <h3 className="text-lg font-bold text-brand-neutral-800 mb-4 flex items-center gap-2">
-                  <div className="w-2 h-6 bg-gradient-to-b from-brand-coral-500 to-brand-sage-500 rounded-full" />
+                  {/* <div className="w-2 h-6 bg-gradient-to-b from-brand-coral-500 to-brand-sage-500 rounded-full" /> */}
                   Our Commitment
                 </h3>
                 <p className="text-sm text-brand-neutral-600 leading-relaxed font-medium">
@@ -102,7 +102,7 @@ const About = () => {
               {/* Core Values Card */}
               <div className="glass-professional p-6 rounded-2xl shadow-professional h-[200px] flex flex-col justify-between">
                 <h3 className="text-lg font-bold text-brand-neutral-800 mb-4 flex items-center gap-2">
-                  <div className="w-2 h-6 bg-gradient-to-b from-brand-sage-500 to-brand-coral-500 rounded-full" />
+                  {/* <div className="w-2 h-6 bg-gradient-to-b from-brand-sage-500 to-brand-coral-500 rounded-full" /> */}
                   Our Core Values
                 </h3>
                 <div className="grid grid-cols-2 gap-4">

@@ -9,6 +9,7 @@ import {
   MapPinHouse,
   MapPinIcon,
 } from "lucide-react";
+import Link from "next/link";
 
 const Footer = () => {
   return (
@@ -34,9 +35,21 @@ const Footer = () => {
               </p>
               <div className="flex space-x-4 mb-6">
                 {[
-                  { name: "LinkedIn", href: "#", icon: Linkedin },
-                  { name: "Facebook", href: "#", icon: Facebook },
-                  { name: "Instagram", href: "#", icon: Instagram },
+                  {
+                    name: "LinkedIn",
+                    href: "https://www.linkedin.com/company/qtest-solutions/",
+                    icon: Linkedin,
+                  },
+                  {
+                    name: "Facebook",
+                    href: "https://www.facebook.com/qtestsolutions",
+                    icon: Facebook,
+                  },
+                  {
+                    name: "Instagram",
+                    href: "https://www.instagram.com/qtest_solutions_calicut/",
+                    icon: Instagram,
+                  },
                 ].map((social, index) => (
                   <a
                     key={index}
@@ -81,22 +94,25 @@ const Footer = () => {
           <div className="lg:col-span-1">
             <h3 className="text-lg font-semibold mb-6 text-white flex items-center">
               <span className="w-2 h-2 bg-gradient-to-r from-brand-primary-400 to-brand-accent-400 rounded-full mr-3" />
-              Company
+              Quick Links
             </h3>
             <ul className="space-y-3">
-              {["About Us", "Careers", "Blog", "Software Testing Training"].map(
-                (course, index) => (
-                  <li key={index}>
-                    <a
-                      href="#"
-                      className="text-brand-slate-300 hover:text-brand-primary-300 transition-colors duration-300 text-sm flex items-center group"
-                    >
-                      <span className="w-1 h-1 bg-brand-slate-500 rounded-full mr-3 group-hover:bg-brand-primary-400 transition-colors duration-300" />
-                      {course}
-                    </a>
-                  </li>
-                )
-              )}
+              {[
+                { name: "Services", href: "/services" },
+                { name: "Blog", href: "/blog" },
+                { name: "Training", href: "/training" },
+                { name: "About Us", href: "/about" },
+              ].map((link, index) => (
+                <li key={index}>
+                  <Link
+                    href={link.href}
+                    className="text-brand-slate-300 hover:text-brand-primary-300 transition-colors duration-300 text-sm flex items-center group"
+                  >
+                    <span className="w-1 h-1 bg-brand-slate-500 rounded-full mr-3 group-hover:bg-brand-primary-400 transition-colors duration-300" />
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -133,7 +149,7 @@ const Footer = () => {
           <p className="text-brand-slate-400 text-sm">
             © 2025 QTest Software Solutions LLP. All rights reserved.
           </p>
-          <div className="flex space-x-6">
+          {/* <div className="flex space-x-6">
             {[
               { name: "Privacy Policy", href: "#" },
               { name: "Terms of Service", href: "#" },
@@ -147,7 +163,7 @@ const Footer = () => {
                 {link.name}
               </a>
             ))}
-          </div>
+          </div> */}
         </div>
       </div>
     </footer>
