@@ -32,8 +32,16 @@ export default function Services() {
     },
   ];
 
-  const getColorClasses = (color) => {
-    const colors = {
+  const getColorClasses = (color: string) => {
+    const colors: {
+      [key: string]: {
+        bg: string;
+        border: string;
+        icon: string;
+        title: string;
+        titleHover: string;
+      };
+    } = {
       blue: {
         bg: "bg-blue-100/50",
         border: "border-blue-200/30",

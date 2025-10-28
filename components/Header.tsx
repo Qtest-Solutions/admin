@@ -23,7 +23,7 @@ const Header = () => {
     { name: "About", href: "/about" },
   ];
 
-  const isActive = (href) => {
+  const isActive = (href: string): boolean => {
     if (href === "/") {
       return pathname === "/";
     }

@@ -70,8 +70,16 @@ export default function About() {
     },
   ];
 
-  const getColorClasses = (color) => {
-    const colors = {
+  const getColorClasses = (color: string) => {
+    const colors: {
+      [key: string]: {
+        bg: string;
+        border: string;
+        icon: string;
+        iconBg: string;
+        text: string;
+      };
+    } = {
       blue: {
         bg: "bg-blue-50",
         border: "border-blue-200",
