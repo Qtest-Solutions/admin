@@ -1,5 +1,5 @@
 "use client";
-import { useState, FormEvent, useEffect } from "react";
+import { useState, FormEvent, useEffect, ChangeEvent } from "react";
 import {
   CheckCircle,
   Users,
@@ -18,6 +18,7 @@ import {
   Quote,
   ChevronLeft,
   ChevronRight,
+  AlertCircle,
 } from "lucide-react";
 
 // -------------------- Types --------------------
@@ -57,6 +58,15 @@ interface FormData {
   course: string;
 }
 
+interface FormErrors {
+  name?: string;
+  email?: string;
+  phone?: string;
+  place?: string;
+  course?: string;
+  submit?: string;
+}
+
 interface Testimonial {
   id: number;
   name: string;
@@ -71,7 +81,9 @@ interface Testimonial {
 const Training: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [currentTestimonial, setCurrentTestimonial] = useState<number>(0);
-  const [isAutoPlaying, setIsAutoPlaying] = useState<boolean>(true);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(false);
+  const [errors, setErrors] = useState<FormErrors>({});
   const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
@@ -284,32 +296,25 @@ const Training: React.FC = () => {
     },
   ];
 
-  // Auto-play carousel
+  // Auto-play carousel - endless loop
   useEffect(() => {
-    if (!isAutoPlaying) return;
-
     const interval = setInterval(() => {
-      setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
+      setCurrentTestimonial((prev) => prev + 1);
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [isAutoPlaying, testimonials.length]);
+  }, []);
 
   const nextTestimonial = () => {
-    setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
-    setIsAutoPlaying(false);
+    setCurrentTestimonial((prev) => prev + 1);
   };
 
   const prevTestimonial = () => {
-    setCurrentTestimonial(
-      (prev) => (prev - 1 + testimonials.length) % testimonials.length
-    );
-    setIsAutoPlaying(false);
+    setCurrentTestimonial((prev) => prev - 1);
   };
 
   const goToTestimonial = (index: number) => {
     setCurrentTestimonial(index);
-    setIsAutoPlaying(false);
   };
 
   // Get initials for avatar
@@ -319,6 +324,51 @@ const Training: React.FC = () => {
       .map((n) => n[0])
       .join("")
       .toUpperCase();
+  };
+
+  // -------------------- Validation --------------------
+  const validateForm = (): boolean => {
+    const newErrors: FormErrors = {};
+
+    // Name validation
+    if (!formData.name.trim()) {
+      newErrors.name = "Full name is required";
+    } else if (formData.name.trim().length < 2) {
+      newErrors.name = "Name must be at least 2 characters";
+    } else if (!/^[a-zA-Z\s]+$/.test(formData.name)) {
+      newErrors.name = "Name can only contain letters and spaces";
+    }
+
+    // Email validation
+    if (!formData.email.trim()) {
+      newErrors.email = "Email address is required";
+    } else if (
+      !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(formData.email)
+    ) {
+      newErrors.email = "Please enter a valid email address";
+    }
+
+    // Phone validation
+    if (!formData.phone.trim()) {
+      newErrors.phone = "Phone number is required";
+    } else if (!/^[0-9]{10}$/.test(formData.phone.replace(/\s/g, ""))) {
+      newErrors.phone = "Please enter a valid 10-digit phone number";
+    }
+
+    // Place validation
+    if (!formData.place.trim()) {
+      newErrors.place = "Place is required";
+    } else if (formData.place.trim().length < 2) {
+      newErrors.place = "Place must be at least 2 characters";
+    }
+
+    // Course validation
+    if (!formData.course) {
+      newErrors.course = "Please select a course";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   // -------------------- WhatsApp Handler --------------------
@@ -479,22 +529,86 @@ const Training: React.FC = () => {
   };
 
   // -------------------- Handlers --------------------
-  const handleInputChange = (field: keyof FormData, value: string): void => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+  const handleInputChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ): void => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    // Clear error for this field when user starts typing
+    if (errors[name as keyof FormErrors]) {
+      setErrors((prev) => ({
+        ...prev,
+        [name]: undefined,
+      }));
+    }
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    setIsModalOpen(false);
-    setFormData({ name: "", email: "", phone: "", place: "", course: "" });
+
+    // Validate form before submission
+    if (!validateForm()) {
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    const form = e.currentTarget;
+    const submissionData = new FormData(form);
+
+    try {
+      const response = await fetch(
+        "https://formsubmit.co/hisham@qtestsolutions.com",
+        {
+          method: "POST",
+          body: submissionData,
+          headers: {
+            Accept: "application/json",
+          },
+        }
+      );
+
+      if (response.ok) {
+        // Show success message
+        setShowSuccessMessage(true);
+
+        // Clear form
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          place: "",
+          course: "",
+        });
+        form.reset();
+
+        // Hide success message and close modal after 3 seconds
+        setTimeout(() => {
+          setShowSuccessMessage(false);
+          setIsModalOpen(false);
+        }, 3000);
+      } else {
+        // Handle error response
+        setErrors({
+          submit: "Failed to submit enrollment. Please try again.",
+        });
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      setErrors({
+        submit: "An error occurred. Please try again later.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // -------------------- Render --------------------
   return (
     <section
       id="training"
-      className="py-16 bg-gradient-sage relative overflow-hidden"
+      className="py-16 bg-transparent relative overflow-hidden"
     >
       {/* Background blobs */}
       <div className="absolute inset-0">
@@ -596,7 +710,7 @@ const Training: React.FC = () => {
         </div>
 
         {/* Courses Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-6 mb-16">
           {courses.map((course, index) => {
             const colors = getColorClasses(course.color);
             return (
@@ -614,7 +728,7 @@ const Training: React.FC = () => {
                 <div className="relative z-10 flex flex-col h-full">
                   {/* Icon */}
                   <div
-                    className={`w-14 h-14 ${colors.iconBg} rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110                     transition-all duration-500 border border-white/20`}
+                    className={`w-14 h-14 ${colors.iconBg} rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-all duration-500 border border-white/20`}
                   >
                     <course.icon
                       className={`w-7 h-7 ${colors.icon} transition-transform duration-500 group-hover:rotate-12`}
@@ -684,7 +798,7 @@ const Training: React.FC = () => {
         </div>
 
         {/* -------------------- Testimonials Section -------------------- */}
-        <div className="mt-20 -mx-6 px-6 py-16  animate-fade-in-up">
+        <div className="mt-20 py-16 animate-fade-in-up">
           <div className="container mx-auto">
             <div className="text-center mb-12">
               <div className="inline-flex items-center gap-2 glass-professional px-4 py-2 rounded-full text-xs text-brand-coral-700 mb-4 font-medium glow-coral">
@@ -705,121 +819,119 @@ const Training: React.FC = () => {
             </div>
 
             {/* Carousel Container */}
-            <div className="relative max-w-7xl mx-auto">
+            <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               {/* Overflow Container */}
               <div className="overflow-hidden rounded-3xl">
-                {/* Sliding Track */}
+                {/* Sliding Track - Duplicate for endless loop */}
                 <div
                   className="flex transition-transform duration-700 ease-out"
                   style={{
                     transform: `translateX(-${
-                      currentTestimonial * (100 / 5)
+                      (currentTestimonial % testimonials.length) * (100 / 5)
                     }%)`,
                   }}
                 >
-                  {testimonials.map((testimonial, index) => (
-                    <div
-                      key={testimonial.id}
-                      className="flex-shrink-0 px-2"
-                      style={{ width: "20%" }} // 100% / 5 = 20%
-                    >
-                      <div className="glass-professional bg-white/80 backdrop-blur-sm border border-brand-sage-200/40 hover:border-brand-coral-300/60 rounded-2xl p-5 shadow-soft hover:shadow-soft-lg transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1 glow-sage flex flex-col h-full min-h-[320px]">
-                        {/* Decorative Quote Icon */}
-                        <div className="absolute top-3 right-3 opacity-5">
-                          <Quote className="w-12 h-12 text-brand-sage-600" />
-                        </div>
-
-                        {/* Content */}
-                        <div className="relative z-10 flex flex-col h-full">
-                          {/* Stars */}
-                          <div className="flex gap-0.5 mb-3">
-                            {[...Array(testimonial.rating)].map((_, i) => (
-                              <Star
-                                key={i}
-                                className="w-3 h-3 fill-yellow-400 text-yellow-400"
-                              />
-                            ))}
+                  {/* Original testimonials + duplicated set for seamless loop */}
+                  {[...testimonials, ...testimonials.slice(0, 5)].map(
+                    (testimonial, index) => (
+                      <div
+                        key={`${testimonial.id}-${index}`}
+                        className="flex-shrink-0 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 px-2 sm:px-3"
+                      >
+                        <div className="glass-professional bg-white/80 backdrop-blur-sm border border-brand-sage-200/40 hover:border-brand-coral-300/60 rounded-2xl p-4 sm:p-5 shadow-soft hover:shadow-soft-lg transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1 glow-sage flex flex-col h-full min-h-[280px] sm:min-h-[320px]">
+                          {/* Decorative Quote Icon */}
+                          <div className="absolute top-3 right-3 opacity-5">
+                            <Quote className="w-10 h-10 sm:w-12 sm:h-12 text-brand-sage-600" />
                           </div>
 
-                          {/* Title */}
-                          <h4 className="text-sm font-bold text-brand-neutral-800 mb-2 line-clamp-2">
-                            {testimonial.title}
-                          </h4>
-
-                          {/* Review */}
-                          <p className="text-brand-neutral-600 text-xs leading-relaxed mb-4 font-medium line-clamp-4 flex-1">
-                            "{testimonial.review}"
-                          </p>
-
-                          {/* Author Info */}
-                          <div className="pt-3 border-t border-brand-neutral-200/30 mt-auto">
-                            <div className="flex items-center gap-2 mb-2">
-                              {/* Avatar */}
-                              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-brand-sage-400 to-brand-lavender-500 flex items-center justify-center text-white font-bold text-xs shadow">
-                                {getInitials(testimonial.name)}
-                              </div>
-
-                              {/* Details */}
-                              <div className="flex-1 min-w-0">
-                                <p className="font-bold text-brand-neutral-800 text-xs truncate">
-                                  {testimonial.name}
-                                </p>
-                                <p className="text-xs text-brand-neutral-600 truncate">
-                                  {testimonial.course}
-                                </p>
-                              </div>
+                          {/* Content */}
+                          <div className="relative z-10 flex flex-col h-full">
+                            {/* Stars */}
+                            <div className="flex gap-0.5 mb-2 sm:mb-3">
+                              {[...Array(testimonial.rating)].map((_, i) => (
+                                <Star
+                                  key={i}
+                                  className="w-3 h-3 fill-yellow-400 text-yellow-400"
+                                />
+                              ))}
                             </div>
 
-                            {/* Date Badge */}
-                            <span className="text-xs text-brand-neutral-500 bg-brand-neutral-100 px-2 py-0.5 rounded-full inline-block">
-                              {new Date(testimonial.date).toLocaleDateString(
-                                "en-US",
-                                {
-                                  month: "short",
-                                  year: "numeric",
-                                }
-                              )}
-                            </span>
+                            {/* Title */}
+                            <h4 className="text-sm font-bold text-brand-neutral-800 mb-2 line-clamp-2">
+                              {testimonial.title}
+                            </h4>
+
+                            {/* Review */}
+                            <p className="text-brand-neutral-600 text-xs leading-relaxed mb-3 sm:mb-4 font-medium line-clamp-4 flex-1">
+                              "{testimonial.review}"
+                            </p>
+
+                            {/* Author Info */}
+                            <div className="pt-3 border-t border-brand-neutral-200/30 mt-auto">
+                              <div className="flex items-center gap-2 mb-2">
+                                {/* Avatar */}
+                                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-brand-sage-400 to-brand-lavender-500 flex items-center justify-center text-white font-bold text-xs shadow flex-shrink-0">
+                                  {getInitials(testimonial.name)}
+                                </div>
+
+                                {/* Details */}
+                                <div className="flex-1 min-w-0">
+                                  <p className="font-bold text-brand-neutral-800 text-xs truncate">
+                                    {testimonial.name}
+                                  </p>
+                                  <p className="text-xs text-brand-neutral-600 truncate">
+                                    {testimonial.course}
+                                  </p>
+                                </div>
+                              </div>
+
+                              {/* Date Badge */}
+                              <span className="text-xs text-brand-neutral-500 bg-brand-neutral-100 px-2 py-0.5 rounded-full inline-block">
+                                {new Date(testimonial.date).toLocaleDateString(
+                                  "en-US",
+                                  {
+                                    month: "short",
+                                    year: "numeric",
+                                  }
+                                )}
+                              </span>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    )
+                  )}
                 </div>
               </div>
 
               {/* Navigation Arrows */}
               <button
                 onClick={prevTestimonial}
-                disabled={currentTestimonial === 0}
-                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 glass-professional bg-white/90 w-12 h-12 rounded-full flex items-center justify-center text-brand-neutral-700 hover:text-brand-sage-600 transition-all duration-300 hover:scale-110 shadow-soft hover:shadow-soft-lg border border-brand-sage-200/40 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 z-10"
+                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 sm:-translate-x-4 glass-professional bg-white/90 w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-brand-neutral-700 hover:text-brand-sage-600 transition-all duration-300 hover:scale-110 shadow-soft hover:shadow-soft-lg border border-brand-sage-200/40 z-10"
                 aria-label="Previous testimonials"
               >
-                <ChevronLeft className="w-6 h-6" />
+                <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
               </button>
 
               <button
                 onClick={nextTestimonial}
-                disabled={currentTestimonial >= testimonials.length - 5}
-                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 glass-professional bg-white/90 w-12 h-12 rounded-full flex items-center justify-center text-brand-neutral-700 hover:text-brand-sage-600 transition-all duration-300 hover:scale-110 shadow-soft hover:shadow-soft-lg border border-brand-sage-200/40 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 z-10"
+                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-3 sm:translate-x-4 glass-professional bg-white/90 w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-brand-neutral-700 hover:text-brand-sage-600 transition-all duration-300 hover:scale-110 shadow-soft hover:shadow-soft-lg border border-brand-sage-200/40 z-10"
                 aria-label="Next testimonials"
               >
-                <ChevronRight className="w-6 h-6" />
+                <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
               </button>
 
               {/* Navigation Controls */}
-              <div className="flex items-center justify-center gap-4 mt-8">
+              <div className="flex items-center justify-center gap-4 mt-6 sm:mt-8">
                 {/* Dots Indicator */}
-                <div className="flex gap-2">
-                  {Array.from({
-                    length: testimonials.length - 4,
-                  }).map((_, index) => (
+                <div className="flex gap-1.5 sm:gap-2">
+                  {testimonials.map((_, index) => (
                     <button
                       key={index}
                       onClick={() => goToTestimonial(index)}
                       className={`transition-all duration-300 rounded-full ${
-                        currentTestimonial === index
-                          ? "w-8 h-2 bg-brand-sage-600"
+                        currentTestimonial % testimonials.length === index
+                          ? "w-6 sm:w-8 h-2 bg-brand-sage-600"
                           : "w-2 h-2 bg-brand-neutral-300 hover:bg-brand-sage-400"
                       }`}
                       aria-label={`Go to testimonial ${index + 1}`}
@@ -829,22 +941,11 @@ const Training: React.FC = () => {
               </div>
 
               {/* Counter */}
-              <div className="text-center mt-4">
-                <p className="text-sm text-brand-neutral-500 font-medium">
-                  Showing {currentTestimonial + 1}-
-                  {Math.min(currentTestimonial + 5, testimonials.length)} of{" "}
+              <div className="text-center mt-3 sm:mt-4">
+                <p className="text-xs sm:text-sm text-brand-neutral-500 font-medium">
+                  {(currentTestimonial % testimonials.length) + 1} of{" "}
                   {testimonials.length} reviews
                 </p>
-              </div>
-
-              {/* Auto-play Toggle */}
-              <div className="text-center mt-4">
-                <button
-                  onClick={() => setIsAutoPlaying(!isAutoPlaying)}
-                  className="text-xs text-brand-neutral-500 hover:text-brand-sage-600 transition-colors font-medium"
-                >
-                  {isAutoPlaying ? "⏸ Pause" : "▶ Play"} Auto-scroll
-                </button>
               </div>
             </div>
           </div>
@@ -853,77 +954,229 @@ const Training: React.FC = () => {
 
       {/* -------------------- Modal -------------------- */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/50 backdrop-blur-sm">
-          <form
-            onSubmit={handleSubmit}
-            className="glass-professional rounded-2xl shadow-xl w-full max-w-lg p-8 relative border border-brand-sage-200/40"
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/50 backdrop-blur-sm"
+          onClick={() => {
+            setIsModalOpen(false);
+            setErrors({});
+            setShowSuccessMessage(false);
+          }}
+        >
+          <div
+            className="glass-professional rounded-2xl shadow-xl w-full max-w-lg p-6 sm:p-8 relative border border-brand-sage-200/40 max-h-[90vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
           >
             {/* Close button */}
             <button
               type="button"
-              onClick={() => setIsModalOpen(false)}
+              onClick={() => {
+                setIsModalOpen(false);
+                setErrors({});
+                setShowSuccessMessage(false);
+              }}
               className="absolute top-4 right-4 text-brand-neutral-400 hover:text-brand-neutral-600 transition-colors"
             >
               <X className="w-6 h-6" />
             </button>
 
-            {/* Title */}
-            <div className="text-center mb-6">
-              <div className="inline-flex items-center gap-2 glass-professional px-3 py-1 rounded-full text-xs text-brand-sage-700 mb-3 font-medium">
-                <GraduationCap className="w-3 h-3" />
-                Training Enrollment
-              </div>
-              <h3 className="text-2xl font-bold text-brand-neutral-800 gradient-text-professional">
-                Start Your Journey
-              </h3>
-            </div>
-
-            {/* Form */}
-            <div className="space-y-4">
-              {["name", "email", "phone", "place"].map((field) => (
-                <div key={field}>
-                  <label className="block text-sm font-medium text-brand-neutral-700 mb-1">
-                    {field.charAt(0).toUpperCase() + field.slice(1)}
-                  </label>
-                  <input
-                    type={field === "email" ? "email" : "text"}
-                    value={formData[field as keyof FormData]}
-                    onChange={(e) =>
-                      handleInputChange(field as keyof FormData, e.target.value)
-                    }
-                    required
-                    className="w-full px-4 py-2 rounded-lg border border-brand-neutral-200 focus:ring-2 focus:ring-brand-sage-500 focus:border-transparent transition-all text-sm"
-                  />
+            {/* Success Message */}
+            {showSuccessMessage ? (
+              <div className="text-center py-8">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-100 mb-4">
+                  <CheckCircle className="w-8 h-8 text-green-600" />
                 </div>
-              ))}
-
-              <div>
-                <label className="block text-sm font-medium text-brand-neutral-700 mb-1">
-                  Select Course
-                </label>
-                <select
-                  value={formData.course}
-                  onChange={(e) => handleInputChange("course", e.target.value)}
-                  required
-                  className="w-full px-4 py-2 rounded-lg border border-brand-neutral-200 focus:ring-2 focus:ring-brand-sage-500 focus:border-transparent transition-all text-sm"
-                >
-                  <option value="">Choose a course</option>
-                  {courses.map((course, index) => (
-                    <option key={index} value={course.name}>
-                      {course.name}
-                    </option>
-                  ))}
-                </select>
+                <h3 className="text-2xl font-bold text-brand-neutral-800 mb-2">
+                  Enrollment Successful!
+                </h3>
+                <p className="text-brand-neutral-600">
+                  Thank you for enrolling. We'll contact you shortly with course
+                  details.
+                </p>
               </div>
+            ) : (
+              <>
+                {/* Title */}
+                <div className="text-center mb-6">
+                  <div className="inline-flex items-center gap-2 glass-professional px-3 py-1 rounded-full text-xs text-brand-sage-700 mb-3 font-medium">
+                    <GraduationCap className="w-3 h-3" />
+                    Training Enrollment
+                  </div>
+                  <h3 className="text-xl sm:text-2xl font-bold text-brand-neutral-800 gradient-text-professional">
+                    Start Your Journey
+                  </h3>
+                </div>
 
-              <button
-                type="submit"
-                className="w-full py-3 rounded-lg font-semibold transition-all duration-300 bg-gradient-to-r from-brand-sage-500 to-brand-lavender-600 text-white hover:shadow-lg transform hover:scale-[1.02] text-sm"
-              >
-                Submit Application
-              </button>
-            </div>
-          </form>
+                {/* Form */}
+                <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+                  {/* FormSubmit Configuration */}
+                  <input type="hidden" name="_captcha" value="false" />
+                  <input
+                    type="hidden"
+                    name="_subject"
+                    value="New Training Enrollment from QTest Website"
+                  />
+                  <input type="hidden" name="_template" value="table" />
+
+                  {/* Name Field */}
+                  <div>
+                    <label className="block text-sm font-medium text-brand-neutral-700 mb-1">
+                      Full Name *
+                    </label>
+                    <input
+                      type="text"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      className={`w-full px-3 sm:px-4 py-2 rounded-lg border transition-all text-sm ${
+                        errors.name
+                          ? "border-red-400 focus:border-red-400 focus:ring-red-200/50"
+                          : "border-brand-neutral-200 focus:border-brand-sage-500"
+                      } focus:ring-2 focus:ring-brand-sage-200/50`}
+                      placeholder="Enter your full name"
+                    />
+                    {errors.name && (
+                      <div className="flex items-center gap-1 mt-1 text-red-600">
+                        <AlertCircle className="w-3 h-3" />
+                        <p className="text-xs">{errors.name}</p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Email Field */}
+                  <div>
+                    <label className="block text-sm font-medium text-brand-neutral-700 mb-1">
+                      Email Address *
+                    </label>
+                    <input
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      className={`w-full px-3 sm:px-4 py-2 rounded-lg border transition-all text-sm ${
+                        errors.email
+                          ? "border-red-400 focus:border-red-400 focus:ring-red-200/50"
+                          : "border-brand-neutral-200 focus:border-brand-sage-500"
+                      } focus:ring-2 focus:ring-brand-sage-200/50`}
+                      placeholder="your.email@example.com"
+                    />
+                    {errors.email && (
+                      <div className="flex items-center gap-1 mt-1 text-red-600">
+                        <AlertCircle className="w-3 h-3" />
+                        <p className="text-xs">{errors.email}</p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Phone Field */}
+                  <div>
+                    <label className="block text-sm font-medium text-brand-neutral-700 mb-1">
+                      Phone Number *
+                    </label>
+                    <input
+                      type="tel"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      className={`w-full px-3 sm:px-4 py-2 rounded-lg border transition-all text-sm ${
+                        errors.phone
+                          ? "border-red-400 focus:border-red-400 focus:ring-red-200/50"
+                          : "border-brand-neutral-200 focus:border-brand-sage-500"
+                      } focus:ring-2 focus:ring-brand-sage-200/50`}
+                      placeholder="10-digit mobile number"
+                    />
+                    {errors.phone && (
+                      <div className="flex items-center gap-1 mt-1 text-red-600">
+                        <AlertCircle className="w-3 h-3" />
+                        <p className="text-xs">{errors.phone}</p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Place Field */}
+                  <div>
+                    <label className="block text-sm font-medium text-brand-neutral-700 mb-1">
+                      Place *
+                    </label>
+                    <input
+                      type="text"
+                      name="place"
+                      value={formData.place}
+                      onChange={handleInputChange}
+                      className={`w-full px-3 sm:px-4 py-2 rounded-lg border transition-all text-sm ${
+                        errors.place
+                          ? "border-red-400 focus:border-red-400 focus:ring-red-200/50"
+                          : "border-brand-neutral-200 focus:border-brand-sage-500"
+                      } focus:ring-2 focus:ring-brand-sage-200/50`}
+                      placeholder="Your city or location"
+                    />
+                    {errors.place && (
+                      <div className="flex items-center gap-1 mt-1 text-red-600">
+                        <AlertCircle className="w-3 h-3" />
+                        <p className="text-xs">{errors.place}</p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Course Field */}
+                  <div>
+                    <label className="block text-sm font-medium text-brand-neutral-700 mb-1">
+                      Select Course *
+                    </label>
+                    <select
+                      name="course"
+                      value={formData.course}
+                      onChange={handleInputChange}
+                      className={`w-full px-3 sm:px-4 py-2 rounded-lg border transition-all text-sm ${
+                        errors.course
+                          ? "border-red-400 focus:border-red-400 focus:ring-red-200/50"
+                          : "border-brand-neutral-200 focus:border-brand-sage-500"
+                      } focus:ring-2 focus:ring-brand-sage-200/50`}
+                    >
+                      <option value="">Choose a course</option>
+                      {courses.map((course, index) => (
+                        <option key={index} value={course.name}>
+                          {course.name}
+                        </option>
+                      ))}
+                    </select>
+                    {errors.course && (
+                      <div className="flex items-center gap-1 mt-1 text-red-600">
+                        <AlertCircle className="w-3 h-3" />
+                        <p className="text-xs">{errors.course}</p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Submit Error */}
+                  {errors.submit && (
+                    <div className="flex items-center gap-2 bg-red-50 border border-red-200 rounded-lg px-4 py-3">
+                      <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
+                      <p className="text-red-800 text-sm">{errors.submit}</p>
+                    </div>
+                  )}
+
+                  {/* Submit Button */}
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full py-3 rounded-lg font-semibold transition-all duration-300 bg-gradient-to-r from-brand-sage-500 to-brand-lavender-600 text-white hover:shadow-lg transform hover:scale-[1.02] text-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        Submitting...
+                      </>
+                    ) : (
+                      <>
+                        Submit Application
+                        <ArrowRight className="w-4 h-4" />
+                      </>
+                    )}
+                  </button>
+                </form>
+              </>
+            )}
+          </div>
         </div>
       )}
     </section>
