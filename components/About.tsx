@@ -1,204 +1,315 @@
-import { Users, Award, Lightbulb, TrendingUp } from "lucide-react";
+import {
+  Users,
+  Award,
+  Target,
+  TrendingUp,
+  Shield,
+  Clock,
+  Zap,
+  Globe,
+} from "lucide-react";
 
-const About = () => {
+export default function About() {
   const stats = [
-    { number: "500+", label: "Projects Delivered", icon: TrendingUp },
-    { number: "99.9%", label: "Success Rate", icon: Award },
-    { number: "50+", label: "Expert Team", icon: Users },
-    { number: "10+", label: "Years Experience", icon: Lightbulb },
+    { number: "100%", label: "Client Satisfaction", icon: Award },
+    { number: "24/7", label: "Support Available", icon: Clock },
+    { number: "Expert", label: "QA Team", icon: Users },
+    { number: "Rapid", label: "Turnaround Time", icon: TrendingUp },
   ];
 
+  const whyChooseUs = [
+    {
+      icon: Shield,
+      title: "Quality First Approach",
+      description:
+        "We don't just test software—we ensure your product meets the highest standards of quality, performance, and reliability.",
+      color: "blue",
+    },
+    {
+      icon: Zap,
+      title: "Fast Turnaround",
+      description:
+        "Swift testing cycles without compromising quality, helping you achieve faster time-to-market and stay ahead of competition.",
+      color: "purple",
+    },
+    {
+      icon: Globe,
+      title: "Industry Expertise",
+      description:
+        "Deep domain knowledge across fintech, e-commerce, healthcare, and enterprise applications with proven methodologies.",
+      color: "green",
+    },
+    {
+      icon: Target,
+      title: "Tailored Solutions",
+      description:
+        "Custom testing strategies designed specifically for your business needs, whether you're a startup or enterprise.",
+      color: "pink",
+    },
+  ];
+
+  const values = [
+    {
+      title: "Excellence",
+      subtitle: "Quality First",
+      icon: Award,
+      color: "blue",
+    },
+    {
+      title: "Transparency",
+      subtitle: "Open & Honest",
+      icon: Shield,
+      color: "purple",
+    },
+    { title: "Innovation", subtitle: "Future Ready", icon: Zap, color: "pink" },
+    {
+      title: "Partnership",
+      subtitle: "Your Success",
+      icon: Users,
+      color: "green",
+    },
+  ];
+
+  const getColorClasses = (color) => {
+    const colors = {
+      blue: {
+        bg: "bg-blue-50",
+        border: "border-blue-200",
+        icon: "text-blue-600",
+        iconBg: "bg-blue-100",
+        text: "text-blue-700",
+      },
+      purple: {
+        bg: "bg-purple-50",
+        border: "border-purple-200",
+        icon: "text-purple-600",
+        iconBg: "bg-purple-100",
+        text: "text-purple-700",
+      },
+      pink: {
+        bg: "bg-pink-50",
+        border: "border-pink-200",
+        icon: "text-pink-600",
+        iconBg: "bg-pink-100",
+        text: "text-pink-700",
+      },
+      green: {
+        bg: "bg-green-50",
+        border: "border-green-200",
+        icon: "text-green-600",
+        iconBg: "bg-green-100",
+        text: "text-green-700",
+      },
+    };
+    return colors[color];
+  };
+
   return (
-    <section id="about" className="py-16 relative bg-gradient-lavender">
-      {/* Professional Background decorative elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-16 right-16 w-80 h-80 bg-brand-lavender-200/20 rounded-full blur-3xl animate-gentle-float" />
-        <div
-          className="absolute bottom-16 left-16 w-96 h-96 bg-brand-sage-200/15 rounded-full blur-3xl animate-gentle-float"
-          style={{ animationDelay: "3s" }}
-        />
-        <div className="absolute top-1/2 right-1/3 w-64 h-64 bg-brand-coral-200/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/3 right-10 w-48 h-48 bg-brand-lavender-300/15 rounded-full blur-2xl" />
+    <section
+      id="about"
+      className="py-20 relative bg-transparent overflow-hidden"
+    >
+      {/* Background Elements */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-20 right-20 w-96 h-96 bg-blue-200/20 rounded-full blur-3xl" />
+        <div className="absolute bottom-20 left-20 w-80 h-80 bg-purple-200/20 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-1/3 w-64 h-64 bg-pink-200/15 rounded-full blur-3xl" />
       </div>
 
-      <div className="container mx-auto px-6 relative z-10">
-        <div className="max-w-6xl mx-auto">
-          {/* Header Section */}
-          <div className="text-center mb-10 animate-fade-in-up">
-            <div className="inline-flex items-center gap-2 glass-professional px-4 py-2 rounded-full text-xs text-brand-lavender-700 mb-4 font-medium glow-lavender">
-              <Users className="w-3 h-3" />
-              About Our Excellence
-              <div className="w-1.5 h-1.5 bg-brand-lavender-500 rounded-full animate-pulse" />
-            </div>
-
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 leading-tight">
-              <span className="text-brand-neutral-800">About </span>
-              <span className="text-black">QTest Solutions</span>
-            </h2>
-
-            <div className="mt-4 flex justify-center mb-6">
-              <div className="w-20 h-0.5 bg-gradient-to-r from-brand-sage-500 via-brand-lavender-500 to-brand-coral-500 rounded-full" />
-            </div>
+      <div className="container mx-auto px-6 relative z-10 max-w-7xl">
+        {/* Header */}
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full text-xs font-semibold text-blue-700 mb-6 border border-blue-200 shadow-sm">
+            <Users className="w-4 h-4" />
+            About QTest Solutions
           </div>
 
-          {/* Content Grid */}
-          <div className="grid lg:grid-cols-2 gap-6 items-stretch mb-12">
-            {/* Left Column */}
-            <div className="space-y-6">
-              {/* Mission Card */}
-              <div className="glass-professional p-6 rounded-2xl shadow-professional h-[200px] flex flex-col justify-between">
-                <h3 className="text-lg font-bold text-brand-neutral-800 mb-4 flex items-center gap-2">
-                  {/* <div className="w-2 h-6 bg-gradient-to-b from-brand-sage-500 to-brand-lavender-500 rounded-full" /> */}
-                  Our Mission
-                </h3>
-                <p className="text-sm text-brand-neutral-600 leading-relaxed font-medium">
-                  We are{" "}
-                  <span className="text-brand-sage-600 font-semibold">
-                    pioneers in quality assurance
-                  </span>
-                  and testing solutions, combining cutting-edge technology with
-                  deep industry expertise to deliver exceptional results that
-                  transform businesses.
-                </p>
-              </div>
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900">
+            Transforming Quality Assurance
+            <span className="block text-blue-600 mt-2">One Test at a Time</span>
+          </h2>
 
-              {/* Expertise Card */}
-              <div className="glass-professional p-6 rounded-2xl shadow-professional h-[200px] flex flex-col justify-between">
-                <h3 className="text-lg font-bold text-brand-neutral-800 mb-4 flex items-center gap-2">
-                  {/* <div className="w-2 h-6 bg-gradient-to-b from-brand-lavender-500 to-brand-coral-500 rounded-full" /> */}
-                  Our Expertise
-                </h3>
-                <p className="text-sm text-brand-neutral-600 leading-relaxed font-medium">
-                  Our team consists of{" "}
-                  <span className="text-brand-lavender-600 font-semibold">
-                    seasoned professionals
-                  </span>
-                  with years of experience in software testing, quality
-                  assurance, and training. We bring industry best practices to
-                  every project.
-                </p>
-              </div>
-            </div>
+          <p className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            We are dedicated to quality assurance and software testing
+            excellence, combining modern technology with industry best practices
+            to deliver exceptional results that drive business success.
+          </p>
+        </div>
 
-            {/* Right Column */}
-            <div className="space-y-6">
-              {/* Commitment Card */}
-              <div className="glass-professional p-6 rounded-2xl shadow-professional h-[200px] flex flex-col justify-between">
-                <h3 className="text-lg font-bold text-brand-neutral-800 mb-4 flex items-center gap-2">
-                  {/* <div className="w-2 h-6 bg-gradient-to-b from-brand-coral-500 to-brand-sage-500 rounded-full" /> */}
-                  Our Commitment
-                </h3>
-                <p className="text-sm text-brand-neutral-600 leading-relaxed font-medium">
-                  We understand the{" "}
-                  <span className="text-brand-coral-600 font-semibold">
-                    unique challenges
-                  </span>
-                  faced by startups and career aspirations of students, allowing
-                  us to provide tailored solutions that drive sustainable
-                  success.
-                </p>
-              </div>
-
-              {/* Core Values Card */}
-              <div className="glass-professional p-6 rounded-2xl shadow-professional h-[200px] flex flex-col justify-between">
-                <h3 className="text-lg font-bold text-brand-neutral-800 mb-4 flex items-center gap-2">
-                  {/* <div className="w-2 h-6 bg-gradient-to-b from-brand-sage-500 to-brand-coral-500 rounded-full" /> */}
-                  Our Core Values
-                </h3>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="text-center p-4 rounded-xl bg-brand-sage-50/50 border border-brand-sage-100/50">
-                    <div className="w-10 h-10 bg-brand-sage-100 rounded-xl flex items-center justify-center mx-auto mb-3">
-                      <Award className="w-5 h-5 text-brand-sage-600" />
-                    </div>
-                    <span className="text-sm font-semibold text-brand-sage-700">
-                      Excellence
-                    </span>
-                    <p className="text-xs text-brand-sage-600 mt-1">
-                      Quality First
-                    </p>
-                  </div>
-                  <div className="text-center p-4 rounded-xl bg-brand-lavender-50/50 border border-brand-lavender-100/50">
-                    <div className="w-10 h-10 bg-brand-lavender-100 rounded-xl flex items-center justify-center mx-auto mb-3">
-                      <Lightbulb className="w-5 h-5 text-brand-lavender-600" />
-                    </div>
-                    <span className="text-sm font-semibold text-brand-lavender-700">
-                      Innovation
-                    </span>
-                    <p className="text-xs text-brand-lavender-600 mt-1">
-                      Future Ready
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Stats Section */}
-          {/* <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-16">
-            {stats.map((stat, index) => (
+        {/* Stats Section */}
+        {/* <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-20">
+          {stats.map((stat, index) => {
+            const Icon = stat.icon;
+            const colors = ["blue", "purple", "pink", "green"];
+            const colorClass = getColorClasses(colors[index % 4]);
+            return (
               <div
                 key={index}
-                className="group bg-white/70 backdrop-blur-sm border border-slate-200/50 rounded-2xl p-6 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+                className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 text-center shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border border-gray-100"
               >
-                <div className="mb-4 flex justify-center">
-                  <div
-                    className={`w-14 h-14 rounded-xl flex items-center justify-center ${
-                      index % 4 === 0
-                        ? "bg-sky-100 text-sky-600"
-                        : index % 4 === 1
-                        ? "bg-emerald-100 text-emerald-600"
-                        : index % 4 === 2
-                        ? "bg-violet-100 text-violet-600"
-                        : "bg-amber-100 text-amber-600"
-                    }`}
-                  >
-                    <stat.icon className="w-7 h-7" />
-                  </div>
-                </div>
-
                 <div
-                  className={`text-3xl md:text-4xl font-bold mb-2 ${
-                    index % 4 === 0
-                      ? "text-sky-600"
-                      : index % 4 === 1
-                      ? "text-emerald-600"
-                      : index % 4 === 2
-                      ? "text-violet-600"
-                      : "text-amber-600"
-                  }`}
+                  className={`w-14 h-14 ${colorClass.iconBg} rounded-xl flex items-center justify-center mx-auto mb-4`}
                 >
+                  <Icon className={`w-7 h-7 ${colorClass.icon}`} />
+                </div>
+                <div className={`text-3xl font-bold mb-1 ${colorClass.text}`}>
                   {stat.number}
                 </div>
-
-                <div className="text-slate-600 text-sm font-medium">
+                <div className="text-sm text-gray-600 font-medium">
                   {stat.label}
                 </div>
               </div>
-            ))}
-          </div> */}
+            );
+          })}
+        </div> */}
 
-          {/* Call to Action */}
-          {/* <div className="mt-16 bg-gradient-to-r from-emerald-600 to-blue-600 text-white rounded-3xl p-8">
-            <h3 className="text-2xl md:text-3xl font-bold mb-4">
-              Ready to Transform Your Testing Strategy?
+        {/* Who We Are Section */}
+        <div className="bg-white/90 backdrop-blur-sm rounded-3xl p-8 md:p-12 mb-16 shadow-xl border border-gray-100">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div>
+              <h3 className="text-3xl font-bold text-gray-900 mb-6">
+                Who We Are
+              </h3>
+              <div className="space-y-4 text-gray-700 leading-relaxed">
+                <p className="text-base">
+                  <span className="font-bold text-blue-600">
+                    QTest Solutions
+                  </span>{" "}
+                  is an independent software testing company dedicated to
+                  empowering businesses with comprehensive quality assurance
+                  services. We specialize in delivering{" "}
+                  <span className="font-semibold">
+                    top-tier testing solutions
+                  </span>{" "}
+                  tailored to your unique business needs.
+                </p>
+                <p className="text-base">
+                  Our team of{" "}
+                  <span className="font-semibold text-purple-600">
+                    certified professionals
+                  </span>{" "}
+                  brings expertise in functional testing, automation testing,
+                  performance testing, security testing, and custom software
+                  development. We're committed to building{" "}
+                  <span className="font-semibold">long-term partnerships</span>{" "}
+                  with our clients, ensuring their success through quality and
+                  reliability.
+                </p>
+                <p className="text-base">
+                  We don't just find bugs—we partner with you to deliver
+                  products that excel in quality, performance, and user
+                  experience, helping you stand out in competitive markets.
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-6">
+              <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-2xl border border-blue-200">
+                <h4 className="text-lg font-bold text-blue-900 mb-3 flex items-center gap-2">
+                  <Target className="w-5 h-5" />
+                  Our Mission
+                </h4>
+                <p className="text-sm text-blue-800 leading-relaxed">
+                  To empower businesses with world-class quality assurance
+                  solutions that ensure their software products deliver
+                  exceptional value, reliability, and performance to end users.
+                </p>
+              </div>
+
+              <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-2xl border border-purple-200">
+                <h4 className="text-lg font-bold text-purple-900 mb-3 flex items-center gap-2">
+                  <Award className="w-5 h-5" />
+                  Our Vision
+                </h4>
+                <p className="text-sm text-purple-800 leading-relaxed">
+                  To be the global leader in software testing and quality
+                  assurance, recognized for innovation, expertise, and
+                  unwavering commitment to client success.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Why Choose Us Section */}
+        <div className="mb-16">
+          <h3 className="text-3xl font-bold text-center text-gray-900 mb-12">
+            Why Choose QTest Solutions
+          </h3>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {whyChooseUs.map((item, index) => {
+              const Icon = item.icon;
+              const colors = getColorClasses(item.color);
+              return (
+                <div
+                  key={index}
+                  className={`bg-white rounded-2xl p-6 border ${colors.border} hover:shadow-xl transition-all duration-300 hover:-translate-y-1`}
+                >
+                  <div
+                    className={`w-12 h-12 ${colors.iconBg} rounded-xl flex items-center justify-center mb-4`}
+                  >
+                    <Icon className={`w-6 h-6 ${colors.icon}`} />
+                  </div>
+                  <h4 className={`text-lg font-bold ${colors.text} mb-3`}>
+                    {item.title}
+                  </h4>
+                  <p className="text-sm text-gray-600 leading-relaxed">
+                    {item.description}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Core Values Section */}
+        {/* <div className="bg-gradient-to-br from-gray-900 to-blue-900 rounded-3xl p-8 md:p-12 text-white">
+          <h3 className="text-3xl font-bold text-center mb-12">
+            Our Core Values
+          </h3>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {values.map((value, index) => {
+              const Icon = value.icon;
+              const colors = getColorClasses(value.color);
+              return (
+                <div
+                  key={index}
+                  className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 text-center hover:bg-white/15 transition-all duration-300 border border-white/20"
+                >
+                  <div
+                    className={`w-14 h-14 ${colors.iconBg} rounded-xl flex items-center justify-center mx-auto mb-4`}
+                  >
+                    <Icon className={`w-7 h-7 ${colors.icon}`} />
+                  </div>
+                  <h4 className="text-xl font-bold mb-2">{value.title}</h4>
+                  <p className="text-sm text-blue-200">{value.subtitle}</p>
+                </div>
+              );
+            })}
+          </div>
+        </div> */}
+
+        {/* CTA Section */}
+        <div className="mt-16 text-center">
+          <div className="bg-gradient-to-br from-gray-900 to-blue-900 rounded-3xl p-8 md:p-12 text-white shadow-2xl">
+            <h3 className="text-3xl font-bold text-white mb-4">
+              Ready to Elevate Your Software Quality?
             </h3>
-            <p className="text-lg opacity-90 mb-6 max-w-2xl mx-auto">
-              Join hundreds of companies that trust QTest Solutions for their
-              quality assurance needs.
+            <p className="text-lg text-blue-100 mb-8 max-w-2xl mx-auto">
+              Partner with us to ensure your software meets the highest
+              standards of quality and performance.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="px-8 py-3 bg-white text-emerald-600 rounded-xl font-semibold hover:bg-gray-50 transition-colors">
+              <button className="px-8 py-4 bg-white text-blue-600 rounded-xl font-semibold hover:bg-gray-50 transition-all duration-300 hover:scale-105 shadow-lg">
                 Start Your Project
               </button>
-              <button className="px-8 py-3 border-2 border-white text-white rounded-xl font-semibold hover:bg-white/10 transition-colors">
-                Learn More
+              <button className="px-8 py-4 border-2 border-white text-white rounded-xl font-semibold hover:bg-white/10 transition-all duration-300">
+                Schedule Consultation
               </button>
             </div>
-          </div> */}
+          </div>
         </div>
       </div>
     </section>
   );
-};
-
-export default About;
+}

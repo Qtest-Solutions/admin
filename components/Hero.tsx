@@ -149,6 +149,55 @@ export default function HeroSlider() {
       aria-roledescription={isSingleSlide ? undefined : "carousel"}
       aria-label={isSingleSlide ? "Hero section" : "Hero slider"}
     >
+      {/* Breadcrumb structured data for sitelinks */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              {
+                "@type": "ListItem",
+                position: 1,
+                name: "Home",
+                item: "https://qtestsolutions.com/",
+              },
+              {
+                "@type": "ListItem",
+                position: 2,
+                name: "Services",
+                item: "https://qtestsolutions.com/services",
+              },
+              {
+                "@type": "ListItem",
+                position: 3,
+                name: "About",
+                item: "https://qtestsolutions.com/about",
+              },
+              {
+                "@type": "ListItem",
+                position: 4,
+                name: "Training",
+                item: "https://qtestsolutions.com/training",
+              },
+              {
+                "@type": "ListItem",
+                position: 5,
+                name: "Blog",
+                item: "https://qtestsolutions.com/blog",
+              },
+              {
+                "@type": "ListItem",
+                position: 6,
+                name: "Contact",
+                item: "https://qtestsolutions.com/contact",
+              },
+            ],
+          }),
+        }}
+      />
+
       {/* Light modern gradient backgrounds */}
       <div className="absolute inset-0">
         {banners.map((_, i) => (
@@ -166,7 +215,7 @@ export default function HeroSlider() {
       <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-white/5" />
 
       {/* Content centered */}
-      <div className="relative z-10 h-full flex items-center justify-center">
+      <div className="relative z-10 h-full flex items-center justify-center mt-[80px]">
         <div className="container mx-auto px-6 h-full flex items-center justify-center">
           <div className="flex flex-col justify-center items-center space-y-6 lg:space-y-8 max-w-2xl text-center">
             <motion.div
@@ -199,7 +248,7 @@ export default function HeroSlider() {
               <button
                 onClick={scrollToServices}
                 className="group relative px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-purple-600 hover:to-blue-600 text-white font-semibold rounded-full transition-all duration-500 flex items-center gap-3 shadow-lg hover:shadow-blue-500/25 hover:scale-105 text-base overflow-hidden border border-white/20 backdrop-blur-sm"
-                aria-label={`${banners[index].primary} - Scroll to services section`}
+                aria-label="Contact us - Go to contact page"
               >
                 <span className="relative z-10">{banners[index].primary}</span>
                 <div className="relative z-10 w-7 h-7 bg-white/20 rounded-full flex items-center justify-center group-hover:bg-white/30 transition-all duration-300 group-hover:rotate-45">

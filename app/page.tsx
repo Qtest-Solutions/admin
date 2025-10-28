@@ -10,7 +10,7 @@ import Blog from "../components/Blog";
 
 export default function HomePage() {
   return (
-    <div className="relative min-h-screen ">
+    <div className="relative min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 ">
       {/* <ClientBackground /> */}
       <Header />
       <Hero />

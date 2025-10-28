@@ -82,7 +82,7 @@ const BlogDetail = () => {
 
   if (!blog) {
     return (
-      <div className="min-h-screen bg-gradient-sage flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 flex items-center justify-center">
         <div className="glass-professional border border-brand-sage-200/40 rounded-2xl p-6 text-center">
           <h2 className="text-xl font-bold text-brand-neutral-800 mb-2">
             Blog post not found
