@@ -25,7 +25,7 @@ const Footer = () => {
             <div className="flex flex-col space-y-6">
               <div className="flex items-center space-x-3">
                 <span className="text-xl font-bold bg-gradient-to-r from-white to-brand-primary-100 bg-clip-text text-transparent">
-                  Qtest Software Solution LLP
+                  QTest Software Solution LLP
                 </span>
               </div>
 

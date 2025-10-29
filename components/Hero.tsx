@@ -247,7 +247,7 @@ export default function HeroSlider() {
             >
               <button
                 onClick={scrollToServices}
-                className="group relative px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-purple-600 hover:to-blue-600 text-white font-semibold rounded-full transition-all duration-500 flex items-center gap-3 shadow-lg hover:shadow-blue-500/25 hover:scale-105 text-base overflow-hidden border border-white/20 backdrop-blur-sm"
+                className="group relative px-8 py-4 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white font-semibold rounded-full transition-all duration-500 flex items-center gap-3 shadow-lg hover:shadow-blue-500/25 hover:scale-105 text-base overflow-hidden border border-white/20 backdrop-blur-sm"
                 aria-label="Contact us - Go to contact page"
               >
                 <span className="relative z-10">{banners[index].primary}</span>
