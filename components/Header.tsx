@@ -37,21 +37,21 @@ const Header = () => {
       <div
         className={`mx-auto max-w-7xl transition-all duration-700 ease-in-out ${
           isScrolled
-            ? "bg-white/20 backdrop-blur-3xl rounded-full  shadow-[0_20px_60px_0_rgba(0,0,0,0.12)]"
-            : "bg-transparent"
-        }`}
+            ? "bg-white/30 backdrop-blur-2xl rounded-full shadow-[0_20px_60px_0_rgba(0,0,0,0.18)] border border-white/30"
+            : "bg-white/10 backdrop-blur-lg rounded-full border border-white/10"
+        } relative`}
       >
-        {/* Multiple Glass Layers for Enhanced Effect */}
+        {/* Enhanced Glass Layers for More Glassmorphism */}
         {isScrolled && (
           <>
             {/* Inner glow layer */}
-            <div className="absolute inset-0 bg-gradient-to-b from-white/40 via-white/20 to-white/10 rounded-full" />
-
+            <div className="absolute inset-0 bg-gradient-to-b from-white/60 via-white/30 to-white/10 rounded-full pointer-events-none" />
             {/* Outer glow effect */}
-            <div className="absolute -inset-1 bg-gradient-to-r from-white/30 via-white/10 to-white/30 rounded-full blur-2xl opacity-60 -z-10" />
-
+            <div className="absolute -inset-2 bg-gradient-to-r from-teal-200/30 via-white/10 to-purple-200/30 rounded-full blur-2xl opacity-70 -z-10 pointer-events-none" />
             {/* Shimmer effect */}
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent rounded-full opacity-50" />
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent rounded-full opacity-60 pointer-events-none" />
+            {/* Extra shadow for glass pop */}
+            <div className="absolute inset-0 rounded-full shadow-2xl shadow-teal-200/10 pointer-events-none" />
           </>
         )}
 
@@ -82,11 +82,11 @@ const Header = () => {
                     href={item.href}
                     className={`relative px-5 py-2.5 text-sm font-medium transition-all duration-300 overflow-hidden ${
                       isScrolled ? "rounded-full" : ""
-                    } ${active ? "text-sky-700" : "text-gray-800"}`}
+                    } ${active ? "text-green-700" : "text-gray-800"}`}
                   >
                     {/* Active Background - When scrolled */}
                     {isScrolled && active && (
-                      <span className="absolute inset-0 bg-sky-100/90 backdrop-blur-md rounded-full shadow-inner shadow-sky-200/50" />
+                      <span className="absolute inset-0 bg-green-100/90 backdrop-blur-md rounded-full shadow-inner shadow-green-200/50" />
                     )}
 
                     {/* Text */}
@@ -95,8 +95,13 @@ const Header = () => {
                     </span>
 
                     {/* Underline when not scrolled */}
-                    {!isScrolled && active && (
-                      <span className="absolute bottom-0 left-0 w-full h-0.5 bg-sky-500" />
+                    {!isScrolled && (
+                      <span
+                        className={`absolute bottom-0 left-0 w-full h-0.5 ${
+                          active &&
+                          "bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 "
+                        }`}
+                      />
                     )}
                   </Link>
                 );
@@ -107,7 +112,7 @@ const Header = () => {
             <div className="hidden lg:flex items-center relative z-10">
               <Link
                 href="/contact"
-                className="group relative px-6 py-2.5 bg-gray-900/95 backdrop-blur-sm text-white text-sm font-medium rounded-full overflow-hidden transition-all duration-300 hover:bg-gray-900 shadow-lg hover:shadow-2xl"
+                className="group relative px-6 py-2.5 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white text-sm font-medium rounded-full overflow-hidden transition-all duration-300 shadow-lg hover:shadow-2xl"
               >
                 <span className="relative z-10 flex items-center gap-2">
                   Contact Us

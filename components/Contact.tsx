@@ -163,7 +163,7 @@ const Contact = () => {
 
   const contactInfo: ContactInfo[] = [
     { icon: Mail, title: "Email", info: "info@qtestsolutions.com" },
-    { icon: Phone, title: "Phone", info: "+91 9876543210" },
+    { icon: Phone, title: "Phone", info: "+91 9961544424" },
     {
       icon: MapPin,
       title: "Address",
