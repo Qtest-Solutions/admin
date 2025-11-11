@@ -7,6 +7,13 @@ import Footer from "../components/Footer";
 import Header from "../components/Header";
 import ClientBackground from "../components/ClientBackground";
 import Blog from "../components/Blog";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  alternates: {
+    canonical: "https://www.qtestsolutions.com",
+  },
+};
 
 export default function HomePage() {
   return (
