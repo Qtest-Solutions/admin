@@ -2,27 +2,25 @@
 const nextConfig = {
   reactStrictMode: true,
 
+  async redirects() {
+    return [
+      // Redirect root domain → www
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "qtestsolutions.com" }],
+        destination: "https://www.qtestsolutions.com/:path*",
+        permanent: true,
+      },
+    ];
+  },
+
   images: {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "qtestsolutions.com",
+        hostname: "www.qtestsolutions.com",
       },
     ],
-  },
-
-  async redirects() {
-    return [
-      // Redirect www → non-www
-      {
-        source: "/:path*",
-        has: [
-          { type: "host", value: "www.qtestsolutions.com" }
-        ],
-        destination: "https://qtestsolutions.com/:path*",
-        permanent: true,
-      },
-    ];
   },
 
   async headers() {

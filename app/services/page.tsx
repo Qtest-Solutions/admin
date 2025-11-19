@@ -20,13 +20,13 @@ export const metadata: Metadata = {
     "penetration testing",
   ],
   alternates: {
-    canonical: "https://qtestsolutions.com/services",
+    canonical: "https://www.qtestsolutions.com/services",
   },
   openGraph: {
     title: "Software Testing Services - QTest Solutions",
     description:
       "Expert software testing and QA automation services. Performance, security, API, and mobile testing solutions.",
-    url: "https://qtestsolutions.com/services",  
+    url: "https://www.qtestsolutions.com/services",  
     type: "website",
   },
 };
