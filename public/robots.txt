@@ -1,17 +1,11 @@
-# robots.txt for QTest Software Solutions LLP
-# https://qtestsolutions.com
-
-# Allow all search engines to crawl the site
 User-agent: *
-Allow: /
-
-# Disallow admin and private areas
-Disallow: /admin/
-Disallow: /admin/dashboard/
-Disallow: /api/
-
-# Sitemap location
 Sitemap: https://qtestsolutions.com/sitemap.xml
-
-# Crawl-delay for respectful crawling
-Crawl-delay: 1
+Allow: /$
+Allow: /about
+Allow: /services
+Allow: /training
+Allow: /blog
+Disallow: /api/
+# Optional: block common parameter patterns used for tracking
+Disallow: /*?utm_
+Disallow: /*?fbclid=

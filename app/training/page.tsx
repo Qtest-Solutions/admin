@@ -18,12 +18,12 @@ export const metadata: Metadata = {
     "quality assurance certification"
   ],
   alternates: {
-    canonical: "https://www.qtestsolutions.com/training",
+    canonical: "https://qtestsolutions.com/training",
   },
   openGraph: {
     title: "Software Testing Training & Certification - QTest Solutions",
     description: "Professional training programs in software testing, QA automation, and quality assurance certification.",
-    url: "https://www.qtestsolutions.com/training",
+    url: "https://qtestsolutions.com/training",
     type: "website",
   },
 };
