@@ -15,12 +15,12 @@ export const metadata: Metadata = {
     "performance testing tips"
   ],
   alternates: {
-    canonical: "https://www.qtestsolutions.com/blog",
+    canonical: "https://qtestsolutions.com/blog",
   },
   openGraph: {
     title: "Blog - Software Testing & QA Insights",
     description: "Expert articles on software testing, automation, and quality assurance best practices.",
-    url: "https://www.qtestsolutions.com/blog",
+    url: "https://qtestsolutions.com/blog",
     type: "website",
   },
 };

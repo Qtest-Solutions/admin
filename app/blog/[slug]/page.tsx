@@ -359,3 +359,9 @@ const BlogDetail = () => {
 };
 
 export default BlogDetail;
+
+export const metadata = {
+  alternates: {
+    canonical: "https://qtestsolutions.com/blog/[slug]",
+  },
+};
