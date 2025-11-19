@@ -9,7 +9,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       title: "Blog Not Found - QTest Solutions",
       description: "This blog post does not exist.",
       alternates: {
-        canonical: `https://qtestsolutions.com/blog/${params.slug}`,
+        canonical: `https://www.qtestsolutions.com/log/${params.slug}`,
       },
     };
   }
@@ -18,12 +18,12 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     title: `${blog.title} - QTest Solutions Blog`,
     description: blog.excerpt,
     alternates: {
-      canonical: `https://qtestsolutions.com/blog/${blog.slug}`,
+      canonical: `https://www.qtestsolutions.com/log/${blog.slug}`,
     },
     openGraph: {
       title: `${blog.title} - QTest Solutions Blog`,
       description: blog.excerpt,
-      url: `https://qtestsolutions.com/blog/${blog.slug}`,
+      url: `https://www.qtestsolutions.com/log/${blog.slug}`,
       type: "article",
       images: [
         {

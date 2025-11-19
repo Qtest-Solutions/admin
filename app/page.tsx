@@ -11,7 +11,7 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   alternates: {
-    canonical: "https://qtestsolutions.com",
+    canonical: "https://www.qtestsolutions.com/",
   },
 };
 
