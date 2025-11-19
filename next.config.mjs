@@ -13,19 +13,11 @@ const nextConfig = {
 
   async redirects() {
     return [
-      // Force HTTPS + non-www
+      // Redirect www → non-www
       {
         source: "/:path*",
         has: [
           { type: "host", value: "www.qtestsolutions.com" }
-        ],
-        destination: "https://qtestsolutions.com/:path*",
-        permanent: true,
-      },
-      {
-        source: "/:path*",
-        has: [
-          { type: "protocol", value: "http" }
         ],
         destination: "https://qtestsolutions.com/:path*",
         permanent: true,
@@ -41,24 +33,36 @@ const nextConfig = {
           { key: "X-Frame-Options", value: "SAMEORIGIN" },
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-          { key: "Permissions-Policy", value: "geolocation=(), microphone=(), camera=()" },
-          { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
+          {
+            key: "Permissions-Policy",
+            value: "geolocation=(), microphone=(), camera=()",
+          },
+          {
+            key: "Strict-Transport-Security",
+            value: "max-age=63072000; includeSubDomains; preload",
+          },
         ],
       },
       {
         source: "/_next/static/:path*",
         headers: [
-          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
         ],
       },
       {
         source: "/image.png",
         headers: [
-          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
         ],
       },
     ];
   },
 };
 
-module.exports = nextConfig;
+export default nextConfig;
