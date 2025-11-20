@@ -6,8 +6,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://www.qtestsolutions.com"),
 
   title: {
-    default:
-      "QTest Solutions | Software Testing, QA Automation & Performance Engineering",
+    default: "QTest Solutions | Software Testing, QA Automation & Performance Engineering",
     template: "%s | QTest Solutions",
   },
 
@@ -53,8 +52,7 @@ export const metadata: Metadata = {
     locale: "en_IN",
     url: "https://www.qtestsolutions.com",
     siteName: "QTest Solutions",
-    title:
-      "QTest Solutions | Software Testing & QA Automation Company in India",
+    title: "QTest Solutions | Software Testing & QA Automation Company in India",
     description:
       "Leading software testing and QA automation company in India. AI-powered testing, performance engineering, security testing, and comprehensive training programs.",
     images: [
@@ -94,10 +92,6 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // -----------------------------
-  // JSON-LD Structured Data
-  // -----------------------------
-
   const organizationSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
@@ -162,31 +156,35 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        {/* Inject structured data */}
+    
+        {/* Favicon */}
+        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="icon" sizes="16x16" href="/favicon-16x16.png" />
+
+        {/* Apple Touch Icon */}
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+        {/* Web Manifest */}
+        <link rel="manifest" href="/site.webmanifest" />
+
+        {/* Structured Data (JSON-LD) */}
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(organizationSchema),
-          }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
         />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(websiteSchema),
-          }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
         />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(professionalServiceSchema),
-          }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(professionalServiceSchema) }}
         />
       </head>
 
       <AuthProvider>
-        <body className="min-h-screen font-sans antialiased">
-          {children}
-        </body>
+        <body className="min-h-screen font-sans antialiased">{children}</body>
       </AuthProvider>
     </html>
   );
