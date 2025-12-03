@@ -5,25 +5,23 @@ import ClientBackground from "../../components/ClientBackground";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "About Us - QTest Solutions",
-  description: "Learn about QTest Solutions, a leading software testing and QA automation company in India. Our mission, vision, team expertise, and commitment to quality assurance excellence.",
-  keywords: [
-    "about QTest Solutions",
-    "software testing company India",
-    "QA team",
-    "testing experts",
-    "quality assurance company profile"
-  ],
+  title: "About QTest Solutions – Software Testing Experts",
+  description:
+    "QTest Solutions is a leading QA automation and software testing company offering end-to-end quality assurance expertise.",
   alternates: {
     canonical: "https://www.qtestsolutions.com/about",
   },
+
   openGraph: {
-    title: "About QTest Solutions - Software Testing Company",
-    description: "Meet the QTest Solutions team - experts in software testing, QA automation, and quality assurance.",
+    title: "About Us – QTest Solutions",
+    description:
+      "Learn about our mission, vision, and expertise in QA automation and testing services.",
     url: "https://www.qtestsolutions.com/about",
     type: "website",
+images: [{ url: "/image.png", width: 1200, height: 630 }],
   },
 };
+
 
 export default function AboutPage() {
   return (

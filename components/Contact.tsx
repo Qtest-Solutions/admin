@@ -7,431 +7,372 @@ import {
   MapPin,
   CheckCircle,
   AlertCircle,
-  LucideIcon,
 } from "lucide-react";
 import { useState, ChangeEvent, FormEvent } from "react";
 
-// Type definitions
 interface FormData {
   name: string;
   email: string;
-  company: string;
+  phone: string;
   message: string;
 }
 
 interface FormErrors {
   name?: string;
   email?: string;
-  company?: string;
+  phone?: string;
   message?: string;
   submit?: string;
 }
 
-interface ContactInfo {
-  icon: LucideIcon;
-  title: string;
-  info: string;
-}
-
 const Contact = () => {
-  const [showMessage, setShowMessage] = useState<boolean>(false);
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [errors, setErrors] = useState<FormErrors>({});
   const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
-    company: "",
+    phone: "",
     message: "",
   });
 
-  // Validation rules
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+
+  // ------------------ Validation ------------------
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
 
-    // Name validation
-    if (!formData.name.trim()) {
-      newErrors.name = "Full name is required";
-    } else if (formData.name.trim().length < 2) {
-      newErrors.name = "Name must be at least 2 characters";
-    } else if (!/^[a-zA-Z\s]+$/.test(formData.name)) {
-      newErrors.name = "Name can only contain letters and spaces";
-    }
+    if (!formData.name.trim()) newErrors.name = "Full name is required";
+    else if (!/^[A-Za-z\s]{2,}$/.test(formData.name))
+      newErrors.name = "Enter a valid name";
 
-    // Email validation
-    if (!formData.email.trim()) {
-      newErrors.email = "Email address is required";
-    } else if (
-      !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(formData.email)
-    ) {
-      newErrors.email = "Please enter a valid email address";
-    }
+    if (!formData.email.trim()) newErrors.email = "Email is required";
+    else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(formData.email))
+      newErrors.email = "Enter a valid email";
 
-    // Company validation (optional but if provided, validate)
-    if (formData.company.trim() && formData.company.trim().length < 2) {
-      newErrors.company = "Company name must be at least 2 characters";
-    }
+    if (!formData.phone.trim()) newErrors.phone = "Phone number is required";
+    else if (!/^[0-9]{10}$/.test(formData.phone))
+      newErrors.phone = "Enter a valid 10-digit number";
 
-    // Message validation
-    if (!formData.message.trim()) {
-      newErrors.message = "Message is required";
-    } else if (formData.message.trim().length < 10) {
+    if (!formData.message.trim()) newErrors.message = "Message is required";
+    else if (formData.message.length < 10)
       newErrors.message = "Message must be at least 10 characters";
-    } else if (formData.message.trim().length > 1000) {
-      newErrors.message = "Message must not exceed 1000 characters";
-    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  // Handle input change
+  // ------------------ Handlers ------------------
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ): void => {
+  ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((p) => ({ ...p, [name]: value }));
 
-    // Clear error for this field when user starts typing
     if (errors[name as keyof FormErrors]) {
-      setErrors((prev) => ({
-        ...prev,
-        [name]: undefined,
-      }));
+      setErrors((prev) => ({ ...prev, [name]: undefined }));
     }
   };
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-
-    // Validate form before submission
-    if (!validateForm()) {
-      return;
-    }
+    if (!validateForm()) return;
 
     setIsSubmitting(true);
-
-    const form = e.currentTarget;
-    const submissionData = new FormData(form);
 
     try {
       const response = await fetch(
         "https://formsubmit.co/hisham@qtestsolutions.com",
         {
           method: "POST",
-          body: submissionData,
-          headers: {
-            Accept: "application/json",
-          },
+          headers: { Accept: "application/json" },
+          body: new FormData(e.target as HTMLFormElement),
         }
       );
 
       if (response.ok) {
-        // Show success message
-        setShowMessage(true);
+        setShowSuccessMessage(true);
+        setFormData({ name: "", email: "", phone: "", message: "" });
 
-        // Clear form
-        setFormData({
-          name: "",
-          email: "",
-          company: "",
-          message: "",
-        });
-        form.reset();
-
-        // Hide message after 5 seconds
-        setTimeout(() => {
-          setShowMessage(false);
-        }, 5000);
+        setTimeout(() => setShowSuccessMessage(false), 3000);
       } else {
-        // Handle error response
-        setErrors({
-          submit: "Failed to send message. Please try again.",
-        });
+        setErrors({ submit: "Failed to send message. Please try again." });
       }
-    } catch (error) {
-      console.error("Error submitting form:", error);
-      setErrors({
-        submit: "An error occurred. Please try again later.",
-      });
+    } catch (err) {
+      setErrors({ submit: "An error occurred. Try again later." });
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const contactInfo: ContactInfo[] = [
-    { icon: Mail, title: "Email", info: "info@qtestsolutions.com" },
-    { icon: Phone, title: "Phone", info: "+91 9961544424" },
-    {
-      icon: MapPin,
-      title: "Address",
-      info: "4th floor Emerald mall, Mavoor road, Kozhikode",
-    },
-  ];
-
   return (
-    <section id="contact" className="py-16 relative cv-auto bg-transparent">
-      {/* Professional Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-20 left-16 w-80 h-80 bg-brand-coral-200/15 rounded-full blur-3xl animate-gentle-float" />
+    <section className="relative py-16 bg-transparent overflow-hidden">
+
+      {/* ------------------ FLOATING BLOBS (Same as Training Page) ------------------ */}
+      <div className="absolute inset-0 -z-10">
+        <div className="absolute top-20 left-20 w-80 h-80 bg-brand-lavender-200/20 rounded-full blur-3xl animate-gentle-float" />
         <div
-          className="absolute bottom-16 right-20 w-96 h-96 bg-brand-sage-200/10 rounded-full blur-3xl animate-gentle-float"
+          className="absolute bottom-20 right-20 w-96 h-96 bg-brand-sage-200/20 rounded-full blur-3xl animate-gentle-float"
           style={{ animationDelay: "2s" }}
         />
-        <div className="absolute top-1/3 right-1/4 w-64 h-64 bg-brand-lavender-200/12 rounded-full blur-3xl" />
+        <div
+          className="absolute top-1/2 left-1/3 w-72 h-72 bg-brand-coral-200/15 rounded-full blur-3xl animate-gentle-float"
+          style={{ animationDelay: "4s" }}
+        />
       </div>
 
       <div className="container mx-auto px-6 relative z-10">
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 glass-professional px-4 py-2 rounded-full text-xs text-brand-coral-700 mb-4 font-medium glow-coral animate-fade-in-up">
+
+        {/* ------------------ HEADER (Matches Training Page EXACTLY) ------------------ */}
+        <div className="text-center mb-12 animate-fade-in-up">
+          <div className="inline-flex items-center gap-2 glass-professional px-4 py-2 rounded-full text-xs text-brand-sage-700 mb-4 font-medium glow-sage">
             <Send className="w-3 h-3" />
-            Connect With Excellence
-            <div className="w-1.5 h-1.5 bg-brand-coral-500 rounded-full animate-pulse" />
+            Contact Us
+            <div className="w-1.5 h-1.5 bg-brand-sage-500 rounded-full animate-pulse" />
           </div>
 
-          <h2
-            className="text-3xl md:text-4xl font-bold mb-4 text-black leading-tight animate-fade-in-up"
-            style={{ animationDelay: "0.2s" }}
-          >
-            Get In Touch
+          <h2 className="text-3xl md:text-4xl font-bold text-black leading-tight">
+            Get In Touch With Us
           </h2>
 
-          <p
-            className="text-sm md:text-base text-brand-neutral-600 max-w-2xl mx-auto leading-relaxed font-medium animate-fade-in-up"
-            style={{ animationDelay: "0.4s" }}
-          >
-            Ready to{" "}
-            <span className="text-brand-coral-600 font-semibold">
-              transform your testing process
+          <p className="text-sm md:text-base text-brand-neutral-600 max-w-2xl mx-auto mt-3 font-medium">
+            We're here to help you with{" "}
+            <span className="text-brand-sage-600 font-semibold">
+              QA training & software testing services.
             </span>
-            ? Let's discuss how we can help you achieve quality.
           </p>
 
           <div className="mt-4 flex justify-center">
-            <div className="w-20 h-0.5 bg-gradient-to-r from-brand-coral-500 via-brand-sage-500 to-brand-lavender-500 rounded-full" />
+            <div className="w-20 h-0.5 bg-gradient-to-r from-brand-sage-500 via-brand-lavender-500 to-brand-coral-500 rounded-full" />
           </div>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-          {/* Contact Information */}
-          <div
-            className="animate-fade-in-up"
-            style={{ animationDelay: "0.6s" }}
-          >
-            <div className="glass-professional p-6 rounded-2xl shadow-professional">
-              <h3 className="text-xl font-bold text-brand-neutral-800 mb-6 flex items-center gap-2">
-                Contact Information
-              </h3>
 
-              <div className="space-y-4">
-                {contactInfo.map((info: ContactInfo, idx: number) => (
-                  <div
-                    key={idx}
-                    className="flex items-start group hover:translate-x-1 transition-transform duration-300"
-                  >
-                    <div className="relative mr-4 flex-shrink-0">
-                      <div
-                        className={`glass-professional shadow-professional rounded-lg p-3 transition-all duration-300 group-hover:scale-105 ${
-                          idx === 0
-                            ? "border border-brand-sage-200/50 text-brand-sage-600"
-                            : idx === 1
-                            ? "border border-brand-lavender-200/50 text-brand-lavender-600"
-                            : "border border-brand-coral-200/50 text-brand-coral-600"
-                        }`}
-                      >
-                        <info.icon className="w-5 h-5" />
-                      </div>
-                    </div>
-                    <div className="pt-1">
-                      <h4 className="text-base font-bold text-brand-neutral-800 mb-1">
-                        {info.title}
-                      </h4>
-                      <p className="text-brand-neutral-600 font-medium text-sm">
-                        {info.info}
-                      </p>
-                    </div>
-                  </div>
-                ))}
+        {/* ------------------ GRID ------------------ */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+
+          {/* ------------------ CONTACT INFO CARD ------------------ */}
+          <div
+            className="glass-professional p-6 rounded-2xl shadow-soft hover:shadow-soft-lg border border-brand-sage-200/40 hover:border-brand-sage-300/60 animate-fade-in-up"
+          >
+            <h3 className="text-xl font-bold text-brand-neutral-800 mb-6 flex items-center gap-2">
+              Contact Information
+            </h3>
+
+            <div className="space-y-5">
+              {/* Email */}
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 bg-brand-sage-100/50 border border-white/20 rounded-xl flex items-center justify-center">
+                  <Mail className="w-5 h-5 text-brand-sage-600" />
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-brand-neutral-800">
+                    Email
+                  </p>
+                  <p className="text-sm text-brand-neutral-600">
+                    info@qtestsolutions.com
+                  </p>
+                </div>
+              </div>
+
+              {/* Phone */}
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 bg-brand-lavender-100/50 border border-white/20 rounded-xl flex items-center justify-center">
+                  <Phone className="w-5 h-5 text-brand-lavender-600" />
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-brand-neutral-800">
+                    Phone
+                  </p>
+                  <p className="text-sm text-brand-neutral-600">
+                    +91 9961544424
+                  </p>
+                </div>
+              </div>
+
+              {/* Address */}
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 bg-brand-coral-100/50 border border-white/20 rounded-xl flex items-center justify-center">
+                  <MapPin className="w-5 h-5 text-brand-coral-600" />
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-brand-neutral-800">
+                    Address
+                  </p>
+                  <p className="text-sm text-brand-neutral-600">
+                    4th Floor, Emerald Mall, Mavoor Road, Kozhikode
+                  </p>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Contact Form */}
+          {/* ------------------ CONTACT FORM (TRAINING TEAL-PURPLE THEME) ------------------ */}
           <div
-            className="relative animate-fade-in-up"
-            style={{ animationDelay: "0.8s" }}
+            className="glass-professional rounded-2xl p-6 shadow-soft hover:shadow-soft-lg border border-brand-sage-200/40 hover:border-brand-sage-300/60 animate-fade-in-up"
           >
-            <div className="glass-professional rounded-2xl p-6 shadow-professional glow-coral">
-              <h3 className="text-lg font-bold text-brand-neutral-800 mb-4 flex items-center gap-2">
-                Send us a Message
-              </h3>
+            <h3 className="text-lg font-bold text-brand-neutral-800 mb-4">
+              Send Us a Message
+            </h3>
 
-              <form className="space-y-4" onSubmit={handleSubmit} noValidate>
-                {/* FormSubmit Configuration */}
-                <input type="hidden" name="_captcha" value="false" />
+            <form noValidate onSubmit={handleSubmit} className="space-y-4">
+              {/* Config */}
+              <input type="hidden" name="_captcha" value="false" />
+              <input
+                type="hidden"
+                name="_subject"
+                value="New Contact Submission from QTest Website"
+              />
+              <input type="hidden" name="_template" value="table" />
+
+              {/* Name */}
+              <div>
+                <label className="text-xs font-semibold text-brand-neutral-700">
+                  Full Name *
+                </label>
                 <input
-                  type="hidden"
-                  name="_subject"
-                  value="New Contact Form Submission from QTest Website"
-                />
-                <input type="hidden" name="_template" value="table" />
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {/* Full Name Field */}
-                  <div>
-                    <label className="block text-xs font-semibold mb-2 text-brand-neutral-700">
-                      Full Name *
-                    </label>
-                    <input
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      className={`w-full px-3 py-2 glass-sage border rounded-lg text-brand-neutral-800 focus:border-brand-sage-400 focus:ring-2 focus:ring-brand-sage-200/50 transition-all duration-300 placeholder-brand-neutral-400 font-medium text-sm ${
-                        errors.name
-                          ? "border-red-400 focus:border-red-400 focus:ring-red-200/50"
-                          : "border-brand-sage-200/50"
-                      }`}
-                      placeholder="Enter your full name"
-                    />
-                    {errors.name && (
-                      <div className="flex items-center gap-1 mt-1 text-red-600">
-                        <AlertCircle className="w-3 h-3" />
-                        <p className="text-xs">{errors.name}</p>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Email Field */}
-                  <div>
-                    <label className="block text-xs font-semibold mb-2 text-brand-neutral-700">
-                      Email Address *
-                    </label>
-                    <input
-                      type="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      className={`w-full px-3 py-2 glass-sage border rounded-lg text-brand-neutral-800 focus:border-brand-sage-400 focus:ring-2 focus:ring-brand-sage-200/50 transition-all duration-300 placeholder-brand-neutral-400 font-medium text-sm ${
-                        errors.email
-                          ? "border-red-400 focus:border-red-400 focus:ring-red-200/50"
-                          : "border-brand-sage-200/50"
-                      }`}
-                      placeholder="your.email@company.com"
-                    />
-                    {errors.email && (
-                      <div className="flex items-center gap-1 mt-1 text-red-600">
-                        <AlertCircle className="w-3 h-3" />
-                        <p className="text-xs">{errors.email}</p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Company Field */}
-                <div>
-                  <label className="block text-xs font-semibold mb-2 text-brand-neutral-700">
-                    Company / Organization
-                  </label>
-                  <input
-                    name="company"
-                    value={formData.company}
-                    onChange={handleChange}
-                    className={`w-full px-3 py-2 glass-sage border rounded-lg text-brand-neutral-800 focus:border-brand-sage-400 focus:ring-2 focus:ring-brand-sage-200/50 transition-all duration-300 placeholder-brand-neutral-400 font-medium text-sm ${
-                      errors.company
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  placeholder="Enter your full name"
+                  className={`w-full px-3 py-2 rounded-lg border text-sm font-medium placeholder-brand-neutral-400 
+                    ${
+                      errors.name
                         ? "border-red-400 focus:border-red-400 focus:ring-red-200/50"
-                        : "border-brand-sage-200/50"
-                    }`}
-                    placeholder="Your company or organization"
-                  />
-                  {errors.company && (
-                    <div className="flex items-center gap-1 mt-1 text-red-600">
-                      <AlertCircle className="w-3 h-3" />
-                      <p className="text-xs">{errors.company}</p>
-                    </div>
-                  )}
-                </div>
+                        : "border-brand-neutral-200 focus:border-brand-sage-500 focus:ring-brand-sage-200/50"
+                    }
+                    transition-all focus:ring-2`}
+                />
+                {errors.name && (
+                  <p className="text-red-600 text-xs mt-1 flex items-center gap-1">
+                    <AlertCircle className="w-3 h-3" /> {errors.name}
+                  </p>
+                )}
+              </div>
 
-                {/* Message Field */}
-                <div>
-                  <label className="block text-xs font-semibold mb-2 text-brand-neutral-700 flex items-center justify-between">
-                    <span>How can we help you? *</span>
-                    <span className="text-brand-neutral-500 font-normal">
-                      {formData.message.length}/1000
-                    </span>
-                  </label>
-                  <textarea
-                    name="message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    rows={4}
-                    maxLength={1000}
-                    className={`w-full px-3 py-2 glass-sage border rounded-lg text-brand-neutral-800 focus:border-brand-sage-400 focus:ring-2 focus:ring-brand-sage-200/50 transition-all duration-300 resize-none placeholder-brand-neutral-400 font-medium text-sm ${
+              {/* Email */}
+              <div>
+                <label className="text-xs font-semibold text-brand-neutral-700">
+                  Email Address *
+                </label>
+                <input
+                  name="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="your.email@example.com"
+                  className={`w-full px-3 py-2 rounded-lg border text-sm font-medium placeholder-brand-neutral-400 
+                    ${
+                      errors.email
+                        ? "border-red-400 focus:border-red-400 focus:ring-red-200/50"
+                        : "border-brand-neutral-200 focus:border-brand-sage-500 focus:ring-brand-sage-200/50"
+                    }
+                    transition-all focus:ring-2`}
+                />
+                {errors.email && (
+                  <p className="text-red-600 text-xs mt-1 flex items-center gap-1">
+                    <AlertCircle className="w-3 h-3" /> {errors.email}
+                  </p>
+                )}
+              </div>
+
+              {/* Phone */}
+              <div>
+                <label className="text-xs font-semibold text-brand-neutral-700">
+                  Phone Number *
+                </label>
+                <input
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  placeholder="10-digit mobile number"
+                  className={`w-full px-3 py-2 rounded-lg border text-sm font-medium placeholder-brand-neutral-400 
+                    ${
+                      errors.phone
+                        ? "border-red-400 focus:border-red-400 focus:ring-red-200/50"
+                        : "border-brand-neutral-200 focus:border-brand-sage-500 focus:ring-brand-sage-200/50"
+                    }
+                    transition-all focus:ring-2`}
+                />
+                {errors.phone && (
+                  <p className="text-red-600 text-xs mt-1 flex items-center gap-1">
+                    <AlertCircle className="w-3 h-3" /> {errors.phone}
+                  </p>
+                )}
+              </div>
+
+              {/* Message */}
+              <div>
+                <label className="text-xs font-semibold text-brand-neutral-700">
+                  Message *
+                </label>
+                <textarea
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  rows={4}
+                  placeholder="How can we help you?"
+                  className={`w-full px-3 py-2 rounded-lg border text-sm font-medium resize-none placeholder-brand-neutral-400 
+                    ${
                       errors.message
                         ? "border-red-400 focus:border-red-400 focus:ring-red-200/50"
-                        : "border-brand-sage-200/50"
-                    }`}
-                    placeholder="Tell us about your testing needs..."
-                  />
-                  {errors.message && (
-                    <div className="flex items-center gap-1 mt-1 text-red-600">
-                      <AlertCircle className="w-3 h-3" />
-                      <p className="text-xs">{errors.message}</p>
-                    </div>
-                  )}
-                </div>
-
-                {/* Submit Error */}
-                {/* Submit Error */}
-                {errors.submit && (
-                  <div className="flex items-center gap-2 bg-red-50 border border-red-200 rounded-lg px-4 py-3">
-                    <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
-                    <p className="text-red-800 text-sm">{errors.submit}</p>
-                  </div>
+                        : "border-brand-neutral-200 focus:border-brand-sage-500 focus:ring-brand-sage-200/50"
+                    }
+                    transition-all focus:ring-2`}
+                />
+                {errors.message && (
+                  <p className="text-red-600 text-xs mt-1 flex items-center gap-1">
+                    <AlertCircle className="w-3 h-3" /> {errors.message}
+                  </p>
                 )}
+              </div>
 
-                <div className="pt-2">
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full btn-accent py-2 px-4 text-sm font-semibold flex items-center justify-center gap-2 group disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                        Sending...
-                      </>
-                    ) : (
-                      <>
-                        Send Message
-                        <Send className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
-                      </>
-                    )}
-                  </button>
+              {/* Submit Error */}
+              {errors.submit && (
+                <div className="flex items-center gap-2 bg-red-50 border border-red-200 rounded-lg px-4 py-3">
+                  <AlertCircle className="w-5 h-5 text-red-600" />
+                  <p className="text-red-800 text-sm">{errors.submit}</p>
                 </div>
+              )}
 
-                {/* Success Message */}
-                {showMessage && (
-                  <div className="pt-2 animate-fade-in-up">
-                    <div className="flex items-center gap-2 bg-green-50 border border-green-200 rounded-lg px-4 py-3">
-                      <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
-                      <div>
-                        <p className="font-semibold text-green-800 text-sm">
-                          Message Sent Successfully!
-                        </p>
-                        <p className="text-green-700 text-xs">
-                          We'll get back to you within 24 hours.
-                        </p>
-                      </div>
+              {/* Submit Button (MATCHES TRAINING THEME) */}
+              <button
+                disabled={isSubmitting}
+                type="submit"
+                className="w-full py-3 rounded-lg font-semibold text-sm 
+                  bg-gradient-to-r from-brand-sage-500 to-brand-lavender-600 
+                  text-white shadow-soft hover:shadow-soft-lg hover:scale-[1.02] 
+                  transition-all duration-300 disabled:opacity-50 
+                  flex items-center justify-center gap-2"
+              >
+                {isSubmitting ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    Sending...
+                  </>
+                ) : (
+                  <>
+                    Send Message
+                    <Send className="w-4 h-4" />
+                  </>
+                )}
+              </button>
+
+              {/* Success Message */}
+              {showSuccessMessage && (
+                <div className="pt-4 animate-fade-in-up">
+                  <div className="flex items-center gap-2 bg-green-50 border border-green-200 rounded-lg px-4 py-3">
+                    <CheckCircle className="w-5 h-5 text-green-600" />
+                    <div>
+                      <p className="font-semibold text-green-800 text-sm">
+                        Message sent successfully!
+                      </p>
+                      <p className="text-green-700 text-xs">
+                        We'll get back to you within 24 hours.
+                      </p>
                     </div>
                   </div>
-                )}
-
-                <div className="text-center pt-2 text-xs text-brand-neutral-500">
-                  <p>We typically respond within 24 hours</p>
                 </div>
-              </form>
-            </div>
+              )}
+            </form>
           </div>
         </div>
       </div>
