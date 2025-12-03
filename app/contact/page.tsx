@@ -5,25 +5,24 @@ import ClientBackground from "../../components/ClientBackground";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Contact Us - Get in Touch with QTest Solutions",
-  description: "Contact QTest Solutions for software testing and QA automation services. Reach out to our team for consultation, inquiries, or partnership opportunities.",
-  keywords: [
-    "contact QTest Solutions",
-    "software testing inquiry",
-    "QA consultation",
-    "testing services contact",
-    "get software testing quote"
-  ],
+  title: "Contact QTest Solutions – Software Testing & QA Automation",
+  description:
+    "Connect with QTest Solutions for software testing, QA automation services, training programs, and project inquiries.",
+  keywords: ["contact software testing company", "QA consultation"],
+
   alternates: {
     canonical: "https://www.qtestsolutions.com/contact",
   },
+
   openGraph: {
-    title: "Contact QTest Solutions - Software Testing Services",
-    description: "Get in touch with our software testing and QA automation experts.",
+    title: "Contact QTest Solutions",
+    description: "Reach out to our QA and test automation experts.",
     url: "https://www.qtestsolutions.com/contact",
     type: "website",
+images: [{ url: "/image.png", width: 1200, height: 630 }],
   },
 };
+
 
 export default function ContactPage() {
   return (

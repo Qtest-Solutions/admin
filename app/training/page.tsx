@@ -5,28 +5,32 @@ import ClientBackground from "../../components/ClientBackground";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Training Programs - Software Testing & QA Certification",
-  description: "Professional software testing and QA training programs. ISTQB certification, automation testing courses, performance testing training, and hands-on workshops by industry experts.",
+  title: "Software Testing Training – Manual, Automation & Certification",
+  description:
+    "Industry-led training programs in manual testing, automation testing, ISTQB preparation, API testing, and performance testing. Hands-on sessions by experts at QTest Solutions.",
   keywords: [
     "software testing training",
-    "ISTQB certification",
-    "QA automation training",
+    "automation testing course",
+    "manual testing certification",
+    "ISTQB coaching",
     "selenium training",
-    "performance testing course",
-    "API testing training",
-    "test automation workshop",
-    "quality assurance certification"
   ],
+
   alternates: {
-    canonical: "https://www.qtestsolutions.com//training",
+    canonical: "https://www.qtestsolutions.com/training",
   },
+
   openGraph: {
-    title: "Software Testing Training & Certification - QTest Solutions",
-    description: "Professional training programs in software testing, QA automation, and quality assurance certification.",
-    url: "https://www.qtestsolutions.com//training",
+    title: "Software Testing Training & Certification – QTest Solutions",
+    description:
+      "Professional training programs in manual testing, QA automation, and ISTQB certification.",
+    url: "https://www.qtestsolutions.com/training",
     type: "website",
+ images: [{ url: "/image.png", width: 1200, height: 630 }],
+
   },
 };
+
 
 export default function TrainingPage() {
   return (

@@ -5,85 +5,40 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.qtestsolutions.com"),
 
-  title: {
-    default: "QTest Solutions | Software Testing, QA Automation & Performance Engineering",
-    template: "%s | QTest Solutions",
-  },
-
+  title: "QTest Solutions – Software Testing & QA Automation Company in India",
   description:
-    "AI-powered software testing: automation, performance, security, API and mobile QA services. Expert QA consultancy and training in India.",
+    "QTest Solutions provides software testing, QA automation, performance engineering, security testing, and expert QA consultancy. AI-powered testing and professional training in India.",
 
   keywords: [
     "software testing company India",
-    "QA automation services",
-    "performance testing",
+    "QA automation",
+    "performance engineering",
     "security testing",
     "API testing",
     "mobile app testing",
-    "test automation",
-    "quality assurance consultancy",
     "software testing training",
-    "AI-powered testing",
-    "selenium automation",
-    "ISTQB training",
-    "agile testing",
   ],
 
   alternates: {
     canonical: "https://www.qtestsolutions.com",
   },
 
-  icons: {
-    icon: [
-      { url: "/favicon.ico", type: "image/x-icon" },
-      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
-      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
-    ],
-    apple: [
-      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
-    ],
-    shortcut: "/favicon.ico",
-  },
-
-  manifest: "/site.webmanifest",
-
   openGraph: {
-    type: "website",
-    locale: "en_IN",
-    url: "https://www.qtestsolutions.com",
-    siteName: "QTest Solutions",
-    title: "QTest Solutions | Software Testing & QA Automation Company in India",
+    title: "QTest Solutions – Software Testing & QA Automation",
     description:
-      "Leading software testing and QA automation company in India. AI-powered testing, performance engineering, security testing, and comprehensive training programs.",
-    images: [
-      {
-        url: "https://www.qtestsolutions.com/image.png",
-        width: 1200,
-        height: 630,
-        alt: "QTest Solutions - Software Testing & QA Automation Services",
-      },
-    ],
+      "Expert software testing and QA automation services including performance, security, mobile, and AI-powered testing.",
+    url: "https://www.qtestsolutions.com",
+    type: "website",
+images: [{ url: "/image.png", width: 1200, height: 630 }],
+
   },
 
   twitter: {
     card: "summary_large_image",
-    title: "QTest Solutions | Software Testing & QA Automation",
+    title: "QTest Solutions – Software Testing & QA Automation",
     description:
-      "AI-powered software testing services: automation, performance, security, API & mobile QA.",
-    images: ["https://www.qtestsolutions.com/image.png"],
-    creator: "@qtestsolutions",
-    site: "@qtestsolutions",
-  },
-
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
+      "AI-powered software testing and QA automation services in India.",
+images: [{ url: "/image.png", width: 1200, height: 630 }],
   },
 };
 

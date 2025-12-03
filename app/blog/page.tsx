@@ -4,26 +4,28 @@ import Blog from "../../components/Blog";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Blog - Software Testing Insights & Best Practices",
-  description: "Latest articles on software testing, QA automation, performance testing, and quality assurance best practices. Expert insights and tutorials from QTest Solutions.",
+  title: "Blog – Software Testing Articles & QA Insights",
+  description:
+    "Expert insights on QA automation, performance testing, API testing, and quality assurance best practices from QTest Solutions.",
   keywords: [
     "software testing blog",
-    "QA automation tutorials",
-    "testing best practices",
-    "quality assurance articles",
-    "test automation guides",
-    "performance testing tips"
+    "QA tutorials",
+    "automation testing guides",
   ],
+
   alternates: {
     canonical: "https://www.qtestsolutions.com/blog",
   },
+
   openGraph: {
-    title: "Blog - Software Testing & QA Insights",
-    description: "Expert articles on software testing, automation, and quality assurance best practices.",
+    title: "Software Testing Blog – QTest Solutions",
+    description: "QA automation tutorials and testing insights.",
     url: "https://www.qtestsolutions.com/blog",
     type: "website",
+images: [{ url: "/image.png", width: 1200, height: 630 }],
   },
 };
+
 
 export default function BlogPage() {
   return (
