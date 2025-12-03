@@ -115,6 +115,7 @@ body {
   @apply bg-gradient-to-r from-brand-sage-500 to-brand-sage-600 text-white px-6 py-3 rounded-xl font-medium transition-all duration-300 shadow-soft hover:shadow-soft-lg hover:scale-105 focus:ring-4 focus:ring-brand-sage-200;
 }
 
+
 .btn-secondary {
   @apply bg-gradient-to-r from-brand-lavender-100 to-brand-lavender-200 text-brand-lavender-700 px-6 py-3 rounded-xl font-medium transition-all duration-300 hover:from-brand-lavender-200 hover:to-brand-lavender-300 focus:ring-4 focus:ring-brand-lavender-200;
 }
