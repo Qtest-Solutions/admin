@@ -652,7 +652,7 @@ const Training: React.FC = () => {
               onClick={() => setIsModalOpen(true)}
               className="group glass-professional px-8 py-3 rounded-full font-semibold text-sm transition-all duration-300 transform hover:scale-105 shadow-soft hover:shadow-soft-lg bg-gradient-to-r from-brand-sage-500 to-brand-lavender-600 text-black glow-sage"
             >
-              Enroll Now
+                Enquiry Now
               <ArrowRight className="inline-block ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
             </button>
 
