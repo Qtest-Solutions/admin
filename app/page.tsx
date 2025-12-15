@@ -13,6 +13,10 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://www.qtestsolutions.com/",
   },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function HomePage() {
