@@ -19,7 +19,11 @@ export const metadata: Metadata = {
     description: "Reach out to our QA and test automation experts.",
     url: "https://www.qtestsolutions.com/contact",
     type: "website",
-images: [{ url: "/image.png", width: 1200, height: 630 }],
+images: [{ url: "https://www.qtestsolutions.com/image.png", width: 1200, height: 630 }],
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
 };
 

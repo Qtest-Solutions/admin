@@ -29,7 +29,7 @@ export const metadata: Metadata = {
       "Expert software testing and QA automation services including performance, security, mobile, and AI-powered testing.",
     url: "https://www.qtestsolutions.com",
     type: "website",
-images: [{ url: "/image.png", width: 1200, height: 630 }],
+images: [{ url: "https://www.qtestsolutions.com/image.png", width: 1200, height: 630 }],
 
   },
 
@@ -38,7 +38,7 @@ images: [{ url: "/image.png", width: 1200, height: 630 }],
     title: "QTest Solutions – Software Testing & QA Automation",
     description:
       "AI-powered software testing and QA automation services in India.",
-images: [{ url: "/image.png", width: 1200, height: 630 }],
+    images: [{ url: "https://www.qtestsolutions.com/image.png", width: 1200, height: 630 }],
   },
 };
 
@@ -122,6 +122,10 @@ export default function RootLayout({
 
         {/* Web Manifest */}
         <link rel="manifest" href="/site.webmanifest" />
+        {/* Crawling & Indexing */}
+        <meta name="robots" content="index, follow" />
+        <meta name="googlebot" content="index, follow" />
+        <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
 
         {/* Structured Data (JSON-LD) */}
         <script

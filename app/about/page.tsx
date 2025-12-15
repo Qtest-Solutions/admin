@@ -18,7 +18,11 @@ export const metadata: Metadata = {
       "Learn about our mission, vision, and expertise in QA automation and testing services.",
     url: "https://www.qtestsolutions.com/about",
     type: "website",
-images: [{ url: "/image.png", width: 1200, height: 630 }],
+images: [{ url: "https://www.qtestsolutions.com/image.png", width: 1200, height: 630 }],
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
 };
 

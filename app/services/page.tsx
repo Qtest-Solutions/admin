@@ -21,6 +21,10 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://www.qtestsolutions.com/services",
   },
+  robots: {
+    index: true,
+    follow: true,
+  },
 
   openGraph: {
     title: "Software Testing Services – QTest Solutions",
@@ -28,10 +32,11 @@ export const metadata: Metadata = {
       "Expert automation testing, performance testing, API testing, and security testing services.",
     url: "https://www.qtestsolutions.com/services",
     type: "website",
-  images: [{ url: "/image.png", width: 1200, height: 630 }],
+  images: [{ url: "https://www.qtestsolutions.com/image.png", width: 1200, height: 630 }],
 
   },
 };
+// ...existing code...
 
 
 
