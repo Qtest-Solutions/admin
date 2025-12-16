@@ -64,7 +64,7 @@ const Blog = ({ home = false }: BlogProps) => {
     if (!home || !isAutoPlaying) return;
 
     const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % totalSlides);
+      setCurrentSlide((prev) => prev + 1);
     }, 5000);
 
     return () => clearInterval(interval);
@@ -72,12 +72,12 @@ const Blog = ({ home = false }: BlogProps) => {
 
   // Carousel navigation
   const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % totalSlides);
+    setCurrentSlide((prev) => prev + 1);
     setIsAutoPlaying(false);
   };
 
   const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + totalSlides) % totalSlides);
+    setCurrentSlide((prev) => prev - 1);
     setIsAutoPlaying(false);
   };
 
@@ -115,9 +115,9 @@ const Blog = ({ home = false }: BlogProps) => {
     const colorGradient = getCategoryColor(blog.category);
 
     return (
-      <article className="bg-white rounded-xl md:rounded-2xl shadow-2xl overflow-hidden max-w-[320px] md:max-w-sm mx-auto border border-gray-100 hover:shadow-3xl transition-all duration-300">
+      <article className="bg-white rounded-lg md:rounded-xl shadow-md overflow-hidden w-full border border-gray-100 hover:shadow-lg transition-all duration-300">
         {/* Image - Clean without overlay */}
-        <div className="relative h-40 md:h-48 overflow-hidden">
+        <div className="relative h-32 md:h-36 overflow-hidden">
           <img
             src={blog.image}
             alt={blog.title}
@@ -131,7 +131,7 @@ const Blog = ({ home = false }: BlogProps) => {
         </div>
 
         {/* Content */}
-        <div className="p-4 md:p-5 relative">
+        <div className="p-3 md:p-3 relative">
           {/* Date Badge */}
           <div className="absolute -top-4 right-4 md:right-5 bg-teal-400 text-white px-3 md:px-4 py-1.5 md:py-2 rounded-full shadow-lg">
             <span className="text-[10px] md:text-xs font-bold">
@@ -268,62 +268,41 @@ const Blog = ({ home = false }: BlogProps) => {
                 </div>
 
                 {/* Carousel Container */}
-                <div className="relative overflow-visible pt-4">
-                  <div className="flex transition-transform duration-700 ease-in-out">
-                    {carouselBlogs.map((blog, index) => {
-                      const position =
-                        (index - currentSlide + totalSlides) % totalSlides;
-
-                      let transform = "translateX(0%) scale(1)";
-                      let opacity = 0;
-                      let zIndex = 0;
-
-                      if (position === 0) {
-                        transform = "translateX(0%) scale(1)";
-                        opacity = 1;
-                        zIndex = 30;
-                      } else if (position === 1) {
-                        transform = "translateX(70%) scale(0.8)";
-                        opacity = 0.5;
-                        zIndex = 20;
-                      } else if (position === totalSlides - 1) {
-                        transform = "translateX(-70%) scale(0.8)";
-                        opacity = 0.3;
-                        zIndex = 10;
-                      } else {
-                        transform = "translateX(100%) scale(0.7)";
-                        opacity = 0;
-                        zIndex = 0;
-                      }
-
-                      return (
+                <div className="relative overflow-hidden pt-4">
+                  <div
+                    className="flex transition-transform duration-700 ease-out"
+                    style={{
+                      transform: `translateX(-${
+                        (currentSlide % Math.ceil(totalSlides / 2)) * 50
+                      }%)`,
+                    }}
+                  >
+                    {/* Original blogs + duplicated for endless loop */}
+                    {[...carouselBlogs, ...carouselBlogs.slice(0, 2)].map(
+                      (blog, index) => (
                         <div
-                          key={blog.id}
-                          className="absolute w-full transition-all duration-700 ease-in-out"
-                          style={{
-                            transform,
-                            opacity,
-                            zIndex,
-                          }}
+                          key={`${blog.id}-${Math.floor(index / totalSlides)}`}
+                          className="flex-shrink-0 w-1/2 px-2"
                         >
-                          <BlogCard blog={blog} index={index} />
+                          <div className="flex justify-center">
+                            <BlogCard blog={blog} index={index % totalSlides} />
+                          </div>
                         </div>
-                      );
-                    })}
+                      )
+                    )}
                   </div>
-
-                  {/* Spacer to maintain height */}
-                  <div className="h-[420px] md:h-[480px]" />
                 </div>
 
                 {/* Carousel Indicators */}
-                <div className="flex justify-center gap-2 mt-6 md:mt-8">
-                  {carouselBlogs.map((_, index) => (
+                <div className="flex justify-center gap-2 mt-4 md:mt-6">
+                  {Array.from({
+                    length: Math.ceil(totalSlides / 2),
+                  }).map((_, index) => (
                     <button
                       key={index}
                       onClick={() => goToSlide(index)}
                       className={`transition-all duration-300 rounded-full ${
-                        index === currentSlide
+                        index === currentSlide % Math.ceil(totalSlides / 2)
                           ? "w-6 md:w-8 h-2 bg-teal-500"
                           : "w-2 h-2 bg-gray-300 hover:bg-gray-400"
                       }`}
