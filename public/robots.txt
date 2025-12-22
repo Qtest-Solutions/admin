@@ -1,5 +1,5 @@
 User-agent: *
-Sitemap: https://qtestsolutions.com/sitemap.xml
+Sitemap: https://www.qtestsolutions.com/sitemap.xml
 Allow: /$
 Allow: /about
 Allow: /services

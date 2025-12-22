@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Calendar } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { useRouter } from "next/navigation";
+import Modal from "./Modal";
 
 interface Banner {
   title: string;
@@ -50,6 +51,8 @@ export default function HeroSlider() {
 
   const [index, setIndex] = useState<number>(0);
   const [isPaused, setIsPaused] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [calendlyLoaded, setCalendlyLoaded] = useState<boolean>(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const containerRef = useRef<HTMLElement | null>(null);
   const startX = useRef<number>(0);
@@ -63,6 +66,16 @@ export default function HeroSlider() {
   const scrollToServices = () => {
     router.push("/contact");
   };
+
+  // Load Calendly widget
+  useEffect(() => {
+    if (isModalOpen && !calendlyLoaded) {
+      const script = document.createElement("script");
+      script.src = "https://assets.calendly.com/assets/external/widget.js";
+      script.onload = () => setCalendlyLoaded(true);
+      document.body.appendChild(script);
+    }
+  }, [isModalOpen, calendlyLoaded]);
 
   // Get modern gradient based on index
   const getGradient = (slideIndex: number) => {
@@ -161,37 +174,37 @@ export default function HeroSlider() {
                 "@type": "ListItem",
                 position: 1,
                 name: "Home",
-                item: "https://qtestsolutions.com/",
+                item: "https://www.qtestsolutions.com/",
               },
               {
                 "@type": "ListItem",
                 position: 2,
                 name: "Services",
-                item: "https://qtestsolutions.com/services",
+                item: "https://www.qtestsolutions.com/services",
               },
               {
                 "@type": "ListItem",
                 position: 3,
                 name: "About",
-                item: "https://qtestsolutions.com/about",
+                item: "https://www.qtestsolutions.com/about",
               },
               {
                 "@type": "ListItem",
                 position: 4,
                 name: "Training",
-                item: "https://qtestsolutions.com/training",
+                item: "https://www.qtestsolutions.com/training",
               },
               {
                 "@type": "ListItem",
                 position: 5,
                 name: "Blog",
-                item: "https://qtestsolutions.com/blog",
+                item: "https://www.qtestsolutions.com/blog",
               },
               {
                 "@type": "ListItem",
                 position: 6,
                 name: "Contact",
-                item: "https://qtestsolutions.com/contact",
+                item: "https://www.qtestsolutions.com/contact",
               },
             ],
           }),
@@ -238,13 +251,14 @@ export default function HeroSlider() {
               {banners[index].desc}
             </motion.p>
 
-            {/* CTA button with scroll functionality */}
+            {/* CTA buttons with scroll functionality */}
             <motion.div
-              className="pt-6"
+              className="pt-6 flex flex-col sm:flex-row gap-4 justify-center items-center"
               initial={reduced ? "show" : "hidden"}
               animate="show"
               variants={textVariants(0.12)}
             >
+              {/* Contact Us Button */}
               <button
                 onClick={scrollToServices}
                 className="group relative px-8 py-4 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white font-semibold rounded-full transition-all duration-500 flex items-center gap-3 shadow-lg hover:shadow-blue-500/25 hover:scale-105 text-base overflow-hidden border border-white/20 backdrop-blur-sm"
@@ -255,6 +269,16 @@ export default function HeroSlider() {
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-all duration-300" />
                 </div>
               </button>
+
+              {/* Start Consultation Button */}
+              {/* <button
+                onClick={() => setIsModalOpen(true)}
+                className="group relative px-8 py-4 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold rounded-full transition-all duration-500 flex items-center gap-3 shadow-lg hover:shadow-blue-500/25 hover:scale-105 text-base overflow-hidden border border-white/20 backdrop-blur-sm"
+                aria-label="Start consultation - Open scheduling"
+              >
+                <Calendar className="w-5 h-5" />
+                <span className="relative z-10">Start Consultation</span>
+              </button> */}
             </motion.div>
           </div>
         </div>
@@ -279,6 +303,31 @@ export default function HeroSlider() {
           </div>
         </div>
       )}
+
+      {/* Consultation Modal with Calendly Widget */}
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title="Schedule Your Free Consultation"
+        maxWidth="max-w-2xl"
+      >
+        <div className="min-h-[600px]">
+          {calendlyLoaded ? (
+            <div
+              className="calendly-inline-widget"
+              data-url="https://calendly.com/qtestsolutions/consultation"
+              style={{ minHeight: "600px" }}
+            ></div>
+          ) : (
+            <div className="flex items-center justify-center h-[600px]">
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-500 mx-auto mb-4"></div>
+                <p className="text-gray-600">Loading scheduling widget...</p>
+              </div>
+            </div>
+          )}
+        </div>
+      </Modal>
     </section>
   );
 }
