@@ -58,12 +58,27 @@ interface FormData {
   course: string;
 }
 
+interface DemoFormData {
+  program: string;
+  name: string;
+  email: string;
+  phone: string;
+}
+
 interface FormErrors {
   name?: string;
   email?: string;
   phone?: string;
   place?: string;
   course?: string;
+  submit?: string;
+}
+
+interface DemoFormErrors {
+  program?: string;
+  name?: string;
+  email?: string;
+  phone?: string;
   submit?: string;
 }
 
@@ -82,8 +97,11 @@ const Training: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [currentTestimonial, setCurrentTestimonial] = useState<number>(0);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [isDemoSubmitting, setIsDemoSubmitting] = useState<boolean>(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(false);
+  const [showDemoSuccessMessage, setShowDemoSuccessMessage] = useState<boolean>(false);
   const [errors, setErrors] = useState<FormErrors>({});
+  const [demoErrors, setDemoErrors] = useState<DemoFormErrors>({});
   const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
@@ -91,6 +109,20 @@ const Training: React.FC = () => {
     place: "",
     course: "",
   });
+  const [demoFormData, setDemoFormData] = useState<DemoFormData>({
+    program: "",
+    name: "",
+    email: "",
+    phone: "",
+  });
+
+  // Program options for demo form
+  const programOptions = [
+    "Manual Testing",
+    "Automation Testing",
+    "Manual + Automation Testing",
+    "Internship",
+  ];
 
   // Testimonials data
   const testimonials: Testimonial[] = [
@@ -371,6 +403,34 @@ const Training: React.FC = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  const validateDemoForm = (): boolean => {
+    const newErrors: DemoFormErrors = {};
+
+    // Program validation
+    if (!demoFormData.program) {
+      newErrors.program = "Please select a program";
+    }
+
+    // Name validation
+    if (!demoFormData.name.trim()) {
+      newErrors.name = "Full name is required";
+    } else if (demoFormData.name.trim().length < 2) {
+      newErrors.name = "Name must be at least 2 characters";
+    } else if (!/^[a-zA-Z\s]+$/.test(demoFormData.name)) {
+      newErrors.name = "Name can only contain letters and spaces";
+    }
+
+    // Phone validation
+    if (!demoFormData.phone.trim()) {
+      newErrors.phone = "Phone number is required";
+    } else if (!/^[0-9]{10}$/.test(demoFormData.phone.replace(/\s/g, ""))) {
+      newErrors.phone = "Please enter a valid 10-digit phone number";
+    }
+
+    setDemoErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   // -------------------- WhatsApp Handler --------------------
   const handleWhatsAppClick = () => {
     const phoneNumber = "919961544424";
@@ -397,7 +457,7 @@ const Training: React.FC = () => {
     },
     {
       icon: Briefcase,
-      title: "Job Placement",
+      title: "Job Assistance",
       description: "Dedicated career support and placement assistance",
     },
     {
@@ -420,8 +480,8 @@ const Training: React.FC = () => {
   // -------------------- Courses --------------------
   const courses: Course[] = [
     {
-      name: "Manual Testing Fundamentals",
-      duration: "6 weeks",
+      name: "Manual Testing",
+      duration: "4 weeks",
       level: "Beginner Level",
       description:
         "Master the foundations of software testing with comprehensive manual testing techniques and methodologies.",
@@ -436,7 +496,7 @@ const Training: React.FC = () => {
     },
     {
       name: "Automation Testing",
-      duration: "8 weeks",
+      duration: "6 weeks",
       level: "Intermediate Level",
       description:
         "Build expertise in test automation using industry-standard tools and frameworks for efficient testing.",
@@ -450,31 +510,31 @@ const Training: React.FC = () => {
       color: "emerald",
     },
     {
-      name: "Performance Testing",
-      duration: "4 weeks",
-      level: "Advanced Level",
+      name: "Manual & Automation Testing",
+      duration: "12 weeks",
+      level: "Comprehensive",
       description:
-        "Specialize in performance testing to ensure applications deliver optimal speed and reliability.",
+        "Complete QA training covering both manual and automation testing for a well-rounded skill set.",
       highlights: [
-        "Load Testing",
-        "Stress Testing",
-        "Performance Analysis",
-        "Monitoring Tools",
+        "Full Stack QA",
+        "Multiple Tools",
+        "Real Projects",
+        "Interview Prep",
       ],
       icon: BarChart,
       color: "purple",
     },
     {
-      name: "Complete QA Bootcamp",
+      name: "Internship",
       duration: "12 weeks",
       level: "All Levels",
       description:
-        "Comprehensive program covering all aspects of QA testing from basics to advanced automation.",
+        "Hands-on internship program with real project experience and mentorship from industry experts.",
       highlights: [
-        "Full Stack QA",
-        "Multiple Tools",
-        "Capstone Project",
-        "Interview Prep",
+        "Live Projects",
+        "Mentorship",
+        "Industry Exposure",
+        "Placement Support",
       ],
       icon: GraduationCap,
       color: "coral",
@@ -544,6 +604,21 @@ const Training: React.FC = () => {
     }
   };
 
+  const handleDemoInputChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ): void => {
+    const { name, value } = e.target;
+    setDemoFormData((prev) => ({ ...prev, [name]: value }));
+
+    // Clear error for this field when user starts typing
+    if (demoErrors[name as keyof DemoFormErrors]) {
+      setDemoErrors((prev) => ({
+        ...prev,
+        [name]: undefined,
+      }));
+    }
+  };
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
 
@@ -604,11 +679,69 @@ const Training: React.FC = () => {
     }
   };
 
+  const handleDemoSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
+    e.preventDefault();
+
+    // Validate form before submission
+    if (!validateDemoForm()) {
+      return;
+    }
+
+    setIsDemoSubmitting(true);
+
+    const form = e.currentTarget;
+    const submissionData = new FormData(form);
+
+    try {
+      const response = await fetch(
+        "https://formsubmit.co/hisham@qtestsolutions.com",
+        {
+          method: "POST",
+          body: submissionData,
+          headers: {
+            Accept: "application/json",
+          },
+        }
+      );
+
+      if (response.ok) {
+        // Show success message
+        setShowDemoSuccessMessage(true);
+
+        // Clear form
+        setDemoFormData({
+          program: "",
+          name: "",
+          email: "",
+          phone: "",
+        });
+        form.reset();
+
+        // Hide success message after 3 seconds
+        setTimeout(() => {
+          setShowDemoSuccessMessage(false);
+        }, 3000);
+      } else {
+        // Handle error response
+        setDemoErrors({
+          submit: "Failed to submit. Please try again.",
+        });
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      setDemoErrors({
+        submit: "An error occurred. Please try again later.",
+      });
+    } finally {
+      setIsDemoSubmitting(false);
+    }
+  };
+
   // -------------------- Render --------------------
   return (
     <section
       id="training"
-      className="py-16 bg-transparent relative overflow-hidden"
+      className="py-16 mt-5 bg-transparent relative overflow-hidden"
     >
       {/* Background blobs */}
       <div className="absolute inset-0">
@@ -625,76 +758,248 @@ const Training: React.FC = () => {
       </div>
 
       <div className="container mx-auto px-6 relative z-10">
-        {/* Header */}
-        <div className="text-center mb-12 animate-fade-in-up">
-          <div className="inline-flex items-center gap-2 glass-professional px-4 py-2 rounded-full text-xs text-brand-sage-700 mb-4 font-medium glow-sage">
+        {/* Header Section with Form */}
+    <div className="container mx-auto px-6 relative z-10">
+  {/* Header Section with Form */}
+  <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 mb-16 animate-fade-in-up">
+    {/* Left Side - Content (70%) */}
+    <div className="lg:w-[70%]">
+      <div className="mb-8">
+        {/* Centered Badge */}
+        <div className="flex justify-center lg:justify-start mb-4">
+          <div className="inline-flex items-center gap-2 glass-professional px-4 py-2 rounded-full text-xs text-brand-sage-700 font-medium glow-sage">
             <GraduationCap className="w-3 h-3" />
             Professional Training Programs
             <div className="w-1.5 h-1.5 bg-brand-sage-500 rounded-full animate-pulse" />
           </div>
-
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-black leading-tight">
-            Launch Your QA Career
-          </h2>
-
-          <p className="text-sm md:text-base text-brand-neutral-600 max-w-2xl mx-auto leading-relaxed font-medium mb-6">
-            Comprehensive training programs designed to take you from
-            <span className="text-brand-sage-600 font-semibold">
-              {" "}
-              beginner to job-ready
-            </span>{" "}
-            QA professional with hands-on projects and industry curriculum
-          </p>
-
-          {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-6">
-            <button
-              onClick={() => setIsModalOpen(true)}
-              className="group glass-professional px-8 py-3 rounded-full font-semibold text-sm transition-all duration-300 transform hover:scale-105 shadow-soft hover:shadow-soft-lg bg-gradient-to-r from-brand-sage-500 to-brand-lavender-600 text-black glow-sage"
-            >
-                Enquiry Now
-              <ArrowRight className="inline-block ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
-            </button>
-
-            <button
-              onClick={handleWhatsAppClick}
-              className="group glass-professional px-8 py-3 rounded-full font-semibold text-sm transition-all duration-300 transform hover:scale-105 shadow-soft hover:shadow-soft-lg bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-black"
-            >
-              <MessageCircle className="inline-block mr-2 w-4 h-4 group-hover:scale-110 transition-transform duration-300" />
-              WhatsApp Us
-            </button>
-          </div>
-
-          <div className="mt-4 flex justify-center">
-            <div className="w-16 h-0.5 bg-gradient-to-r from-brand-sage-500 via-brand-lavender-500 to-brand-coral-500 rounded-full" />
-          </div>
         </div>
 
-        {/* Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
-          {features.map((feature, index) => (
-            <div
-              key={index}
-              className="group glass-professional border border-brand-sage-200/40 hover:border-brand-sage-300/60 rounded-2xl p-5 transition-all duration-500 hover:scale-[1.02] hover:-translate-y-1 shadow-soft hover:shadow-soft-lg glow-sage animate-fade-in-up"
-              style={{ animationDelay: `${index * 0.1}s` }}
-            >
-              <div className="flex items-start space-x-4">
-                <div className="w-12 h-12 bg-brand-sage-100/50 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-all duration-500 border border-white/20">
-                  <feature.icon className="w-6 h-6 text-brand-sage-600 transition-transform duration-500 group-hover:rotate-12" />
-                </div>
-                <div className="flex-1">
-                  <h4 className="text-sm font-bold text-brand-neutral-800 mb-1 group-hover:text-brand-neutral-900 transition-colors">
-                    {feature.title}
-                  </h4>
-                  <p className="text-xs text-brand-neutral-600 leading-relaxed font-medium">
-                    {feature.description}
-                  </p>
-                </div>
+        <h2 className="text-3xl md:text-4xl font-bold mb-4 text-black leading-tight text-center lg:text-left">
+          Launch Your QA Career
+        </h2>
+
+        <p className="text-sm md:text-base text-brand-neutral-600 max-w-2xl leading-relaxed font-medium mb-6 text-center lg:text-left">
+          Comprehensive training programs designed to take you from
+          <span className="text-brand-sage-600 font-semibold">
+            {" "}
+            beginner to job-ready
+          </span>{" "}
+          QA professional with hands-on projects and industry curriculum
+        </p>
+
+        {/* Action Buttons */}
+        <div className="flex flex-col sm:flex-row gap-4 mb-6 justify-center lg:justify-start">
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="group glass-professional px-8 py-3 rounded-full font-semibold text-sm transition-all duration-300 transform hover:scale-105 shadow-soft hover:shadow-soft-lg bg-gradient-to-r from-brand-sage-500 to-brand-lavender-600 text-black glow-sage"
+          >
+            Enquiry Now
+            <ArrowRight className="inline-block ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+          </button>
+
+          <button
+            onClick={handleWhatsAppClick}
+            className="group glass-professional px-8 py-3 rounded-full font-semibold text-sm transition-all duration-300 transform hover:scale-105 shadow-soft hover:shadow-soft-lg bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-black"
+          >
+            <MessageCircle className="inline-block mr-2 w-4 h-4 group-hover:scale-110 transition-transform duration-300" />
+            WhatsApp Us
+          </button>
+        </div>
+      </div>
+
+      {/* Features Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {features.map((feature, index) => (
+          <div
+            key={index}
+            className="group glass-professional border border-brand-sage-200/40 hover:border-brand-sage-300/60 rounded-2xl p-4 transition-all duration-500 hover:scale-[1.02] hover:-translate-y-1 shadow-soft hover:shadow-soft-lg glow-sage"
+            style={{ animationDelay: `${index * 0.1}s` }}
+          >
+            <div className="flex items-start space-x-3">
+              <div className="w-10 h-10 bg-brand-sage-100/50 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-all duration-500 border border-white/20">
+                <feature.icon className="w-5 h-5 text-brand-sage-600 transition-transform duration-500 group-hover:rotate-12" />
+              </div>
+              <div className="flex-1">
+                <h4 className="text-xs font-bold text-brand-neutral-800 mb-1 group-hover:text-brand-neutral-900 transition-colors">
+                  {feature.title}
+                </h4>
+                <p className="text-xs text-brand-neutral-600 leading-relaxed font-medium">
+                  {feature.description}
+                </p>
               </div>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
+      </div>
+    </div>
 
+    {/* Right Side - Demo Form (30%) */}
+    <div className="lg:w-[30%]">
+      <div className="glass-professional border border-brand-sage-200/40 rounded-2xl p-6 shadow-soft glow-sage sticky top-24">
+        {showDemoSuccessMessage ? (
+          <div className="text-center py-8">
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-green-100 mb-4">
+              <CheckCircle className="w-7 h-7 text-green-600" />
+            </div>
+            <h3 className="text-xl font-bold text-brand-neutral-800 mb-2">
+              Demo Booked!
+            </h3>
+            <p className="text-sm text-brand-neutral-600">
+              We'll contact you shortly to schedule your demo session.
+            </p>
+          </div>
+        ) : (
+          <>
+            <div className="text-center mb-5">
+              <div className="inline-flex items-center gap-2 glass-professional px-3 py-1 rounded-full text-xs text-brand-coral-700 mb-3 font-medium">
+                <Target className="w-3 h-3" />
+                Free Demo Session
+              </div>
+              <h3 className="text-lg font-bold text-brand-neutral-800 gradient-text-professional">
+                Book Your Demo
+              </h3>
+            </div>
+
+            <form onSubmit={handleDemoSubmit} className="space-y-4" noValidate>
+              {/* FormSubmit Configuration */}
+              <input type="hidden" name="_captcha" value="false" />
+              <input
+                type="hidden"
+                name="_subject"
+                value="New Demo Request from QTest Website"
+              />
+              <input type="hidden" name="_template" value="table" />
+
+              {/* Program Field */}
+              <div>
+                <label className="block text-xs font-medium text-brand-neutral-700 mb-1">
+                  Program Interested *
+                </label>
+                <select
+                  name="program"
+                  value={demoFormData.program}
+                  onChange={handleDemoInputChange}
+                  className={`w-full px-3 py-2 rounded-lg border transition-all text-sm ${
+                    demoErrors.program
+                      ? "border-red-400 focus:border-red-400 focus:ring-red-200/50"
+                      : "border-brand-neutral-200 focus:border-brand-sage-500"
+                  } focus:ring-2 focus:ring-brand-sage-200/50`}
+                >
+                  <option value="">Select One</option>
+                  {programOptions.map((program, index) => (
+                    <option key={index} value={program}>
+                      {program}
+                    </option>
+                  ))}
+                </select>
+                {demoErrors.program && (
+                  <div className="flex items-center gap-1 mt-1 text-red-600">
+                    <AlertCircle className="w-3 h-3" />
+                    <p className="text-xs">{demoErrors.program}</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Name Field */}
+              <div>
+                <label className="block text-xs font-medium text-brand-neutral-700 mb-1">
+                  Full Name *
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  value={demoFormData.name}
+                  onChange={handleDemoInputChange}
+                  className={`w-full px-3 py-2 rounded-lg border transition-all text-sm ${
+                    demoErrors.name
+                      ? "border-red-400 focus:border-red-400 focus:ring-red-200/50"
+                      : "border-brand-neutral-200 focus:border-brand-sage-500"
+                  } focus:ring-2 focus:ring-brand-sage-200/50`}
+                  placeholder="Your full name"
+                />
+                {demoErrors.name && (
+                  <div className="flex items-center gap-1 mt-1 text-red-600">
+                    <AlertCircle className="w-3 h-3" />
+                    <p className="text-xs">{demoErrors.name}</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Email Field */}
+              <div>
+                <label className="block text-xs font-medium text-brand-neutral-700 mb-1">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  value={demoFormData.email}
+                  onChange={handleDemoInputChange}
+                  className="w-full px-3 py-2 rounded-lg border border-brand-neutral-200 focus:border-brand-sage-500 transition-all text-sm focus:ring-2 focus:ring-brand-sage-200/50"
+                  placeholder="your.email@example.com"
+                />
+              </div>
+
+              {/* Phone Field */}
+              <div>
+                <label className="block text-xs font-medium text-brand-neutral-700 mb-1">
+                  Phone Number *
+                </label>
+                <input
+                  type="tel"
+                  name="phone"
+                  value={demoFormData.phone}
+                  onChange={handleDemoInputChange}
+                  className={`w-full px-3 py-2 rounded-lg border transition-all text-sm ${
+                    demoErrors.phone
+                      ? "border-red-400 focus:border-red-400 focus:ring-red-200/50"
+                      : "border-brand-neutral-200 focus:border-brand-sage-500"
+                  } focus:ring-2 focus:ring-brand-sage-200/50`}
+                  placeholder="10-digit mobile number"
+                />
+                {demoErrors.phone && (
+                  <div className="flex items-center gap-1 mt-1 text-red-600">
+                    <AlertCircle className="w-3 h-3" />
+                    <p className="text-xs">{demoErrors.phone}</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Submit Error */}
+              {demoErrors.submit && (
+                <div className="flex items-center gap-2 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+                  <AlertCircle className="w-4 h-4 text-red-600 flex-shrink-0" />
+                  <p className="text-red-800 text-xs">{demoErrors.submit}</p>
+                </div>
+              )}
+
+              {/* Submit Button */}
+              <button
+                type="submit"
+                disabled={isDemoSubmitting}
+                className="w-full py-3 rounded-lg font-semibold transition-all duration-300 bg-gradient-to-r from-brand-coral-500 to-brand-coral-600 text-white hover:shadow-lg transform hover:scale-[1.02] text-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
+              >
+                {isDemoSubmitting ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    Booking...
+                  </>
+                ) : (
+                  <>
+                    Book Your Demo
+                    <ArrowRight className="w-4 h-4" />
+                  </>
+                )}
+              </button>
+            </form>
+          </>
+        )}
+      </div>
+    </div>
+  </div>
+  
+  {/* Rest of the component remains the same... */}
+</div>
         {/* Courses Section */}
         <div className="mb-8 text-center animate-fade-in-up">
           <h3 className="text-2xl md:text-3xl font-bold mb-4 gradient-text-professional">
