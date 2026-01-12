@@ -181,7 +181,7 @@ export default function About() {
         </div>
 
         {/* Stats Section */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-20">
+        {/* <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-20">
           {stats.map((stat, index) => {
             const Icon = stat.icon;
             return (
@@ -201,7 +201,7 @@ export default function About() {
               </div>
             );
           })}
-        </div>
+        </div> */}
 
         {/* Who We Are Section */}
         <div className="glass-professional bg-white/90 backdrop-blur-sm rounded-3xl p-8 md:p-12 mb-16 shadow-xl border border-brand-sage-200">
