@@ -17,10 +17,11 @@ const Header = () => {
 
   const navItems = [
     { name: "Home", href: "/" },
+    { name: "Training", href: "/training" },
     { name: "Services", href: "/services" },
     { name: "Blog", href: "/blog" },
-    { name: "Training", href: "/training" },
-    { name: "About", href: "/about" },
+  
+    // { name: "About", href: "/about" },
   ];
 
   const isActive = (href: string): boolean => {
