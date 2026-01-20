@@ -1,3 +1,4 @@
+'use client'
 import {
   Hand,
   Terminal,
@@ -11,8 +12,11 @@ import {
   Sparkles,
   ArrowRight,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function Services() {
+    const router = useRouter();
+
   return (
     <section
       id="services"
@@ -74,6 +78,7 @@ export default function Services() {
                 title: "Manual Testing",
                 desc: "Comprehensive manual testing services to identify usability issues, UI/UX problems, and critical bugs that automated tests might miss.",
                 gradient: "from-teal-500 to-teal-600",
+                slug: "manual-testing",
                 delay: "0ms",
               },
               {
@@ -81,11 +86,13 @@ export default function Services() {
                 title: "Automation Testing",
                 desc: "Accelerate your testing cycles with robust automation frameworks. We build scalable test suites using industry-leading tools.",
                 gradient: "from-teal-600 to-teal-700",
+                slug:"automation-testing",
                 delay: "100ms",
               },
               {
                 icon: History,
                 title: "Regression Testing",
+                slug:"regression-testing",
                 desc: "Ensure new updates don't break existing functionality. Our regression testing catches issues early in the development cycle.",
                 gradient: "from-teal-500 to-teal-600",
                 delay: "200ms",
@@ -95,6 +102,7 @@ export default function Services() {
                 title: "Performance & Load Testing",
                 desc: "Validate your application can handle peak traffic. We stress test systems to identify bottlenecks and optimize performance.",
                 gradient: "from-teal-600 to-teal-700",
+                slug:"performance-testing",
                 delay: "0ms",
               },
               {
@@ -102,6 +110,7 @@ export default function Services() {
                 title: "Security Testing",
                 desc: "Protect your application from vulnerabilities. Our security testing identifies potential threats and ensures compliance standards.",
                 gradient: "from-teal-500 to-teal-600",
+                slug:"security-testing",
                 delay: "100ms",
               },
               {
@@ -109,6 +118,7 @@ export default function Services() {
                 title: "API Testing",
                 desc: "Comprehensive API validation ensuring your integrations are reliable, secure, and performant across all endpoints.",
                 gradient: "from-teal-600 to-teal-700",
+                slug:"api-testing",
                 delay: "200ms",
               },
             ].map((item, index) => {
@@ -140,8 +150,8 @@ export default function Services() {
                     </p>
 
                     {/* Hover Arrow */}
-                    <div className="flex items-center gap-2 text-teal-600 font-semibold text-sm opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
-                      <span>Learn more</span>
+                    <div className="flex items-center gap-2 text-teal-600 cursor-pointer font-semibold text-sm opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+                      <span onClick={()=>{router.push(`/services/${item.slug}`)}} >Learn more</span>
                       <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </div>
 

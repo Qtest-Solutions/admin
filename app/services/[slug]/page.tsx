@@ -137,7 +137,7 @@ export default function ServiceSlugPage({ params }: Props) {
       </section>
 
       {/* TRUSTED BY SECTION */}
-      <section className="border-y border-gray-200 bg-white/50">
+      {/* <section className="border-y border-gray-200 bg-white/50">
         <div className="max-w-[1280px] mx-auto px-6 md:px-20 lg:px-40 py-12">
           <p className="text-center text-sm font-medium text-gray-500 mb-8">
             TRUSTED BY INDUSTRY LEADERS
@@ -150,7 +150,7 @@ export default function ServiceSlugPage({ params }: Props) {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* WHEN TO USE SECTION */}
       <section className="py-20 lg:py-28 bg-[#f6f8f8] relative">

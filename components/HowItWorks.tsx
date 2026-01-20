@@ -75,7 +75,7 @@ export default function HowItWorks() {
         </div>
 
         {/* OPTIONAL CTA LINE */}
-        <div className="text-center mt-20">
+        {/* <div className="text-center mt-20">
           <p className="text-gray-700 mb-6">
             Looking for a reliable QA partner for your next release?
           </p>
@@ -85,7 +85,7 @@ export default function HowItWorks() {
           >
             Start Your QA Engagement
           </a>
-        </div>
+        </div> */}
       </div>
     </section>
   );

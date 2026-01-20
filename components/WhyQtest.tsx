@@ -92,7 +92,7 @@ export default function WhyChooseQTest() {
         </div>
 
         {/* CTA STRIP */}
-        <div className="text-center mt-20">
+        {/* <div className="text-center mt-20">
           <p className="text-gray-700 mb-6">
             Ready to partner with a QA team that takes quality seriously?
           </p>
@@ -102,7 +102,7 @@ export default function WhyChooseQTest() {
           >
             Talk to a QA Expert
           </a>
-        </div>
+        </div> */}
       </div>
     </section>
   );
