@@ -86,9 +86,7 @@ interface Testimonial {
   id: number;
   name: string;
   rating: number;
-  title: string;
   review: string;
-  course: string;
   date: string;
 }
 
@@ -99,7 +97,8 @@ const Training: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isDemoSubmitting, setIsDemoSubmitting] = useState<boolean>(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(false);
-  const [showDemoSuccessMessage, setShowDemoSuccessMessage] = useState<boolean>(false);
+  const [showDemoSuccessMessage, setShowDemoSuccessMessage] =
+    useState<boolean>(false);
   const [errors, setErrors] = useState<FormErrors>({});
   const [demoErrors, setDemoErrors] = useState<DemoFormErrors>({});
   const [formData, setFormData] = useState<FormData>({
@@ -128,203 +127,123 @@ const Training: React.FC = () => {
   const testimonials: Testimonial[] = [
     {
       id: 1,
-      name: "Soumya KK",
+      name: "Akesh Krishna",
       rating: 5,
-      title: "Best Software Testing Training Center",
       review:
-        "The one and only good centre for software testing training. Excellent instructors and perfect learning environment.",
-      course: "Software Testing",
-      date: "2024-09-15",
+        "I had a valuable learning experience as a software test intern at Qtest",
+      date: "a week ago",
     },
     {
       id: 2,
-      name: "Neeraja",
+      name: "Harikrishna G Nair",
       rating: 5,
-      title: "Amazing Experience",
       review:
-        "Everything was perfect I was totally satisfied with everything. The service and facilities were great. Education system and the tutors were amazing. Words are not enough to define!",
-      course: "Manual & Automation Testing",
-      date: "2024-08-20",
+        "Probably the best Software Testing teaching centre I've seen so far in Calicut. Experienced tutors, good environment to study, air conditioned classes, high speed internet connectivity, friendly and supporting staffs.",
+      date: "5 years ago",
     },
     {
       id: 3,
-      name: "Sreelakshmi",
+      name: "REJULA !!!",
       rating: 5,
-      title: "Perfect Environment for Learning",
       review:
-        "Perfect environment to learn technology and implement own ideas as a fresher. Trainers will explain every scenario with real time examples.",
-      course: "Automation Testing",
-      date: "2024-09-28",
+        "Excellent training. Provides placement assistance. With the guidance and support of the Qtest i got placed soon after the course completion.",
+      date: "3 years ago",
     },
     {
       id: 4,
-      name: "Subha",
+      name: "priya narayanan",
       rating: 5,
-      title: "Great Experience with Placement Support",
       review:
-        "It was a great experience. Good place and good atmosphere with placement support that helped me land my first job.",
-      course: "Software Testing",
-      date: "2024-10-05",
+        "Qtest Solutions is a great place to start your IT career. Excellent Service, good and experienced faculties. Provides 100% placement. Highly recommended.",
+      date: "5 years ago",
     },
     {
       id: 5,
-      name: "Hari Priya V G",
+      name: "Priyanka N",
       rating: 5,
-      title: "Highly Recommended Training",
       review:
-        "Excellent training program with knowledgeable trainers. They provided clear explanations and hands-on practice with industry tools.",
-      course: "Selenium Training",
-      date: "2024-09-10",
+        "Best teaching with affordable price more than HR is very good and friendly. More placement offers. I would suggest this institute for start up your career in software testing.",
+      date: "5 years ago",
     },
     {
       id: 6,
-      name: "Anand Krishna",
+      name: "Fathimath Sharmina",
       rating: 5,
-      title: "Best Investment in My Career",
       review:
-        "QTest Solutions helped me transition into software testing. The trainers are patient and the curriculum is up-to-date with industry standards.",
-      course: "Manual Testing",
-      date: "2024-08-18",
+        "Qtest is the best software solutions for whom having dream career in software testing, in Calicut. Having best faculty in online as well as offline.",
+      date: "2 years ago",
     },
     {
       id: 7,
-      name: "Priya Menon",
+      name: "Avinash Avi",
       rating: 5,
-      title: "Comprehensive Training Program",
       review:
-        "Very good training center with experienced faculty. They cover both manual and automation testing thoroughly with practical sessions.",
-      course: "QA Automation",
-      date: "2024-09-22",
+        "I like QTest Solutions, it has taught me many things and I am able to understand the concept more in the subjects. There are good teachers to guide me when I do anything wrong.",
+      date: "2 years ago",
     },
     {
       id: 8,
-      name: "Rahul Sharma",
+      name: "JISHNU GAMER",
       rating: 5,
-      title: "Excellent Placement Support",
       review:
-        "Got placed within 2 weeks of completing the course. The placement team is very supportive and connected me with good companies.",
-      course: "Software Testing",
-      date: "2024-10-12",
+        "This is one place where they actually let students GO LIVE the testing and provide the good testing training by giving an interested friendly atmosphere.",
+      date: " 5 years ago",
     },
     {
       id: 9,
-      name: "Divya Krishnan",
+      name: "Sreelakshmi Viswanath",
       rating: 5,
-      title: "Real-World Training Approach",
       review:
-        "The trainers use real-time project examples which made learning very practical. Highly recommend for anyone serious about software testing.",
-      course: "Automation Testing",
-      date: "2024-09-05",
+        "I was well trained on manual and automation testing and I attended mock interviews and had given presentations. So I was confident to attend the placement drives.",
+      date: "6 years ago",
     },
     {
       id: 10,
-      name: "Arun Kumar",
+      name: "Athulk clt",
       rating: 5,
-      title: "Professional and Supportive Environment",
       review:
-        "Great learning atmosphere with modern infrastructure. The instructors are knowledgeable and always ready to help clarify doubts.",
-      course: "Manual & Automation Testing",
-      date: "2024-08-30",
+        "Best software solution in calicut. Good atmosphere and also tutor is very friendly. Teaching method is more interesting.",
+      date: "2 years ago",
     },
     {
       id: 11,
-      name: "Sneha Thomas",
+      name: "Chandana pk",
       rating: 5,
-      title: "Career Transformation",
       review:
-        "QTest Solutions changed my career path completely. From being a fresher to getting hired as a Test Engineer, this training made all the difference.",
-      course: "Software Testing",
-      date: "2024-10-08",
+        "Qtest is the best institute for software testing,excellent and well discipline classes,they provide placement assistance",
+      date: "3 years ago",
     },
     {
       id: 12,
-      name: "Vishnu Prasad",
+      name: "Rahul PH",
       rating: 5,
-      title: "Best Training Institute in Calicut",
       review:
-        "Excellent training with focus on both theoretical knowledge and practical implementation. The tools training is comprehensive.",
-      course: "Selenium & Jmeter",
-      date: "2024-09-17",
+        "I have studied the software test in Qtest by online,i got good teaching in online. I will recommend this to who needs to learn about the software test",
+      date: "2 years ago",
     },
     {
       id: 13,
-      name: "Anjali Nair",
+      name: "Divya Cheeppilatt",
       rating: 5,
-      title: "Highly Skilled Trainers",
       review:
-        "The trainers have extensive industry experience and they share valuable insights about real-world testing scenarios. Very beneficial.",
-      course: "QA Testing",
-      date: "2024-08-25",
+        "Every student get good placement well reputed and renowned institution. curriculum was excellent",
+      date: "2 years ago",
     },
     {
       id: 14,
-      name: "Mohammed Riyas",
+      name: "renjitha c t",
       rating: 5,
-      title: "Perfect for Fresh Graduates",
       review:
-        "As a BTech graduate, this course gave me the practical skills needed to start my testing career. Got placed in a good company after training.",
-      course: "Manual & Automation Testing",
-      date: "2024-10-01",
+        "Its really a great institute for learning Software Testing covering all advanced topics.",
+      date: "6 years ago",
     },
     {
       id: 15,
-      name: "Lakshmi Priya",
+      name: "sahla parveen",
       rating: 5,
-      title: "Excellent Course Content",
       review:
-        "The curriculum is well-structured covering all aspects of software testing from basics to advanced automation tools. Very satisfied.",
-      course: "Software Testing",
-      date: "2024-09-12",
-    },
-    {
-      id: 16,
-      name: "Sreekanth Pillai",
-      rating: 5,
-      title: "Value for Money",
-      review:
-        "Best training institute for software testing in Kozhikode. The fees are reasonable and the quality of training is top-notch.",
-      course: "Automation Testing",
-      date: "2024-08-28",
-    },
-    {
-      id: 17,
-      name: "Reshma Abdul",
-      rating: 5,
-      title: "Supportive Learning Environment",
-      review:
-        "The calm and comfortable atmosphere makes learning easy. Instructors are patient and provide clear explanations for complex concepts.",
-      course: "Manual Testing",
-      date: "2024-10-15",
-    },
-    {
-      id: 18,
-      name: "Nithin Raj",
-      rating: 5,
-      title: "Industry-Ready Training",
-      review:
-        "Training on advanced tools like Selenium, QTP, and Appium with hands-on practice made me job-ready. Successfully working as a Test Engineer now.",
-      course: "Automation Testing",
-      date: "2024-09-25",
-    },
-    {
-      id: 19,
-      name: "Arya Menon",
-      rating: 5,
-      title: "Great Faculty and Infrastructure",
-      review:
-        "Modern lab facilities with latest software and tools. The trainers are experienced professionals who provide practical knowledge.",
-      course: "Software Testing",
-      date: "2024-10-10",
-    },
-    {
-      id: 20,
-      name: "Kiran Das",
-      rating: 5,
-      title: "Best Decision for My Career",
-      review:
-        "Joining QTest Solutions was the best decision for my career. Comprehensive training, good placement support, and excellent faculty.",
-      course: "Manual & Automation Testing",
-      date: "2024-09-30",
+        "Excellent experience and friendly guiding. Highly recommended for bright software testing future.",
+      date: "3 years ago",
     },
   ];
 
@@ -355,7 +274,8 @@ const Training: React.FC = () => {
       .split(" ")
       .map((n) => n[0])
       .join("")
-      .toUpperCase();
+      .toUpperCase()
+      .slice(0, 2);
   };
 
   // -------------------- Validation --------------------
@@ -450,11 +370,11 @@ const Training: React.FC = () => {
       description:
         "Practical, project-based learning with real-world scenarios",
     },
-    {
-      icon: Users,
-      title: "Expert Instructors",
-      description: "Learn from industry veterans with 10+ years experience",
-    },
+    // {
+    //   icon: Users,
+    //   title: "Expert Instructors",
+    //   description: "Learn from industry veterans with 10+ years experience",
+    // },
     {
       icon: Briefcase,
       title: "Job Assistance",
@@ -470,11 +390,12 @@ const Training: React.FC = () => {
       title: "Project Portfolio",
       description: "Build a professional portfolio with live projects",
     },
-    {
-      icon: Award,
-      title: "Industry Certification",
-      description: "Globally recognized certification upon completion",
-    },
+    // {
+    //   icon: Award,
+    //   title: "Course Completion Recognition",
+    //   description:
+    //     "Proof of training completion backed by practical skills and project work",
+    // },
   ];
 
   // -------------------- Courses --------------------
@@ -679,7 +600,9 @@ const Training: React.FC = () => {
     }
   };
 
-  const handleDemoSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
+  const handleDemoSubmit = async (
+    e: FormEvent<HTMLFormElement>
+  ): Promise<void> => {
     e.preventDefault();
 
     // Validate form before submission
@@ -759,247 +682,253 @@ const Training: React.FC = () => {
 
       <div className="container mx-auto px-6 relative z-10">
         {/* Header Section with Form */}
-    <div className="container mx-auto px-6 relative z-10">
-  {/* Header Section with Form */}
-  <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 mb-16 animate-fade-in-up">
-    {/* Left Side - Content (70%) */}
-    <div className="lg:w-[70%]">
-      <div className="mb-8">
-        {/* Centered Badge */}
-        <div className="flex justify-center lg:justify-start mb-4">
-          <div className="inline-flex items-center gap-2 glass-professional px-4 py-2 rounded-full text-xs text-brand-sage-700 font-medium glow-sage">
-            <GraduationCap className="w-3 h-3" />
-            Professional Training Programs
-            <div className="w-1.5 h-1.5 bg-brand-sage-500 rounded-full animate-pulse" />
-          </div>
-        </div>
-
-        <h2 className="text-3xl md:text-4xl font-bold mb-4 text-black leading-tight text-center lg:text-left">
-          Launch Your QA Career
-        </h2>
-
-        <p className="text-sm md:text-base text-brand-neutral-600 max-w-2xl leading-relaxed font-medium mb-6 text-center lg:text-left">
-          Comprehensive training programs designed to take you from
-          <span className="text-brand-sage-600 font-semibold">
-            {" "}
-            beginner to job-ready
-          </span>{" "}
-          QA professional with hands-on projects and industry curriculum
-        </p>
-
-        {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 mb-6 justify-center lg:justify-start">
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="group glass-professional px-8 py-3 rounded-full font-semibold text-sm transition-all duration-300 transform hover:scale-105 shadow-soft hover:shadow-soft-lg bg-gradient-to-r from-brand-sage-500 to-brand-lavender-600 text-black glow-sage"
-          >
-            Enquiry Now
-            <ArrowRight className="inline-block ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
-          </button>
-
-          <button
-            onClick={handleWhatsAppClick}
-            className="group glass-professional px-8 py-3 rounded-full font-semibold text-sm transition-all duration-300 transform hover:scale-105 shadow-soft hover:shadow-soft-lg bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-black"
-          >
-            <MessageCircle className="inline-block mr-2 w-4 h-4 group-hover:scale-110 transition-transform duration-300" />
-            WhatsApp Us
-          </button>
-        </div>
-      </div>
-
-      {/* Features Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {features.map((feature, index) => (
-          <div
-            key={index}
-            className="group glass-professional border border-brand-sage-200/40 hover:border-brand-sage-300/60 rounded-2xl p-4 transition-all duration-500 hover:scale-[1.02] hover:-translate-y-1 shadow-soft hover:shadow-soft-lg glow-sage"
-            style={{ animationDelay: `${index * 0.1}s` }}
-          >
-            <div className="flex items-start space-x-3">
-              <div className="w-10 h-10 bg-brand-sage-100/50 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-all duration-500 border border-white/20">
-                <feature.icon className="w-5 h-5 text-brand-sage-600 transition-transform duration-500 group-hover:rotate-12" />
-              </div>
-              <div className="flex-1">
-                <h4 className="text-xs font-bold text-brand-neutral-800 mb-1 group-hover:text-brand-neutral-900 transition-colors">
-                  {feature.title}
-                </h4>
-                <p className="text-xs text-brand-neutral-600 leading-relaxed font-medium">
-                  {feature.description}
-                </p>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-
-    {/* Right Side - Demo Form (30%) */}
-    <div className="lg:w-[30%]">
-      <div className="glass-professional border border-brand-sage-200/40 rounded-2xl p-6 shadow-soft glow-sage sticky top-24">
-        {showDemoSuccessMessage ? (
-          <div className="text-center py-8">
-            <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-green-100 mb-4">
-              <CheckCircle className="w-7 h-7 text-green-600" />
-            </div>
-            <h3 className="text-xl font-bold text-brand-neutral-800 mb-2">
-              Demo Booked!
-            </h3>
-            <p className="text-sm text-brand-neutral-600">
-              We'll contact you shortly to schedule your demo session.
-            </p>
-          </div>
-        ) : (
-          <>
-            <div className="text-center mb-5">
-              <div className="inline-flex items-center gap-2 glass-professional px-3 py-1 rounded-full text-xs text-brand-coral-700 mb-3 font-medium">
-                <Target className="w-3 h-3" />
-                Free Demo Session
-              </div>
-              <h3 className="text-lg font-bold text-brand-neutral-800 gradient-text-professional">
-                Book Your Demo
-              </h3>
-            </div>
-
-            <form onSubmit={handleDemoSubmit} className="space-y-4" noValidate>
-              {/* FormSubmit Configuration */}
-              <input type="hidden" name="_captcha" value="false" />
-              <input
-                type="hidden"
-                name="_subject"
-                value="New Demo Request from QTest Website"
-              />
-              <input type="hidden" name="_template" value="table" />
-
-              {/* Program Field */}
-              <div>
-                <label className="block text-xs font-medium text-brand-neutral-700 mb-1">
-                  Program Interested *
-                </label>
-                <select
-                  name="program"
-                  value={demoFormData.program}
-                  onChange={handleDemoInputChange}
-                  className={`w-full px-3 py-2 rounded-lg border transition-all text-sm ${
-                    demoErrors.program
-                      ? "border-red-400 focus:border-red-400 focus:ring-red-200/50"
-                      : "border-brand-neutral-200 focus:border-brand-sage-500"
-                  } focus:ring-2 focus:ring-brand-sage-200/50`}
-                >
-                  <option value="">Select One</option>
-                  {programOptions.map((program, index) => (
-                    <option key={index} value={program}>
-                      {program}
-                    </option>
-                  ))}
-                </select>
-                {demoErrors.program && (
-                  <div className="flex items-center gap-1 mt-1 text-red-600">
-                    <AlertCircle className="w-3 h-3" />
-                    <p className="text-xs">{demoErrors.program}</p>
+        <div className="container mx-auto px-6 relative z-10">
+          {/* Header Section with Form */}
+          <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 mb-16 animate-fade-in-up">
+            {/* Left Side - Content (70%) */}
+            <div className="lg:w-[70%]">
+              <div className="mb-8">
+                {/* Centered Badge */}
+                <div className="flex justify-center lg:justify-start mb-4">
+                  <div className="inline-flex items-center gap-2 glass-professional px-4 py-2 rounded-full text-xs text-brand-sage-700 font-medium glow-sage">
+                    <GraduationCap className="w-3 h-3" />
+                    Professional Training Programs
+                    <div className="w-1.5 h-1.5 bg-brand-sage-500 rounded-full animate-pulse" />
                   </div>
-                )}
-              </div>
-
-              {/* Name Field */}
-              <div>
-                <label className="block text-xs font-medium text-brand-neutral-700 mb-1">
-                  Full Name *
-                </label>
-                <input
-                  type="text"
-                  name="name"
-                  value={demoFormData.name}
-                  onChange={handleDemoInputChange}
-                  className={`w-full px-3 py-2 rounded-lg border transition-all text-sm ${
-                    demoErrors.name
-                      ? "border-red-400 focus:border-red-400 focus:ring-red-200/50"
-                      : "border-brand-neutral-200 focus:border-brand-sage-500"
-                  } focus:ring-2 focus:ring-brand-sage-200/50`}
-                  placeholder="Your full name"
-                />
-                {demoErrors.name && (
-                  <div className="flex items-center gap-1 mt-1 text-red-600">
-                    <AlertCircle className="w-3 h-3" />
-                    <p className="text-xs">{demoErrors.name}</p>
-                  </div>
-                )}
-              </div>
-
-              {/* Email Field */}
-              <div>
-                <label className="block text-xs font-medium text-brand-neutral-700 mb-1">
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  value={demoFormData.email}
-                  onChange={handleDemoInputChange}
-                  className="w-full px-3 py-2 rounded-lg border border-brand-neutral-200 focus:border-brand-sage-500 transition-all text-sm focus:ring-2 focus:ring-brand-sage-200/50"
-                  placeholder="your.email@example.com"
-                />
-              </div>
-
-              {/* Phone Field */}
-              <div>
-                <label className="block text-xs font-medium text-brand-neutral-700 mb-1">
-                  Phone Number *
-                </label>
-                <input
-                  type="tel"
-                  name="phone"
-                  value={demoFormData.phone}
-                  onChange={handleDemoInputChange}
-                  className={`w-full px-3 py-2 rounded-lg border transition-all text-sm ${
-                    demoErrors.phone
-                      ? "border-red-400 focus:border-red-400 focus:ring-red-200/50"
-                      : "border-brand-neutral-200 focus:border-brand-sage-500"
-                  } focus:ring-2 focus:ring-brand-sage-200/50`}
-                  placeholder="10-digit mobile number"
-                />
-                {demoErrors.phone && (
-                  <div className="flex items-center gap-1 mt-1 text-red-600">
-                    <AlertCircle className="w-3 h-3" />
-                    <p className="text-xs">{demoErrors.phone}</p>
-                  </div>
-                )}
-              </div>
-
-              {/* Submit Error */}
-              {demoErrors.submit && (
-                <div className="flex items-center gap-2 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
-                  <AlertCircle className="w-4 h-4 text-red-600 flex-shrink-0" />
-                  <p className="text-red-800 text-xs">{demoErrors.submit}</p>
                 </div>
-              )}
 
-              {/* Submit Button */}
-              <button
-                type="submit"
-                disabled={isDemoSubmitting}
-                className="w-full py-3 rounded-lg font-semibold transition-all duration-300 bg-gradient-to-r from-brand-coral-500 to-brand-coral-600 text-white hover:shadow-lg transform hover:scale-[1.02] text-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
-              >
-                {isDemoSubmitting ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    Booking...
-                  </>
+                <h2 className="text-3xl md:text-4xl font-bold mb-4 text-black leading-tight text-center lg:text-left">
+                  Launch Your QA Career
+                </h2>
+
+                <p className="text-sm md:text-base text-brand-neutral-600 max-w-2xl leading-relaxed font-medium mb-6 text-center lg:text-left">
+                  Comprehensive training programs designed to take you from
+                  <span className="text-brand-sage-600 font-semibold">
+                    {" "}
+                    beginner to job-ready
+                  </span>{" "}
+                  QA professional with hands-on projects and industry curriculum
+                </p>
+
+                {/* Action Buttons */}
+                <div className="flex flex-col sm:flex-row gap-4 mb-6 justify-center lg:justify-start">
+                  <button
+                    onClick={() => setIsModalOpen(true)}
+                    className="group glass-professional px-8 py-3 rounded-full font-semibold text-sm transition-all duration-300 transform hover:scale-105 shadow-soft hover:shadow-soft-lg bg-gradient-to-r from-brand-sage-500 to-brand-lavender-600 text-black glow-sage"
+                  >
+                    Enquiry Now
+                    <ArrowRight className="inline-block ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+                  </button>
+
+                  <button
+                    onClick={handleWhatsAppClick}
+                    className="group glass-professional px-8 py-3 rounded-full font-semibold text-sm transition-all duration-300 transform hover:scale-105 shadow-soft hover:shadow-soft-lg bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-black"
+                  >
+                    <MessageCircle className="inline-block mr-2 w-4 h-4 group-hover:scale-110 transition-transform duration-300" />
+                    WhatsApp Us
+                  </button>
+                </div>
+              </div>
+
+              {/* Features Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {features.map((feature, index) => (
+                  <div
+                    key={index}
+                    className="group glass-professional border border-brand-sage-200/40 hover:border-brand-sage-300/60 rounded-2xl p-4 transition-all duration-500 hover:scale-[1.02] hover:-translate-y-1 shadow-soft hover:shadow-soft-lg glow-sage"
+                    style={{ animationDelay: `${index * 0.1}s` }}
+                  >
+                    <div className="flex items-start space-x-3">
+                      <div className="w-10 h-10 bg-brand-sage-100/50 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-all duration-500 border border-white/20">
+                        <feature.icon className="w-5 h-5 text-brand-sage-600 transition-transform duration-500 group-hover:rotate-12" />
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="text-xs font-bold text-brand-neutral-800 mb-1 group-hover:text-brand-neutral-900 transition-colors">
+                          {feature.title}
+                        </h4>
+                        <p className="text-xs text-brand-neutral-600 leading-relaxed font-medium">
+                          {feature.description}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Right Side - Demo Form (30%) */}
+            <div className="lg:w-[30%]">
+              <div className="glass-professional border border-brand-sage-200/40 rounded-2xl p-6 shadow-soft glow-sage sticky top-24">
+                {showDemoSuccessMessage ? (
+                  <div className="text-center py-8">
+                    <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-green-100 mb-4">
+                      <CheckCircle className="w-7 h-7 text-green-600" />
+                    </div>
+                    <h3 className="text-xl font-bold text-brand-neutral-800 mb-2">
+                      Demo Booked!
+                    </h3>
+                    <p className="text-sm text-brand-neutral-600">
+                      We'll contact you shortly to schedule your demo session.
+                    </p>
+                  </div>
                 ) : (
                   <>
-                    Book Your Demo
-                    <ArrowRight className="w-4 h-4" />
+                    <div className="text-center mb-5">
+                      <div className="inline-flex items-center gap-2 glass-professional px-3 py-1 rounded-full text-xs text-brand-coral-700 mb-3 font-medium">
+                        <Target className="w-3 h-3" />
+                        Free Demo Session
+                      </div>
+                      <h3 className="text-lg font-bold text-brand-neutral-800 gradient-text-professional">
+                        Book Your Demo
+                      </h3>
+                    </div>
+
+                    <form
+                      onSubmit={handleDemoSubmit}
+                      className="space-y-4"
+                      noValidate
+                    >
+                      {/* FormSubmit Configuration */}
+                      <input type="hidden" name="_captcha" value="false" />
+                      <input
+                        type="hidden"
+                        name="_subject"
+                        value="New Demo Request from QTest Website"
+                      />
+                      <input type="hidden" name="_template" value="table" />
+
+                      {/* Program Field */}
+                      <div>
+                        <label className="block text-xs font-medium text-brand-neutral-700 mb-1">
+                          Program Interested *
+                        </label>
+                        <select
+                          name="program"
+                          value={demoFormData.program}
+                          onChange={handleDemoInputChange}
+                          className={`w-full px-3 py-2 rounded-lg border transition-all text-sm ${
+                            demoErrors.program
+                              ? "border-red-400 focus:border-red-400 focus:ring-red-200/50"
+                              : "border-brand-neutral-200 focus:border-brand-sage-500"
+                          } focus:ring-2 focus:ring-brand-sage-200/50`}
+                        >
+                          <option value="">Select One</option>
+                          {programOptions.map((program, index) => (
+                            <option key={index} value={program}>
+                              {program}
+                            </option>
+                          ))}
+                        </select>
+                        {demoErrors.program && (
+                          <div className="flex items-center gap-1 mt-1 text-red-600">
+                            <AlertCircle className="w-3 h-3" />
+                            <p className="text-xs">{demoErrors.program}</p>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Name Field */}
+                      <div>
+                        <label className="block text-xs font-medium text-brand-neutral-700 mb-1">
+                          Full Name *
+                        </label>
+                        <input
+                          type="text"
+                          name="name"
+                          value={demoFormData.name}
+                          onChange={handleDemoInputChange}
+                          className={`w-full px-3 py-2 rounded-lg border transition-all text-sm ${
+                            demoErrors.name
+                              ? "border-red-400 focus:border-red-400 focus:ring-red-200/50"
+                              : "border-brand-neutral-200 focus:border-brand-sage-500"
+                          } focus:ring-2 focus:ring-brand-sage-200/50`}
+                          placeholder="Your full name"
+                        />
+                        {demoErrors.name && (
+                          <div className="flex items-center gap-1 mt-1 text-red-600">
+                            <AlertCircle className="w-3 h-3" />
+                            <p className="text-xs">{demoErrors.name}</p>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Email Field */}
+                      <div>
+                        <label className="block text-xs font-medium text-brand-neutral-700 mb-1">
+                          Email Address
+                        </label>
+                        <input
+                          type="email"
+                          name="email"
+                          value={demoFormData.email}
+                          onChange={handleDemoInputChange}
+                          className="w-full px-3 py-2 rounded-lg border border-brand-neutral-200 focus:border-brand-sage-500 transition-all text-sm focus:ring-2 focus:ring-brand-sage-200/50"
+                          placeholder="your.email@example.com"
+                        />
+                      </div>
+
+                      {/* Phone Field */}
+                      <div>
+                        <label className="block text-xs font-medium text-brand-neutral-700 mb-1">
+                          Phone Number *
+                        </label>
+                        <input
+                          type="tel"
+                          name="phone"
+                          value={demoFormData.phone}
+                          onChange={handleDemoInputChange}
+                          className={`w-full px-3 py-2 rounded-lg border transition-all text-sm ${
+                            demoErrors.phone
+                              ? "border-red-400 focus:border-red-400 focus:ring-red-200/50"
+                              : "border-brand-neutral-200 focus:border-brand-sage-500"
+                          } focus:ring-2 focus:ring-brand-sage-200/50`}
+                          placeholder="10-digit mobile number"
+                        />
+                        {demoErrors.phone && (
+                          <div className="flex items-center gap-1 mt-1 text-red-600">
+                            <AlertCircle className="w-3 h-3" />
+                            <p className="text-xs">{demoErrors.phone}</p>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Submit Error */}
+                      {demoErrors.submit && (
+                        <div className="flex items-center gap-2 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+                          <AlertCircle className="w-4 h-4 text-red-600 flex-shrink-0" />
+                          <p className="text-red-800 text-xs">
+                            {demoErrors.submit}
+                          </p>
+                        </div>
+                      )}
+
+                      {/* Submit Button */}
+                      <button
+                        type="submit"
+                        disabled={isDemoSubmitting}
+                        className="w-full py-3 rounded-lg font-semibold transition-all duration-300 bg-gradient-to-r from-brand-coral-500 to-brand-coral-600 text-white hover:shadow-lg transform hover:scale-[1.02] text-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
+                      >
+                        {isDemoSubmitting ? (
+                          <>
+                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                            Booking...
+                          </>
+                        ) : (
+                          <>
+                            Book Your Demo
+                            <ArrowRight className="w-4 h-4" />
+                          </>
+                        )}
+                      </button>
+                    </form>
                   </>
                 )}
-              </button>
-            </form>
-          </>
-        )}
-      </div>
-    </div>
-  </div>
-  
-  {/* Rest of the component remains the same... */}
-</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Rest of the component remains the same... */}
+        </div>
         {/* Courses Section */}
         <div className="mb-8 text-center animate-fade-in-up">
           <h3 className="text-2xl md:text-3xl font-bold mb-4 gradient-text-professional">
@@ -1132,74 +1061,61 @@ const Training: React.FC = () => {
                   className="flex transition-transform duration-700 ease-out"
                   style={{
                     transform: `translateX(-${
-                      (currentTestimonial % testimonials.length) * (100 / 5)
+                      (((currentTestimonial % testimonials.length) +
+                        testimonials.length) %
+                        testimonials.length) *
+                      (100 / 4)
                     }%)`,
                   }}
                 >
                   {/* Original testimonials + duplicated set for seamless loop */}
-                  {[...testimonials, ...testimonials.slice(0, 5)].map(
+                  {[...testimonials, ...testimonials.slice(0, 4)].map(
                     (testimonial, index) => (
                       <div
                         key={`${testimonial.id}-${index}`}
-                        className="flex-shrink-0 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 px-2 sm:px-3"
+                        className="flex-shrink-0 w-full sm:w-1/2 md:w-1/3 lg:w-1/4 px-2 sm:px-3"
                       >
-                        <div className="glass-professional bg-white/80 backdrop-blur-sm border border-brand-sage-200/40 hover:border-brand-coral-300/60 rounded-2xl p-4 sm:p-5 shadow-soft hover:shadow-soft-lg transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1 glow-sage flex flex-col h-full min-h-[280px] sm:min-h-[320px]">
+                        <div className="glass-professional bg-white/80 backdrop-blur-sm border border-brand-sage-200/40 hover:border-brand-coral-300/60 rounded-2xl p-5 sm:p-6 shadow-soft hover:shadow-soft-lg transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1 glow-sage flex flex-col h-[280px]">
                           {/* Decorative Quote Icon */}
                           <div className="absolute top-3 right-3 opacity-5">
-                            <Quote className="w-10 h-10 sm:w-12 sm:h-12 text-brand-sage-600" />
+                            <Quote className="w-8 h-8 text-brand-sage-600" />
                           </div>
 
                           {/* Content */}
                           <div className="relative z-10 flex flex-col h-full">
                             {/* Stars */}
-                            <div className="flex gap-0.5 mb-2 sm:mb-3">
+                            <div className="flex gap-0.5 mb-3">
                               {[...Array(testimonial.rating)].map((_, i) => (
                                 <Star
                                   key={i}
-                                  className="w-3 h-3 fill-yellow-400 text-yellow-400"
+                                  className="w-4 h-4 fill-yellow-400 text-yellow-400"
                                 />
                               ))}
                             </div>
 
-                            {/* Title */}
-                            <h4 className="text-sm font-bold text-brand-neutral-800 mb-2 line-clamp-2">
-                              {testimonial.title}
-                            </h4>
-
                             {/* Review */}
-                            <p className="text-brand-neutral-600 text-xs leading-relaxed mb-3 sm:mb-4 font-medium line-clamp-4 flex-1">
+                            <p className="text-brand-neutral-600 text-sm leading-relaxed mb-4 font-medium line-clamp-4 flex-1">
                               "{testimonial.review}"
                             </p>
 
                             {/* Author Info */}
-                            <div className="pt-3 border-t border-brand-neutral-200/30 mt-auto">
-                              <div className="flex items-center gap-2 mb-2">
+                            <div className="pt-4 border-t border-brand-neutral-200/30 mt-auto">
+                              <div className="flex items-center gap-3">
                                 {/* Avatar */}
-                                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-brand-sage-400 to-brand-lavender-500 flex items-center justify-center text-white font-bold text-xs shadow flex-shrink-0">
+                                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-brand-sage-400 to-brand-lavender-500 flex items-center justify-center text-white font-bold text-sm shadow flex-shrink-0">
                                   {getInitials(testimonial.name)}
                                 </div>
 
                                 {/* Details */}
                                 <div className="flex-1 min-w-0">
-                                  <p className="font-bold text-brand-neutral-800 text-xs truncate">
+                                  <p className="font-bold text-brand-neutral-800 text-sm truncate">
                                     {testimonial.name}
                                   </p>
-                                  <p className="text-xs text-brand-neutral-600 truncate">
-                                    {testimonial.course}
+                                  <p className="text-xs text-brand-neutral-500">
+                                    {testimonial.date}
                                   </p>
                                 </div>
                               </div>
-
-                              {/* Date Badge */}
-                              <span className="text-xs text-brand-neutral-500 bg-brand-neutral-100 px-2 py-0.5 rounded-full inline-block">
-                                {new Date(testimonial.date).toLocaleDateString(
-                                  "en-US",
-                                  {
-                                    month: "short",
-                                    year: "numeric",
-                                  }
-                                )}
-                              </span>
                             </div>
                           </div>
                         </div>
@@ -1235,7 +1151,10 @@ const Training: React.FC = () => {
                       key={index}
                       onClick={() => goToTestimonial(index)}
                       className={`transition-all duration-300 rounded-full ${
-                        currentTestimonial % testimonials.length === index
+                        ((currentTestimonial % testimonials.length) +
+                          testimonials.length) %
+                          testimonials.length ===
+                        index
                           ? "w-6 sm:w-8 h-2 bg-brand-sage-600"
                           : "w-2 h-2 bg-brand-neutral-300 hover:bg-brand-sage-400"
                       }`}
@@ -1248,8 +1167,11 @@ const Training: React.FC = () => {
               {/* Counter */}
               <div className="text-center mt-3 sm:mt-4">
                 <p className="text-xs sm:text-sm text-brand-neutral-500 font-medium">
-                  {(currentTestimonial % testimonials.length) + 1} of{" "}
-                  {testimonials.length} reviews
+                  {(((currentTestimonial % testimonials.length) +
+                    testimonials.length) %
+                    testimonials.length) +
+                    1}{" "}
+                  of {testimonials.length} reviews
                 </p>
               </div>
             </div>

@@ -8,6 +8,10 @@ import Header from "../components/Header";
 import ClientBackground from "../components/ClientBackground";
 import Blog from "../components/Blog";
 import { Metadata } from "next";
+import HowItWorks from "../components/HowItWorks";
+import WhyChooseQTest from "../components/WhyQtest";
+import Testimonials from "../components/Testimonials";
+import Technologies from "../components/Technologies";
 
 export const metadata: Metadata = {
   alternates: {
@@ -26,8 +30,12 @@ export default function HomePage() {
       <Header />
       <Hero />
       <Services />
+      <HowItWorks />
+      <WhyChooseQTest />
+      <Testimonials/>
+      <Technologies />
       {/* <Training /> */}
-      <About />
+      {/* <About /> */}
       <Blog home={true} />
       <Contact />
       <Footer />

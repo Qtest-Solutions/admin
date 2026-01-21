@@ -1,333 +1,143 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
-import { ArrowRight, Calendar } from "lucide-react";
+import React from "react";
+import { ArrowRight, CheckCircle } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { useRouter } from "next/navigation";
-import Modal from "./Modal";
 
-interface Banner {
-  title: string;
-  highlight: string;
-  desc: string;
-  primary: string;
-  accent: string;
-}
-
-const banners: Banner[] = [
-  {
-    title: "Qtest Software",
-    highlight: "Qtest Software Solutions LLP",
-    desc: "Empowering startups with professional software testing services and training the next generation of quality assurance professionals.",
-    primary: "Contact us",
-    accent: "text-sky-400",
-  },
-  // {
-  //   title: "Software Testing Solutions",
-  //   highlight: "Advanced Outcome Predictions",
-  //   desc: "End-to-end testing solutions with predictive analytics that identify system behaviors, performance issues, and potential failures before user impact.",
-  //   primary: "Discover Solutions",
-  //   accent: "text-emerald-400",
-  // },
-  // {
-  //   title: "CAE Application Testing",
-  //   highlight: "Smart Testing Solutions",
-  //   desc: "Intelligent CAE testing platform using machine learning to predict simulation accuracy, identify computational errors, and optimize engineering workflows.",
-  //   primary: "Get a Demo",
-  //   accent: "text-violet-400",
-  // },
-];
-
-// Light modern gradient backgrounds
-const modernGradients = [
-  "linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #bae6fd 100%)", // Light sky blue
-  "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%)", // Light slate
-  "linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 50%, #99f6e4 100%)", // Light teal
-  "linear-gradient(135deg, #faf5ff 0%, #f3e8ff 50%, #e9d5ff 100%)", // Light lavender
-];
-
-export default function HeroSlider() {
+export default function Hero() {
   const router = useRouter();
-
-  const [index, setIndex] = useState<number>(0);
-  const [isPaused, setIsPaused] = useState<boolean>(false);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [calendlyLoaded, setCalendlyLoaded] = useState<boolean>(false);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const containerRef = useRef<HTMLElement | null>(null);
-  const startX = useRef<number>(0);
   const reduced = useReducedMotion();
 
-  const slideCount = banners.length;
-  const isSingleSlide = slideCount <= 1;
-  const AUTOPLAY_MS = 2000;
-
-  // Smooth scroll to services section
-  const scrollToServices = () => {
-    router.push("/contact");
+  const fadeUp = {
+    hidden: { opacity: 0, y: 14 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.6 } },
   };
-
-  // Load Calendly widget
-  useEffect(() => {
-    if (isModalOpen && !calendlyLoaded) {
-      const script = document.createElement("script");
-      script.src = "https://assets.calendly.com/assets/external/widget.js";
-      script.onload = () => setCalendlyLoaded(true);
-      document.body.appendChild(script);
-    }
-  }, [isModalOpen, calendlyLoaded]);
-
-  // Get modern gradient based on index
-  const getGradient = (slideIndex: number) => {
-    return modernGradients[slideIndex % modernGradients.length];
-  };
-
-  // autoplay effect - only run if multiple slides
-  useEffect(() => {
-    if (reduced || isSingleSlide) return;
-    if (isPaused) {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-      return;
-    }
-    intervalRef.current = setInterval(() => {
-      setIndex((p) => (p + 1) % slideCount);
-    }, AUTOPLAY_MS);
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
-  }, [isPaused, slideCount, reduced, isSingleSlide]);
-
-  // Pause handlers - only for multiple slides
-  const handleMouseEnter = () => !isSingleSlide && setIsPaused(true);
-  const handleMouseLeave = () => !isSingleSlide && setIsPaused(false);
-  const handleFocusIn = () => !isSingleSlide && setIsPaused(true);
-  const handleFocusOut = () => !isSingleSlide && setIsPaused(false);
-
-  // Keyboard nav - only for multiple slides
-  useEffect(() => {
-    if (isSingleSlide) return;
-
-    const el = containerRef.current;
-    if (!el) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "ArrowLeft")
-        setIndex((p) => (p - 1 + slideCount) % slideCount);
-      if (e.key === "ArrowRight") setIndex((p) => (p + 1) % slideCount);
-    };
-    el.addEventListener("keydown", onKey);
-    return () => el.removeEventListener("keydown", onKey);
-  }, [slideCount, isSingleSlide]);
-
-  // Touch gestures - only for multiple slides
-  const onTouchStart = (e: React.TouchEvent) => {
-    if (isSingleSlide) return;
-    startX.current = e.touches[0].clientX;
-  };
-
-  const onTouchEnd = (e: React.TouchEvent) => {
-    if (isSingleSlide) return;
-    const endX = e.changedTouches[0].clientX;
-    const diff = endX - startX.current;
-    const threshold = 40;
-    if (Math.abs(diff) > threshold) {
-      if (diff > 0) setIndex((p) => (p - 1 + slideCount) % slideCount);
-      else setIndex((p) => (p + 1) % slideCount);
-    }
-  };
-
-  const headerVariants = {
-    hidden: { opacity: 0, y: 10 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-  };
-
-  const textVariants = (delay = 0.05) => ({
-    hidden: { opacity: 0, y: 6 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.45, delay } },
-  });
 
   return (
     <section
       id="home"
-      ref={containerRef}
-      className={`relative h-screen w-full overflow-hidden ${
-        isSingleSlide ? "static-hero" : "carousel-hero"
-      }`}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      onFocus={handleFocusIn}
-      onBlur={handleFocusOut}
-      onTouchStart={onTouchStart}
-      onTouchEnd={onTouchEnd}
-      tabIndex={isSingleSlide ? -1 : 0}
-      aria-roledescription={isSingleSlide ? undefined : "carousel"}
-      aria-label={isSingleSlide ? "Hero section" : "Hero slider"}
+      className="relative min-h-screen w-full overflow-hidden bg-[#f6f8f8]"
     >
-      {/* Breadcrumb structured data for sitelinks */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "BreadcrumbList",
-            itemListElement: [
-              {
-                "@type": "ListItem",
-                position: 1,
-                name: "Home",
-                item: "https://www.qtestsolutions.com/",
-              },
-              {
-                "@type": "ListItem",
-                position: 2,
-                name: "Services",
-                item: "https://www.qtestsolutions.com/services",
-              },
-              {
-                "@type": "ListItem",
-                position: 3,
-                name: "About",
-                item: "https://www.qtestsolutions.com/about",
-              },
-              {
-                "@type": "ListItem",
-                position: 4,
-                name: "Training",
-                item: "https://www.qtestsolutions.com/training",
-              },
-              {
-                "@type": "ListItem",
-                position: 5,
-                name: "Blog",
-                item: "https://www.qtestsolutions.com/blog",
-              },
-              {
-                "@type": "ListItem",
-                position: 6,
-                name: "Contact",
-                item: "https://www.qtestsolutions.com/contact",
-              },
-            ],
-          }),
-        }}
-      />
+      {/* Offset for fixed header */}
+      <div className="h-[150px]" />
 
-      {/* Light modern gradient backgrounds */}
-      <div className="absolute inset-0">
-        {banners.map((_, i) => (
-          <div
-            key={i}
-            className={`absolute inset-0 w-full h-full transition-all duration-1000 ease-in-out ${
-              i === index ? "opacity-100" : "opacity-0"
-            }`}
-            style={{ background: getGradient(i) }}
-          />
-        ))}
+      {/* Mesh background */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-0 left-0 w-[60%] h-[60%] bg-teal-300/20 blur-[120px]" />
+        <div className="absolute bottom-0 right-0 w-[50%] h-[50%] bg-teal-400/10 blur-[140px]" />
       </div>
 
-      {/* Subtle overlay for depth */}
-      <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-white/5" />
-
-      {/* Content centered */}
-      <div className="relative z-10 h-full flex items-center justify-center mt-[80px]">
-        <div className="container mx-auto px-6 h-full flex items-center justify-center">
-          <div className="flex flex-col justify-center items-center space-y-6 lg:space-y-8 max-w-2xl text-center">
-            <motion.div
+      <div className="relative z-10 px-6 md:px-20 lg:px-40">
+        <div className="max-w-[1280px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          {/* LEFT CONTENT */}
+          <div className="flex flex-col gap-6">
+            <motion.h1
               initial={reduced ? "show" : "hidden"}
               animate="show"
-              variants={headerVariants}
+              variants={fadeUp}
+              className="text-3xl md:text-4xl lg:text-6xl font-bold leading-tight text-gray-900"
             >
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-gray-900 pt-4">
-                {banners[index].highlight}
-              </h1>
-              <div className="w-20 h-1 bg-gray-700/30 rounded-full mt-4 mx-auto" />
-            </motion.div>
+              QA-First Approach to{" "}
+              <span className="text-teal-500">Scalable</span> Software
+            </motion.h1>
 
             <motion.p
               initial={reduced ? "show" : "hidden"}
               animate="show"
-              variants={textVariants(0.08)}
-              className="text-lg md:text-xl text-gray-700 leading-relaxed max-w-lg"
+              variants={fadeUp}
+              className="text-lg md:text-xl text-gray-700 max-w-xl leading-relaxed"
             >
-              {banners[index].desc}
+              Premium software testing services for startups, SaaS, and
+              enterprises. We ensure every release is stable, secure, and
+              performance-ready.
             </motion.p>
 
-            {/* CTA buttons with scroll functionality */}
+            {/* CTA row */}
             <motion.div
-              className="pt-6 flex flex-col sm:flex-row gap-4 justify-center items-center"
               initial={reduced ? "show" : "hidden"}
               animate="show"
-              variants={textVariants(0.12)}
+              variants={fadeUp}
+              className="flex items-center gap-4 pt-1"
             >
-              {/* Contact Us Button */}
               <button
-                onClick={scrollToServices}
-                className="group relative px-8 py-4 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white font-semibold rounded-full transition-all duration-500 flex items-center gap-3 shadow-lg hover:shadow-blue-500/25 hover:scale-105 text-base overflow-hidden border border-white/20 backdrop-blur-sm"
-                aria-label="Contact us - Go to contact page"
+                onClick={() => router.push("/contact")}
+                className="group relative px-5 py-2.5 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white font-semibold rounded-full transition-all duration-500 flex items-center gap-3 shadow-lg hover:shadow-teal-500/25 hover:scale-105"
               >
-                <span className="relative z-10">{banners[index].primary}</span>
-                <div className="relative z-10 w-7 h-7 bg-white/20 rounded-full flex items-center justify-center group-hover:bg-white/30 transition-all duration-300 group-hover:rotate-45">
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-all duration-300" />
-                </div>
+                Get Free QA Consultation
+                <span className="w-7 h-7 bg-white/20 rounded-full flex items-center justify-center group-hover:bg-white/30 transition-all duration-300 group-hover:rotate-45">
+                  <ArrowRight className="w-4 h-4" />
+                </span>
               </button>
 
-              {/* Start Consultation Button */}
-              {/* <button
-                onClick={() => setIsModalOpen(true)}
-                className="group relative px-8 py-4 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold rounded-full transition-all duration-500 flex items-center gap-3 shadow-lg hover:shadow-blue-500/25 hover:scale-105 text-base overflow-hidden border border-white/20 backdrop-blur-sm"
-                aria-label="Start consultation - Open scheduling"
+              <button
+                onClick={() => router.push("/case-studies")}
+                className="x-5 px-5 py-2.5  rounded-full bg-white/60 border border-gray-200 text-gray-800 font-semibold hover:bg-white transition-all"
               >
-                <Calendar className="w-5 h-5" />
-                <span className="relative z-10">Start Consultation</span>
-              </button> */}
+                View Case Studies
+              </button>
             </motion.div>
           </div>
+
+          {/* RIGHT UI CARD (from image) */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7 }}
+            className="relative"
+          >
+            {/* Floating stats */}
+            {/* <div className="absolute -top-6 -right-6 bg-white rounded-xl shadow-xl px-4 py-2 text-sm font-semibold text-teal-600">
+              99.9% <span className="block text-xs text-gray-500">Accuracy Rate</span>
+            </div>
+
+            <div className="absolute -bottom-6 -left-6 bg-white rounded-xl shadow-xl px-4 py-2 text-sm font-semibold text-teal-600">
+              150+ <span className="block text-xs text-gray-500">Happy Clients</span>
+            </div> */}
+
+            {/* Main card */}
+            <div className="bg-white rounded-2xl shadow-2xl p-6 border border-gray-100">
+              {/* Status */}
+              <div className="flex items-center justify-between bg-green-50 rounded-xl px-4 py-3 mb-6">
+                <div className="flex items-center gap-3">
+                  <div className="bg-green-500 text-white p-2 rounded-full">
+                    <CheckCircle size={18} />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-green-700">
+                      All Tests Passed
+                    </p>
+                    <p className="text-xs text-green-600">
+                      No critical issues found
+                    </p>
+                  </div>
+                </div>
+                <span className="text-xl font-bold text-green-600">100%</span>
+              </div>
+
+              {/* Checklist */}
+              <ul className="space-y-4">
+                {[
+                  "Security Scan",
+                  "Performance Test",
+                  "API Validation",
+                  "UI/UX Check",
+                ].map((item) => (
+                  <li
+                    key={item}
+                    className="flex items-center justify-between bg-gray-50 rounded-lg px-4 py-3"
+                  >
+                    <span className="text-sm font-medium text-gray-700">
+                      {item}
+                    </span>
+                    <CheckCircle className="text-teal-500" size={18} />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </motion.div>
         </div>
       </div>
-
-      {/* Slider controls - only show if multiple slides */}
-      {!isSingleSlide && (
-        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-20">
-          <div className="flex items-center space-x-2 bg-white/80 backdrop-blur-md px-3 py-2 rounded-full border border-gray-200">
-            {banners.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setIndex(i)}
-                aria-label={`Go to slide ${i + 1}`}
-                className={`transition-all duration-500 rounded-full ${
-                  i === index
-                    ? "w-6 h-2 bg-gray-900 scale-110 shadow-lg"
-                    : "w-2 h-2 bg-gray-500 hover:bg-gray-700"
-                }`}
-              />
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Consultation Modal with Calendly Widget */}
-      <Modal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        title="Schedule Your Free Consultation"
-        maxWidth="max-w-2xl"
-      >
-        <div className="min-h-[600px]">
-          {calendlyLoaded ? (
-            <div
-              className="calendly-inline-widget"
-              data-url="https://calendly.com/qtestsolutions/consultation"
-              style={{ minHeight: "600px" }}
-            ></div>
-          ) : (
-            <div className="flex items-center justify-center h-[600px]">
-              <div className="text-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-500 mx-auto mb-4"></div>
-                <p className="text-gray-600">Loading scheduling widget...</p>
-              </div>
-            </div>
-          )}
-        </div>
-      </Modal>
     </section>
   );
 }
