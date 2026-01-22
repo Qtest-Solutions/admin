@@ -69,13 +69,13 @@ export default function Hero() {
                   <ArrowRight className="w-4 h-4" />
                 </span>
               </button>
-
+{/* 
               <button
                 onClick={() => router.push("/case-studies")}
                 className="x-5 px-5 py-2.5  rounded-full bg-white/60 border border-gray-200 text-gray-800 font-semibold hover:bg-white transition-all"
               >
                 View Case Studies
-              </button>
+              </button> */}
             </motion.div>
           </div>
 

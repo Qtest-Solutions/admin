@@ -32,7 +32,7 @@ export default function HomePage() {
       <Services />
       <HowItWorks />
       <WhyChooseQTest />
-      <Testimonials/>
+      {/* <Testimonials/> */}
       <Technologies />
       {/* <Training /> */}
       {/* <About /> */}
