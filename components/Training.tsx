@@ -120,7 +120,6 @@ const Training: React.FC = () => {
     "Manual Testing",
     "Automation Testing",
     "Manual + Automation Testing",
-    "Internship",
   ];
 
   // Testimonials data
@@ -444,21 +443,6 @@ const Training: React.FC = () => {
       ],
       icon: BarChart,
       color: "purple",
-    },
-    {
-      name: "Internship",
-      duration: "12 weeks",
-      level: "All Levels",
-      description:
-        "Hands-on internship program with real project experience and mentorship from industry experts.",
-      highlights: [
-        "Live Projects",
-        "Mentorship",
-        "Industry Exposure",
-        "Placement Support",
-      ],
-      icon: GraduationCap,
-      color: "coral",
     },
   ];
 
@@ -944,7 +928,7 @@ const Training: React.FC = () => {
         </div>
 
         {/* Courses Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-6 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
           {courses.map((course, index) => {
             const colors = getColorClasses(course.color);
             return (

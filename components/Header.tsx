@@ -297,7 +297,7 @@ export default function Header() {
               </Link>
 
               {/* Internship */}
-              <Link
+              {/* <Link
                 href="/internship"
                 onClick={closeMenu}
                 className={`flex items-center justify-between px-4 py-3.5 rounded-xl transition-all duration-200 ${
@@ -310,7 +310,7 @@ export default function Header() {
                 {isActive("/internship") && (
                   <div className="w-2 h-2 rounded-full bg-teal-500" />
                 )}
-              </Link>
+              </Link> */}
 
               {/* Blog */}
               <Link
