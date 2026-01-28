@@ -453,7 +453,7 @@ export default function InternshipPage() {
         <div className="container mx-auto px-6">
           <div className={`max-w-5xl mx-auto text-center transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             {/* Logo */}
-            <div className="flex justify-center mb-6">
+            {/* <div className="flex justify-center mb-6">
               <Image
                 src="https://www.qtestsolutions.com/image.png"
                 alt="QTest Solutions"
@@ -461,7 +461,7 @@ export default function InternshipPage() {
                 height={150}
                 priority
               />
-            </div>
+            </div> */}
 
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-8 leading-tight tracking-tight">
               Launch Your Career
