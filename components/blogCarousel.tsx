@@ -146,10 +146,10 @@ const Blog = ({ home = false }: BlogProps) => {
 
           {/* Meta Info */}
           <div className="flex items-center gap-3 sm:gap-4 text-[10px] sm:text-xs text-gray-500 mb-3 pt-1">
-            <div className="flex items-center gap-1">
+            {/* <div className="flex items-center gap-1">
               <User className="w-3 h-3" />
               <span className="truncate max-w-[80px] sm:max-w-none">{blog.author}</span>
-            </div>
+            </div> */}
             <div className="flex items-center gap-1">
               <Clock className="w-3 h-3" />
               <span>{blog.readTime}</span>
