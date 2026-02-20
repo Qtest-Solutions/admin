@@ -1095,9 +1095,9 @@ const Training: React.FC = () => {
                                   <p className="font-bold text-brand-neutral-800 text-sm truncate">
                                     {testimonial.name}
                                   </p>
-                                  <p className="text-xs text-brand-neutral-500">
+                                  {/* <p className="text-xs text-brand-neutral-500">
                                     {testimonial.date}
-                                  </p>
+                                  </p> */}
                                 </div>
                               </div>
                             </div>
